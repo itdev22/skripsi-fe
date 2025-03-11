@@ -1,25 +1,25 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   typescript: {
-    typeCheck: true
+    typeCheck: true,
   },
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt', '@nuxt/ui'],
+  modules: ["@pinia/nuxt", "@nuxt/ui"],
   tailwindcss: {
-    cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
+    cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],
     config: {},
     exposeConfig: true,
     viewer: true,
     // and more...
   },
   pinia: {
-    storesDirs: ['./stores/**'],
+    storesDirs: ["./stores/**"],
   },
   components: [
     {
-      path: '~/components',
+      path: "~/components",
       pathPrefix: false,
     },
-  ]
-})
+  ],
+});

@@ -3,9 +3,9 @@
     <NuxtRouteAnnouncer />
     <!-- <NuxtWelcome /> -->
     <!-- <NuxtUIProvider> -->
-      <!-- <NuxtLayout > -->
+      <NuxtLayout >
         <NuxtPage />
-      <!-- </NuxtLayout> -->
+      </NuxtLayout>
     <!-- </NuxtUIProvider> -->
   </div>
 </template>
