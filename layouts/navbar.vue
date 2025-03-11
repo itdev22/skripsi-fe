@@ -1,5 +1,5 @@
-import { UButton } from '../.nuxt/components';
 <script setup lang="ts">
+import { UButton } from '../.nuxt/components';
 const showSidebar = ref(true);
 const toggleSidebar = () => {
     showSidebar.value = !showSidebar.value;
@@ -43,7 +43,7 @@ const open = ref(false);
                 Logo
             </div>
             <div>
-                ISP Malang
+                
             </div>
         </div>
         <div>
@@ -64,9 +64,9 @@ const open = ref(false);
 
     <div class="flex w-full">
         <!-- Sidebar -->
-        <div
+        <div class="md:invisible sm:invisible lg:invisible xl:invisible 2xl:invisible"
             :class="['border h-[calc(100vh-64px)] sticky top-16 flex flex-col transition-all duration-300', showSidebar ? 'w-1/6' : 'w-20']">
-            <div class="overflow-y-auto flex-1 p-4">
+            <div class="overflow-y-auto flex-1 p-4 ">
                 <ul>
                     <li v-for="(item, index) in items" :key="index"
                         class="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100 "
@@ -86,7 +86,7 @@ const open = ref(false);
         </div>
 
         <!-- Main Content -->
-        <div class="border p-12 bg-gray-50">
+        <div class="border p-12 bg-gray-50 w-full">
             <slot name="header"></slot>
             <slot name="header-child"></slot>
             <hr class="my-8">
