@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { UButton } from '../.nuxt/components';
 const showSidebar = ref(true);
 const toggleSidebar = () => {
     showSidebar.value = !showSidebar.value;
@@ -7,23 +6,28 @@ const toggleSidebar = () => {
 const items = [
     {
         label: "Dashboard",
-        icon: "i-heroicons-home"
+        icon: "i-heroicons-home",
+        link:"/dashboard"
     },
     {
         label: "Customer",
-        icon: "i-heroicons-cog-6-tooth-solid"
+        icon: "i-heroicons-cog-6-tooth-solid",
+        link:"/dashboard/customer"
     },
     {
         label: "Report",
-        icon: "i-heroicons-user-circle-16-solid"
+        icon: "i-heroicons-user-circle-16-solid",
+        link:"/dashboard/report"
     },
     {
         label: "Billing",
-        icon: "i-heroicons-user-circle-16-solid"
+        icon: "i-heroicons-user-circle-16-solid",
+        link:"/dashboard/billing"
     },
     {
         label: "Assets",
-        icon: "i-heroicons-arrow-down-on-square-stack"
+        icon: "i-heroicons-arrow-down-on-square-stack",
+        link:"/dashboard/asset"
     },
     // {
     //     label: "Logout",
@@ -37,7 +41,7 @@ const open = ref(false);
 </script>
 
 <template>
-    <div class="w-full sticky h-16 top-0 bg-white flex justify-between p-4 border" id="navbar">
+    <div class="sticky top-0 flex justify-between w-full h-16 h-full p-4 bg-white border" id="navbar">
         <div class="flex gap-4">
             <div>
                 Logo
@@ -48,7 +52,7 @@ const open = ref(false);
         </div>
         <div>
             <UInput icon="i-heroicons-magnifying-glass-20-solid" class="w-full" :ui="{ rounded: 'rounded-full' }"
-                color="blue" variant="outline" placeholder="Search..." />
+                color="primary" variant="outline" placeholder="Search..." />
 
         </div>
         <div>
@@ -64,20 +68,20 @@ const open = ref(false);
 
     <div class="flex w-full">
         <!-- Sidebar -->
-        <div class="md:invisible sm:invisible lg:invisible xl:invisible 2xl:invisible"
-            :class="['border h-[calc(100vh-64px)] sticky top-16 flex flex-col transition-all duration-300', showSidebar ? 'w-1/6' : 'w-20']">
-            <div class="overflow-y-auto flex-1 p-4 ">
+        <div class="flex flex-col"
+            :class="['border h-[calc(100vh-64px)] sticky top-16  transition-all duration-300', showSidebar ? 'w-1/6' : 'w-20']">
+            <div class="flex-1 p-4 overflow-y-auto h-max">
                 <ul>
                     <li v-for="(item, index) in items" :key="index"
                         class="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100 "
-                        :class="[!showSidebar ? 'justify-center' : '']">
+                        :class="[!showSidebar ? 'justify-center' : '']" @click="navigateTo(item.link)">
                         <UIcon :name="item.icon" class="w-10 h-10" />
                         <span v-if="showSidebar" class="font-bold">{{ item.label }}</span>
                     </li>
                 </ul>
             </div>
             <!-- Collapse Button -->
-            <div class="p-4 border-t flex justify-center" @click="toggleSidebar">
+            <div class="flex justify-center p-4 border-t" @click="toggleSidebar">
                 <div>
                     <UIcon name="i-line-md-arrow-open-right" v-if="!showSidebar" class="w-5" />
                     <UIcon name="i-line-md-arrow-close-left" v-if="showSidebar" class="w-5" />
@@ -86,7 +90,7 @@ const open = ref(false);
         </div>
 
         <!-- Main Content -->
-        <div class="border p-12 bg-gray-50 w-full">
+        <div class="w-full h-screen p-12 border bg-gray-50">
             <slot name="header"></slot>
             <slot name="header-child"></slot>
             <hr class="my-8">
@@ -95,8 +99,8 @@ const open = ref(false);
     </div>
 
     <!-- <div class="flex w-full bg-gray-100">
-        <div class="bg-gray-200 p-4 rounded-br-2xl" :class="{ 'w-1/6': showSidebar, 'w-1/8': !showSidebar }">
-            <div class="flex gap-2 justify-between ">
+        <div class="p-4 bg-gray-200 rounded-br-2xl" :class="{ 'w-1/6': showSidebar, 'w-1/8': !showSidebar }">
+            <div class="flex justify-between gap-2 ">
                 <div class="text-xl font-bold text-gray-800">
                     Menu
                 </div>
@@ -107,7 +111,7 @@ const open = ref(false);
             </div>
             <div class="p-2">
                 <ul>
-                    <li class="flex gap-4 bg-white rounded-lg my-2 p-2 hover:bg-blue-100" v-for="(item, index) in items"
+                    <li class="flex gap-4 p-2 my-2 bg-white rounded-lg hover:bg-blue-100" v-for="(item, index) in items"
                         :key="index" @click="open = false">
                         <div class="">
                             <UIcon :name="item.icon" class="w-5" />
@@ -120,8 +124,8 @@ const open = ref(false);
             </div>
 
         </div>
-        <div class="row w-full">
-            <div class="p-2 flex justify-between w-full bg-gray-200 w-5/6 h-fit ">
+        <div class="w-full row">
+            <div class="flex justify-between w-5/6 w-full p-2 bg-gray-200 h-fit ">
                 <div>
                     <h1>ISP Malang</h1>
                 </div>
@@ -130,7 +134,7 @@ const open = ref(false);
                 </div>
 
             </div>
-            <div class="p-2 w-full h-auto">
+            <div class="w-full h-auto p-2">
                 <slot></slot>
                 <slot name="bottom-content"></slot>
             </div>

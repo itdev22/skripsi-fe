@@ -4,7 +4,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"] // Pastikan ini ada
+      "@/*": ["./*"], // Pastikan ini ada
+      "#ui/*": ["./node_modules/@nuxt/ui/dist/runtime/*"]
     }
   }
 }

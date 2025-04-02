@@ -1,43 +1,57 @@
-// https://nuxt.com/docs/examples/advanced/jsx
-// https://vuejs.org/guide/extras/render-function.html#jsx-tsx
+<script setup lang="ts">
+import type { FormError, FormErrorEvent, FormSubmitEvent } from '#ui/types'
 
-
-
-<script lang="ts" setup>
-import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
-const authStore = useAuthStore();
-const router = useRouter();
-
-function setToken(data: string) {
-    authStore.token = data
-    router.push('/')
-}
-
-const formData = ref({
-    username: '',
-    password: ''
+const state = reactive({
+  email: undefined,
+  password: undefined
 })
 
+const validate = (state: any): FormError[] => {
+  const errors = []
+  if (!state.email) errors.push({ path: 'email', message: 'Required' })
+  if (!state.password) errors.push({ path: 'password', message: 'Required' })
+  return errors
+}
+
+async function onSubmit(event: FormSubmitEvent<any>) {
+  // Do something with data
+  const authStore = useAuthStore()
+
+
+  // Pastikan ini hanya berjalan di client-side
+  if (event.data.email == "admin@email.com" && event.data.password == 'password') {
+    authStore.login('Token')
+    navigateTo('dashboard')
+  }
+
+
+
+  console.log(event.data)
+}
+
+async function onError(event: FormErrorEvent) {
+  const element = document.getElementById(event.errors[0].id)
+  element?.focus()
+  element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
 </script>
 
 <template>
-    <div class="card bg-blue shadow-lg p-4 ">
-        <div class="flex justify-center shadow w-full bg-blue-500">
-            <h1>Login</h1>
-            <form @submit.prevent="setToken(formData.username)" class="">
-                <div>
-                    <label for="" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                    <input type="text" class="input" v-model="formData.username" placeholder="Username" required>
-                </div>
-                <div>
-                    <label for="" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                    <input type="password" v-model="formData.password" placeholder="Password" required>
-                </div>
-                <div>
-                    <button type="submit" @click="">Login</button>
-                </div>
-            </form>
-        </div>
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="p-4 shadow m-4 bg-white rounded-lg">
+      <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit" @error="onError">
+        <UFormGroup label="Email" name="email">
+          <UInput v-model="state.email" />
+        </UFormGroup>
+
+        <UFormGroup label="Password" name="password">
+          <UInput v-model="state.password" type="password" />
+        </UFormGroup>
+
+        <UButton type="submit">
+          Submit
+        </UButton>
+      </UForm>
     </div>
+  </div>
 </template>
