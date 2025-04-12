@@ -28,13 +28,33 @@ const state = reactive({
     password: undefined,
     name: undefined,
     phone: undefined,
-    address: undefined,
+    address: '',
+    latitude: 0,
+    longitude: 0,
     packet_internet: undefined
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     // Do something with event.data
     console.log(event.data)
+}
+
+function onMarkerDrag(e: any) {
+    const latlng = e.target.getLatLng()
+    state.latitude = latlng.lat
+    state.longitude = latlng.lng
+    reverseGeocode(latlng.lat, latlng.lng)
+}
+
+async function reverseGeocode(lat: number, lng: number) {
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+        const data = await response.json()
+        state.address = data.display_name || 'Address not found'
+    } catch (error) {
+        console.error('Reverse geocoding failed:', error)
+        state.address = 'Error fetching address'
+    }
 }
 </script>
 
@@ -54,6 +74,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </UFormGroup>
         <UFormGroup label="Address" name="address">
             <UInput v-model="state.address" />
+        </UFormGroup>
+
+        <LMap style="height: 350px" :zoom="6" :center="[state.latitude, state.longitude]" :use-global-leaflet="false">
+            <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <LMarker ref="map" :lat-lng="[state.latitude, state.longitude]" draggable @dragend="onMarkerDrag" />
+        </LMap>
+        <UFormGroup label="Map" name="coordinates">
+            <div class="flex justify-around ">
+                <UInput v-model="state.latitude" class="w-full" placeholder="Latitude" type="number" />
+                <UInput v-model="state.longitude" class="w-full" placeholder="Longitude" type="number" />
+            </div>
         </UFormGroup>
         <UFormGroup label="Packet Internet" name="packet_internet">
             <UInput v-model="state.packet_internet" />
