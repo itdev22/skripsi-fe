@@ -29,6 +29,7 @@ const state = reactive({
     name: undefined,
     phone: undefined,
     address: '',
+    area_code: '',
     latitude: 0,
     longitude: 0,
     packet_internet: undefined
@@ -56,6 +57,21 @@ async function reverseGeocode(lat: number, lng: number) {
         state.address = 'Error fetching address'
     }
 }
+
+async function moveToMyLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords
+            state.latitude = latitude
+            state.longitude = longitude
+            reverseGeocode(latitude, longitude)
+        }, (error) => {
+            console.error('Error getting location:', error)
+        })
+    } else {
+        console.error('Geolocation is not supported by this browser.')
+    }
+}
 </script>
 
 <template>
@@ -75,10 +91,16 @@ async function reverseGeocode(lat: number, lng: number) {
         <UFormGroup label="Address" name="address">
             <UInput v-model="state.address" />
         </UFormGroup>
+        <UFormGroup label="Area Code" name="area_code">
+            <UInput v-model="state.area_code" />
+        </UFormGroup>
 
         <LMap style="height: 350px" :zoom="6" :center="[state.latitude, state.longitude]" :use-global-leaflet="false">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <LMarker ref="map" :lat-lng="[state.latitude, state.longitude]" draggable @dragend="onMarkerDrag" />
+            <LControl position="bottomleft">
+                <UButton @click="moveToMyLocation">My Position</UButton>
+            </LControl>
         </LMap>
         <UFormGroup label="Map" name="coordinates">
             <div class="flex justify-around ">
