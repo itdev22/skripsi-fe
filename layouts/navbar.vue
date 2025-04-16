@@ -7,28 +7,79 @@ const items = [
     {
         label: "Dashboard",
         icon: "i-heroicons-home",
-        link:"/dashboard"
+        link: "/dashboard"
     },
     {
         label: "Customer",
-        icon: "i-heroicons-cog-6-tooth-solid",
-        link:"/dashboard/customer"
+        icon: "i-heroicons-user-circle-16-solid",
+        link: "/dashboard/customer"
     },
     {
         label: "Report",
-        icon: "i-heroicons-user-circle-16-solid",
-        link:"/dashboard/report"
+        icon: "i-heroicons-cog-6-tooth-solid",
+        link: "/dashboard/report"
     },
     {
-        label: "Billing",
+        label: "Internet Package",
         icon: "i-heroicons-user-circle-16-solid",
-        link:"/dashboard/billing"
+        link: "/dashboard/internet-package"
     },
     {
         label: "Assets",
         icon: "i-heroicons-arrow-down-on-square-stack",
-        link:"/dashboard/asset"
+        link: "/dashboard/asset"
     },
+    {
+        label: "Report",
+        icon: "i-heroicons-cog-6-tooth-solid",
+        link: "/dashboard/report"
+    },
+    {
+        label: "User Management",
+        icon: "i-heroicons-user-circle-16-solid",
+        link: "/dashboard/user-management"
+    },    
+    // {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },    {
+    //     label: "User Management",
+    //     icon: "i-heroicons-user-circle-16-solid",
+    //     link: "/dashboard/user-management"
+    // },
     // {
     //     label: "Logout",
     //     icon: "i-heroicons-arrow-right-start-on-rectangle-16-solid"
@@ -41,18 +92,16 @@ const open = ref(false);
 </script>
 
 <template>
-    <div class="sticky top-0 flex justify-between w-full h-16 h-full p-4 bg-white border" id="navbar">
+    <div class="sticky top-0 z-10 flex justify-between w-full h-16 h-full p-4 bg-white border" id="navbar">
         <div class="flex gap-4">
             <div>
-                Logo
+                <p class="text-xl font-bold">Malang <span class="text-red-500">Network</span></p>
             </div>
-            <div>
-                
-            </div>
+
         </div>
         <div>
-            <UInput icon="i-heroicons-magnifying-glass-20-solid" class="w-full" :ui="{ rounded: 'rounded-full' }"
-                color="primary" variant="outline" placeholder="Search..." />
+            <!-- <UInput icon="i-heroicons-magnifying-glass-20-solid" class="w-full" :ui="{ rounded: 'rounded-full' }"
+                color="primary" variant="outline" placeholder="Search..." /> -->
 
         </div>
         <div>
@@ -66,35 +115,36 @@ const open = ref(false);
         </div>
     </div>
 
-    <div class="flex w-full">
+    <div class="fixed flex w-full h-screen top-16">
         <!-- Sidebar -->
-        <div class="flex flex-col"
-            :class="['border h-[calc(100vh-64px)] sticky top-16  transition-all duration-300', showSidebar ? 'w-1/6' : 'w-20']">
-            <div class="flex-1 p-4 overflow-y-auto h-max">
-                <ul>
+        <div class="flex flex-col "
+            :class="['border transition-all duration-300', !showSidebar ? 'w-full md:w-1/6' : 'w-20']">
+            <div class="flex-col p-4 overflow-auto no-scrollbar">
+                <ul> 
                     <li v-for="(item, index) in items" :key="index"
-                        class="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100 "
-                        :class="[!showSidebar ? 'justify-center' : '']" @click="navigateTo(item.link)">
+                        class="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100"
+                        :class="[showSidebar ? 'justify-center' : '']" @click="navigateTo(item.link)">
                         <UIcon :name="item.icon" class="w-10 h-10" />
-                        <span v-if="showSidebar" class="font-bold">{{ item.label }}</span>
+                        <span v-if="!showSidebar" class="font-bold">{{ item.label }}</span>
                     </li>
                 </ul>
             </div>
             <!-- Collapse Button -->
-            <div class="flex justify-center p-4 border-t" @click="toggleSidebar">
+            <div class="flex justify-center p-4 border-t " @click="toggleSidebar">
                 <div>
-                    <UIcon name="i-line-md-arrow-open-right" v-if="!showSidebar" class="w-5" />
-                    <UIcon name="i-line-md-arrow-close-left" v-if="showSidebar" class="w-5" />
+                    <UIcon name="i-line-md-arrow-open-right" v-if="showSidebar" class="w-5" />
+                    <UIcon name="i-line-md-arrow-close-left" v-if="!showSidebar" class="w-5" />
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="w-full h-screen p-12 border bg-gray-50">
+        <div class="w-full p-12 overflow-auto border bg-gray-50">
             <slot name="header"></slot>
             <slot name="header-child"></slot>
             <hr class="my-8">
             <slot></slot>
+            <!-- <slot></slot> -->
         </div>
     </div>
 

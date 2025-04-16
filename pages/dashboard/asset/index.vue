@@ -119,25 +119,15 @@ const isOpen = ref(false)
 </script>
 
 <template>
-    <NuxtLayout name="navbar">
+    <UButton label="Add Customer" @click="isOpen = true" />
+    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+        <UInput v-model="q" placeholder="Filter people..." />
+    </div>
+    <UTable :rows="filteredRows" />
 
-        <template #header>
-            <h1 class="text-bold">Dashboard</h1>
-        </template>
-        <template #header-child>
-            <p>Assets</p>
-        </template>
-
-        <UButton label="Add Customer" @click="isOpen = true" />
-        <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-            <UInput v-model="q" placeholder="Filter people..." />
-        </div>
-        <UTable :rows="filteredRows" />
-
-        <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-            <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
-        </div>
-    </NuxtLayout>
+    <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+        <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
+    </div>
 
     <div>
         <UModal v-model="isOpen">

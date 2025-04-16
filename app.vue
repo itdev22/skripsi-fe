@@ -8,7 +8,9 @@
     <!-- <NuxtWelcome /> -->
     <!-- <NuxtUIProvider> -->
     <NuxtLayout>
-      <NuxtPage />
+        <NuxtLayout name="navbar" >
+          <NuxtPage />
+        </NuxtLayout>
     </NuxtLayout>
     <!-- </NuxtUIProvider> -->
   </div>

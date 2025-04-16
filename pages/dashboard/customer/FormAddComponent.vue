@@ -116,9 +116,15 @@ watch(() => state.ip_static, (newIp) => {
             <UInput v-model="state.address" />
         </UFormGroup>
         <UFormGroup label="Map" name="coordinates">
-            <div class="flex justify-around ">
-                <UInput v-model="state.latitude" class="w-full" placeholder="Latitude" type="number" />
-                <UInput v-model="state.longitude" class="w-full" placeholder="Longitude" type="number" />
+            <div class="flex justify-around gap-4 flex-row-2">
+                <div class="w-full text-sm">
+                    <span>Latitude</span>
+                    <UInput v-model="state.latitude" class="w-full" placeholder="Latitude" type="number" />
+                </div>
+                <div class="w-full text-sm">
+                    Longitude
+                    <UInput v-model="state.longitude" class="w-full" placeholder="Longitude" type="number" />
+                </div>
             </div>
         </UFormGroup>
         <UFormGroup label="Packet Internet" name="packet_internet">

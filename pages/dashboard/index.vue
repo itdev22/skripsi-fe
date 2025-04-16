@@ -9,12 +9,27 @@ definePageMeta({
 const data = ref<{ y: number[]; x: string[]; label: string; }[]>([])
 let cards = ref<{ name: string; total: number }[]>([
 ])
-for (let index = 0; index < 1; index++) {
-    const data = {
+const CardList = [
+{
         name: "Customer",
         total: 0
-    }
-    cards.value.push(data)
+    },
+    {
+        name: "Packet Pupolar",
+        total: 0
+    },
+    {
+        name: "Area",
+        total: 0
+    },
+    {
+        name: "Report Cash",
+        total: 0
+    },
+]
+for (const card of CardList) {
+
+    cards.value.push(card)
 }
 for (const card of cards.value) {
 
@@ -37,17 +52,8 @@ for (const card of cards.value) {
 </script>
 
 <template>
-    <NuxtLayout name="navbar">
-
-        <template #header>
-                <h1 class="text-bold">Dashboard</h1>
-        </template>
-        <template #header-child>
-            <p>Analytic company</p>
-        </template>
-
         <div class="grid gap-2 md:grid-cols-4 sm:grid-cols-2">
-            <!-- <div v-for="i in 8" :key="i" class="bg-gray-200 p-4 rounded-lg">
+            <!-- <div v-for="i in 8" :key="i" class="p-4 bg-gray-200 rounded-lg">
                 <div class="flex justify-between py-2">
                     <div>
                         Customer
@@ -56,7 +62,7 @@ for (const card of cards.value) {
                         900
                     </div>
                 </div>
-                <div class="bg-white p-2 rounded-lg">
+                <div class="p-2 bg-white rounded-lg">
                     for analytics
                     <ChartComponent :data="data"/>
                 </div>
@@ -68,6 +74,5 @@ for (const card of cards.value) {
             </div>
 
         </div>
-    </NuxtLayout>
 
 </template>
