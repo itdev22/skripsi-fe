@@ -1,66 +1,95 @@
 <script setup lang="ts">
-import { object, string, type InferType } from 'yup'
+import { boolean, object, string, type InferType } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
 
 const schema = object({
-    email: string().email('Invalid email').required('Required'),
-    password: string()
-        .min(8, 'Must be at least 8 characters')
-        .required('Required'),
-    name: string()
-        .min(3, 'Must be at least 3 characters')
-        .required('Required'),
-    phone: string()
-        .min(3, 'Must be at least 3 characters')
-        .required('Required'),
-    address: string()
-        .min(3, 'Must be at least 3 characters')
-        .required('Required'),
-    packet_internet: string()
-        .min(3, 'Must be at least 3 characters')
-        .required('Required')
+    // email: string().email('Invalid email').required('Required'),
+    // password: string()
+    //     .min(8, 'Must be at least 8 characters')
+    //     .required('Required'),
+    // name: string()
+    //     .min(3, 'Must be at least 3 characters')
+    //     .required('Required'),
+    // phone: string()
+    //     .min(3, 'Must be at least 3 characters')
+    //     .required('Required'),
+    // address: string()
+    //     .min(3, 'Must be at least 3 characters')
+    //     .required('Required'),
+    // packet_internet: string()
+    //     .min(3, 'Must be at least 3 characters')
+    //     .required('Required')
 })
 
 type Schema = InferType<typeof schema>
 
 const state = reactive({
-    email: undefined,
-    password: undefined,
-    name: undefined,
-    phone: undefined,
-    address: undefined,
-    packet_internet: undefined
+    type_cash: '',
+    nominal: 0,
+    description: '',
 })
+const type_cash = [
+    { label: 'Cash', value: 'cash' },
+    { label: 'Credit Card', value: 'credit_card' },
+    { label: 'Debit Card', value: 'debit_card' },
+]
 
+defineProps({
+    // isOpen: { type: Boolean, required: true }
+})
+const emit = defineEmits(['success', 'close'])
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     // Do something with event.data
-    console.log(event.data)
+    // Emit an event to the parent component
+    // Close the modal
+    clearState()
+    // Emit success event
+    emit('success')
+}
+function clearState() {
+    state.type_cash = ''
+    state.nominal = 0
+    state.description = ''
 }
 </script>
 
+<!-- <template>
+    <UModal>
+        <UCard>
+            <div class="space-y-2">
+                <p>This modal was opened programmatically !</p>
+                <p>Count:</p>
+                <UButton @click="onSubmit">
+                    Click to emit a success event
+                </UButton>
+            </div>
+        </UCard>
+    </UModal>
+</template> -->
 <template>
-    <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>Add New Customer</h1>
-    </div>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Email" name="email">
-            <UInput v-model="state.email" />
-        </UFormGroup>
-        <UFormGroup label="Name" name="name">
-            <UInput v-model="state.name" />
-        </UFormGroup>
-        <UFormGroup label="Phone" name="phone">
-            <UInput v-model="state.phone" />
-        </UFormGroup>
-        <UFormGroup label="Address" name="address">
-            <UInput v-model="state.address" />
-        </UFormGroup>
-        <UFormGroup label="Packet Internet" name="packet_internet">
-            <UInput v-model="state.packet_internet" />
-        </UFormGroup>
+    <UModal>
+        <div class="p-4">
 
-        <UButton type="submit">
-            Submit
-        </UButton>
-    </UForm>
+            
+            <div class="p-2 mb-4 text-2xl font-bold text-center">
+                <h1>Add New Report Cash Flow</h1>
+            </div>
+            <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+                <UFormGroup label="Type Cash" name="type_cash">
+                    <USelectMenu v-model="state.type_cash" :options="type_cash" value-attribute="value"
+                    option-attribute="label" />
+                </UFormGroup>
+                <UFormGroup label="Nominal" name="nominal">
+                    <UInput type="number" v-model="state.nominal" />
+                </UFormGroup>
+                <UFormGroup label="Description" name="description">
+                    <UTextarea v-model="state.description" />
+                </UFormGroup>
+                
+                <UButton type="submit">
+                    Submit
+                </UButton>
+            </UForm>
+        </div>
+    </UModal>
 </template>

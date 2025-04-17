@@ -116,11 +116,31 @@ const filteredRows = computed(() => {
 
 const isOpen = ref(false)
 
+const toast = useToast()
+const modal = useModal()
+function openModal() {
+    isOpen.value = true
+    modal.open(FormAddComponent, {
+        // isOpen: true,
+        onSuccess() {
+            // Emit success event
+            console.log('success')
+            modal.close()
+            toast.add({
+                title: 'Success !',
+                id: 'modal-success',
+                ui: { position:"top-right" },
+                })
+        },
+    })
+    console.log('open modals')
+}
+
 </script>
 
 <template>
 
-    <UButton label="Add Customer" @click="isOpen = true" />
+    <UButton label="Add Report Cash Flow" @click="openModal" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
@@ -130,12 +150,12 @@ const isOpen = ref(false)
         <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
     </div>
 
-    <div>
+    <!-- <div>
         <UModal v-model="isOpen">
             <div class="p-4">
                 <Placeholder class="h-48" />
-                <FormAddComponent></FormAddComponent>
+                <FormAddComponent :isOpen="isOpen"></FormAddComponent>
             </div>
         </UModal>
-    </div>
+    </div> -->
 </template>

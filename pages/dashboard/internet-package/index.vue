@@ -121,7 +121,7 @@ const isOpen = ref(false)
 <template>
 
 
-    <UButton label="Add Customer" @click="isOpen = true" />
+    <UButton label="Add Internet Package" @click="isOpen = true" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>

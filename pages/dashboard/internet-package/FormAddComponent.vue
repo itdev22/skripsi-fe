@@ -24,12 +24,9 @@ const schema = object({
 type Schema = InferType<typeof schema>
 
 const state = reactive({
-    email: undefined,
-    password: undefined,
-    name: undefined,
-    phone: undefined,
-    address: undefined,
-    packet_internet: undefined
+    package_name: '',
+    description: '',
+    price: 0
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -40,23 +37,18 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
     <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>Add New Customer</h1>
+        <h1>Add New Internet Package</h1>
     </div>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Email" name="email">
-            <UInput v-model="state.email" />
+
+        <UFormGroup label="Package Name" name="package_name">
+            <UInput v-model="state.package_name" />
         </UFormGroup>
-        <UFormGroup label="Name" name="name">
-            <UInput v-model="state.name" />
+        <UFormGroup label="Price" name="price">
+            <UInput type="number" v-model="state.price" />
         </UFormGroup>
-        <UFormGroup label="Phone" name="phone">
-            <UInput v-model="state.phone" />
-        </UFormGroup>
-        <UFormGroup label="Address" name="address">
-            <UInput v-model="state.address" />
-        </UFormGroup>
-        <UFormGroup label="Packet Internet" name="packet_internet">
-            <UInput v-model="state.packet_internet" />
+        <UFormGroup label="Description" name="description">
+            <UTextarea type="text" v-model="state.description" />
         </UFormGroup>
 
         <UButton type="submit">
