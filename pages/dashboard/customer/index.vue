@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import FormAddComponent from './FormAddComponent.vue'
 const people = [{
-    id:1,
+    id: 1,
     name: 'John Doe',
     email: 'Johndoe@rmail.com',
     phone: '1234567890',
@@ -12,6 +12,56 @@ const people = [{
     ip_static: '',
     mac_address: '00:1A:2B:3C:4D:5E',
 }]
+
+type Person = {
+    id: number
+    name: string
+    email: string
+    phone: string
+    address: string
+    area_code: string
+    gmaps_link: string
+    packet_internet: string
+    ip_static: string
+    mac_address: string
+}
+
+const columns = [
+    {
+        key: 'id',
+        label: 'Number'
+    }, {
+        key: 'name',
+        label: 'Name'
+    }, {
+        key: 'email',
+        label: 'Email'
+    }, {
+        key: 'phone',
+        label: 'Phone'
+    }, {
+        key: 'address',
+        label: 'Address'
+    }, {
+        key: 'area_code',
+        label: 'Area Code'
+    }, {
+        key: 'gmaps_link',
+        label: 'Gmaps Link'
+    }, {
+        key: 'packet_internet',
+        label: 'Packet Internet'
+    }, {
+        key: 'ip_static',
+        label: 'IP Static'
+    }, {
+        key: 'mac_address',
+        label: 'Mac Address'
+    }, {
+        key: 'actions',
+        label: 'Actions'
+    }
+]
 
 const page = ref(1)
 const pageCount = 5
@@ -42,6 +92,27 @@ const filteredRows = computed(() => {
 
 const isOpen = ref(false)
 
+const items = (row:Person ) => [
+    [{
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        click: () => console.log('Edit', row.id)
+    }, {
+        label: 'Duplicate',
+        icon: 'i-heroicons-document-duplicate-20-solid'
+    }], [{
+        label: 'Archive',
+        icon: 'i-heroicons-archive-box-20-solid'
+    }, {
+        label: 'View Maps',
+        icon: 'i-heroicons-arrow-right-circle-20-solid',
+        click: () => window.open(row.gmaps_link, '_blank')
+    }], [{
+        label: 'Delete',
+        icon: 'i-heroicons-trash-20-solid'
+    }]
+]
+
 </script>
 
 
@@ -51,7 +122,15 @@ const isOpen = ref(false)
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
-    <UTable :rows="filteredRows" />
+
+    <UTable :rows="filteredRows" :columns="columns">
+
+        <template #actions-data="{ row }">
+            <UDropdown :items="items(row)">
+                <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+        </template>
+    </UTable>
 
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
         <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
