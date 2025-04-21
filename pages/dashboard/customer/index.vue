@@ -1,90 +1,16 @@
 <script setup lang="ts">
 import FormAddComponent from './FormAddComponent.vue'
 const people = [{
-    id: 1,
-    name: 'Lindsay Walton',
-    email: 'lindsay.walton@example.com',
-    role: 'Member'
-}, {
-    id: 2,
-    name: 'Courtney Henry',
-    email: 'courtney.henry@example.com',
-    role: 'Admin'
-}, {
-    id: 3,
-    name: 'Tom Cook',
-    email: 'tom.cook@example.com',
-    role: 'Member'
-}, {
-    id: 4,
-    name: 'Whitney Francis',
-    email: 'whitney.francis@example.com',
-    role: 'Admin'
-}, {
-    id: 5,
-    name: 'Leonard Krasner',
-    email: 'leonard.krasner@example.com',
-    role: 'Owner'
-}, {
-    id: 6,
-    name: 'Floyd Miles',
-    email: 'floyd.miles@example.com',
-    role: 'Member'
-}, {
-    id: 7,
-    name: 'Emily Selman',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 8,
-    name: 'Kristin Watson',
-    email: '',
-    role: 'Member'
-}, {
-    id: 9,
-    name: 'Emma Watson',
-    email: '',
-    role: 'Member'
-}, {
-    id: 10,
+    id:1,
     name: 'John Doe',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 11,
-    name: 'Jane Doe',
-    email: '',
-    role: 'Member'
-}, {
-    id: 12,
-    name: 'John Smith',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 13,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 14,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 15,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 16,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 17,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
+    email: 'Johndoe@rmail.com',
+    phone: '1234567890',
+    address: '123 Main St',
+    area_code: '12345',
+    gmaps_link: 'https://www.google.com/maps/place/-6.2113333,106.6425833',
+    packet_internet: '100 Mbps',
+    ip_static: '',
+    mac_address: '00:1A:2B:3C:4D:5E',
 }]
 
 const page = ref(1)
