@@ -1,110 +1,74 @@
 <script setup lang="ts">
 import FormAddComponent from './FormAddComponent.vue'
-const people = [{
+
+const assets =[{
     id: 1,
-    name: 'Lindsay Walton',
-    email: 'lindsay.walton@example.com',
-    role: 'Member'
+    type: 'Laptop',
+    brand: 'Asus',
+    model: 'ROG Strix G15',
+    serial_number: '1234567890',
+    mac_address: '00:1A:2B:3C:4D:5E',
+    date: '2023-01-01',
+    area: 'Office',
+    description: 'Gaming laptop'
 }, {
     id: 2,
-    name: 'Courtney Henry',
-    email: 'courtney.henry@example.com',
-    role: 'Admin'
-}, {
-    id: 3,
-    name: 'Tom Cook',
-    email: 'tom.cook@example.com',
-    role: 'Member'
-}, {
-    id: 4,
-    name: 'Whitney Francis',
-    email: 'whitney.francis@example.com',
-    role: 'Admin'
-}, {
-    id: 5,
-    name: 'Leonard Krasner',
-    email: 'leonard.krasner@example.com',
-    role: 'Owner'
-}, {
-    id: 6,
-    name: 'Floyd Miles',
-    email: 'floyd.miles@example.com',
-    role: 'Member'
-}, {
-    id: 7,
-    name: 'Emily Selman',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 8,
-    name: 'Kristin Watson',
-    email: '',
-    role: 'Member'
-}, {
-    id: 9,
-    name: 'Emma Watson',
-    email: '',
-    role: 'Member'
-}, {
-    id: 10,
-    name: 'John Doe',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 11,
-    name: 'Jane Doe',
-    email: '',
-    role: 'Member'
-}, {
-    id: 12,
-    name: 'John Smith',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 13,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 14,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 15,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 16,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 17,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
+    type: 'Monitor',
+    brand: 'Dell',
+    model: 'UltraSharp U2720Q',
+    serial_number: '0987654321',
+    mac_address: '11:22:33:44:55:66',
+    date: '2023-02-01',
+    area: 'Office',
+    description: '4K monitor'
 }]
+
+const columns = [{
+    key: 'id',
+    label: 'Number'
+}, {
+    key: 'type',
+    label: 'Type'
+}, {
+    key: 'brand',
+    label: 'Brand'
+}, {
+    key: 'model',
+    label: 'Model'
+}, {
+    key: 'serial_number',
+    label: 'Serial Number'
+}, {
+    key: 'mac_address',
+    label: 'Mac Address'
+}, {
+    key: 'date',
+    label: 'Date'
+}, {
+    key: 'area',
+    label: 'Area'
+}, {
+    key: 'description',
+    label: 'Description'}]
 
 const page = ref(1)
 const pageCount = 5
 
 const rows = computed(() => {
-    return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    return assets.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
 const q = ref('')
 
-let peopleData = people
+let peopleData = assets
 
 const filteredRows = computed(() => {
     if (!q.value) {
-        peopleData = people
-        return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+        peopleData = assets
+        return assets.slice((page.value - 1) * pageCount, (page.value) * pageCount)
     }
 
-    const newData = people.filter((person) => {
+    const newData = assets.filter((person) => {
         return Object.values(person).some((value) => {
             // person with paginate
             return String(value).toLowerCase().includes(q.value.toLowerCase())
@@ -119,11 +83,11 @@ const isOpen = ref(false)
 </script>
 
 <template>
-    <UButton label="Add Customer" @click="isOpen = true" />
+    <UButton label="Add Asset" @click="isOpen = true" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
-    <UTable :rows="filteredRows" />
+    <UTable :columns="columns" :rows="filteredRows" />
 
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
         <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />

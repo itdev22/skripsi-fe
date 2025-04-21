@@ -24,12 +24,14 @@ const schema = object({
 type Schema = InferType<typeof schema>
 
 const state = reactive({
-    email: undefined,
-    password: undefined,
-    name: undefined,
-    phone: undefined,
-    address: undefined,
-    packet_internet: undefined
+    type: '',
+    brand: '',
+    model: '',
+    serial_number: '',
+    mac_address: '',
+    date: '',
+    area: '',
+    description: ''
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -40,24 +42,34 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
     <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>Add New Customer</h1>
+        <h1>Add New Asset</h1>
     </div>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Email" name="email">
-            <UInput v-model="state.email" />
+        <UFormGroup label="Type" name="type">
+            <UInput v-model="state.type" />
         </UFormGroup>
-        <UFormGroup label="Name" name="name">
-            <UInput v-model="state.name" />
+        <UFormGroup label="Brand" name="brand">
+            <UInput v-model="state.brand" />
         </UFormGroup>
-        <UFormGroup label="Phone" name="phone">
-            <UInput v-model="state.phone" />
+        <UFormGroup label="Model" name="model">
+            <UInput v-model="state.model" />
         </UFormGroup>
-        <UFormGroup label="Address" name="address">
-            <UInput v-model="state.address" />
+        <UFormGroup label="Serial Number" name="serial_number">
+            <UInput v-model="state.serial_number" />
         </UFormGroup>
-        <UFormGroup label="Packet Internet" name="packet_internet">
-            <UInput v-model="state.packet_internet" />
+        <UFormGroup label="Mac Address" name="mac_address">
+            <UInput v-model="state.mac_address" />
         </UFormGroup>
+        <UFormGroup label="Date" name="date">
+            <UInput v-model="state.date" />
+        </UFormGroup>
+        <UFormGroup label="Area" name="area">
+            <UInput v-model="state.area" />
+        </UFormGroup>
+        <UFormGroup label="Description" name="description">
+            <UTextarea v-model="state.description" />
+        </UFormGroup>
+
 
         <UButton type="submit">
             Submit

@@ -27,11 +27,24 @@ const state = reactive({
     type_cash: '',
     nominal: 0,
     description: '',
+    type_use_of_money: '',
+    type_transaction: '',
 })
 const type_cash = [
     { label: 'Cash', value: 'cash' },
     { label: 'Credit Card', value: 'credit_card' },
     { label: 'Debit Card', value: 'debit_card' },
+]
+
+const type_use_of_money = [
+    { label: 'Operational', value: 'operational' },
+    { label: 'Asset', value: 'asset' },
+    { label: 'Investment', value: 'investment' },
+    { label: 'Other', value: 'other' },
+]
+const type_transaction = [
+    { label: 'Cash In', value: 'cash_in' },
+    { label: 'Cash Out', value: 'cash_out' },
 ]
 
 defineProps({
@@ -70,14 +83,22 @@ function clearState() {
     <UModal>
         <div class="p-4">
 
-            
+
             <div class="p-2 mb-4 text-2xl font-bold text-center">
                 <h1>Add New Report Cash Flow</h1>
             </div>
             <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
                 <UFormGroup label="Type Cash" name="type_cash">
                     <USelectMenu v-model="state.type_cash" :options="type_cash" value-attribute="value"
-                    option-attribute="label" />
+                        option-attribute="label" />
+                </UFormGroup>
+                <UFormGroup label="Type Transaction" name="type_transaction">
+                    <USelectMenu v-model="state.type_transaction" :options="type_transaction" value-attribute="value"
+                        option-attribute="label" />
+                </UFormGroup>
+                <UFormGroup label="Type Used Of Money" name="type_use_of_money">
+                    <USelectMenu v-model="state.type_use_of_money" :options="type_use_of_money" value-attribute="value"
+                        option-attribute="label" />
                 </UFormGroup>
                 <UFormGroup label="Nominal" name="nominal">
                     <UInput type="number" v-model="state.nominal" />
@@ -85,7 +106,7 @@ function clearState() {
                 <UFormGroup label="Description" name="description">
                     <UTextarea v-model="state.description" />
                 </UFormGroup>
-                
+
                 <UButton type="submit">
                     Submit
                 </UButton>
