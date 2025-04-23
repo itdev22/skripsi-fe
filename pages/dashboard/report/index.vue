@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import FormAddComponent from "./FormAddComponent.vue";
+import CustomerInstallation from "./customer-installation/CustomerInstallation.vue";
+import Internet from "./internet/Internet.vue";
 const people = [
   {
     id: 1,
@@ -164,7 +166,7 @@ const tab_items = [
     value: "report-internet",
   },
   {
-    label: "Report Customer",
+    label: "Report Customer Installation",
     value: "report-customer",
   },
 ];
@@ -194,43 +196,12 @@ const tab_items = [
       </div>
 
       <div v-if="item.value == 'report-internet'">
-        <UButton label="Add Report Internet" @click="openModal" />
-        <div
-          class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700"
-        >
-          <UInput v-model="q" placeholder="Filter people..." />
-        </div>
-        <UTable :rows="filteredRows" />
-
-        <div
-          class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-        >
-          <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="peopleData.length"
-          />
-        </div>
+        <Internet/>
       </div>
 
       <div v-if="item.value == 'report-customer'">
-        <UButton label="Add Report Customer" @click="openModal" />
-        <div
-          class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700"
-        >
-          <UInput v-model="q" placeholder="Filter people..." />
-        </div>
-        <UTable :rows="filteredRows" />
-
-        <div
-          class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-        >
-          <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="peopleData.length"
-          />
-        </div>
+        <CustomerInstallation/>
+        
       </div>
     </template>
   </UTabs>
