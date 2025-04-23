@@ -1,4 +1,4 @@
-FROM node:20.18.1
+FROM node:20.18.1 as build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -11,7 +11,12 @@ RUN yarn
 
 RUN yarn build
 
+
+FROM node:20.18.1-slim as production
+
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app/.output ./.output
+
 CMD node .output/server/index.mjs
-
-
 EXPOSE 3000
