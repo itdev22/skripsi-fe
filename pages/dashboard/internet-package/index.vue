@@ -1,91 +1,20 @@
 <script setup lang="ts">
 import FormAddComponent from './FormAddComponent.vue'
-const people = [{
-    id: 1,
-    name: 'Lindsay Walton',
-    email: 'lindsay.walton@example.com',
-    role: 'Member'
-}, {
-    id: 2,
-    name: 'Courtney Henry',
-    email: 'courtney.henry@example.com',
-    role: 'Admin'
-}, {
-    id: 3,
-    name: 'Tom Cook',
-    email: 'tom.cook@example.com',
-    role: 'Member'
-}, {
-    id: 4,
-    name: 'Whitney Francis',
-    email: 'whitney.francis@example.com',
-    role: 'Admin'
-}, {
-    id: 5,
-    name: 'Leonard Krasner',
-    email: 'leonard.krasner@example.com',
-    role: 'Owner'
-}, {
-    id: 6,
-    name: 'Floyd Miles',
-    email: 'floyd.miles@example.com',
-    role: 'Member'
-}, {
-    id: 7,
-    name: 'Emily Selman',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 8,
-    name: 'Kristin Watson',
-    email: '',
-    role: 'Member'
-}, {
-    id: 9,
-    name: 'Emma Watson',
-    email: '',
-    role: 'Member'
-}, {
-    id: 10,
-    name: 'John Doe',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 11,
-    name: 'Jane Doe',
-    email: '',
-    role: 'Member'
-}, {
-    id: 12,
-    name: 'John Smith',
-    email: '',
-    role: 'Admin'
-}, {
-    id: 13,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 14,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 15,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 16,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}, {
-    id: 17,
-    name: 'Jane Smith',
-    email: '',
-    role: 'Owner'
-}]
+const people = [
+    {
+        package_name: "12 Mbps",
+        price: "Rp. 120.000",
+        Description: ""
+    }, {
+        package_name: "25 Mbps",
+        price: "Rp. 250.000",
+        Description: ""
+    }, {
+        package_name: "35 Mbps",
+        price: "Rp. 350.000",
+        Description: ""
+    }
+]
 
 const page = ref(1)
 const pageCount = 5
