@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import FormInternet from './FormInternet.vue';
+
 
 const dataList = [
   {
@@ -18,10 +20,25 @@ const columns = [
     label: "Actions",
   }
 ];
+
+const toast = useToast()
+const modal = useModal()
+const count = ref(0)
+
+function openModal() {
+  modal.open(FormInternet, {
+    onSuccess() {
+      toast.add({
+        title: 'Success !',
+        id: 'modal-success'
+      })
+    }
+  })
+}
 </script>
 
 <template>
-    <UButton label="Add Report Internet" @click="" />
+    <UButton label="Add Report Internet" @click="openModal" />
         <div
           class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700"
         >
