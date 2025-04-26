@@ -5,7 +5,7 @@ import FormCustomerInstallation from './FormCustomerInstallation.vue';
 const dataList = [
   {
     id: 1,
-    customer: "Lindsay Walton",
+    customer: "Ahmad Walton",
     technician: "Arul Lapangan",
     date: "2024-05-01",
   },
