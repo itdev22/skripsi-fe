@@ -108,8 +108,8 @@ const items = (row: Person) => [
         click: () => window.open(row.gmaps_link, '_blank')
     }, {
         label: 'Upgrade',
-        icon: 'i-heroicons-arrow-right-circle-20-solid',
-        click: () => window.open(row.gmaps_link, '_blank')
+        icon: 'i-heroicons-arrow-up-circle-20-solid',
+        click: () => window.open("", '_blank')
     }], [{
         label: 'Delete',
         icon: 'i-heroicons-trash-20-solid'
