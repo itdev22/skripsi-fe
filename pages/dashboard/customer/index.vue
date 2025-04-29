@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FormCustomerInstallation from './FormCustomerInstallation.vue'
 import FormAddComponent from './FormAddComponent.vue'
 const people = [{
     id: 1,
@@ -92,19 +93,21 @@ const filteredRows = computed(() => {
 
 const isOpen = ref(false)
 
-const items = (row:Person ) => [
+const items = (row: Person) => [
     [{
         label: 'Edit',
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => console.log('Edit', row.id)
-    }, {
-        label: 'Duplicate',
-        icon: 'i-heroicons-document-duplicate-20-solid'
     }], [{
-        label: 'Archive',
-        icon: 'i-heroicons-archive-box-20-solid'
+        label: 'Add Report Installation',
+        icon: 'i-heroicons-archive-box-20-solid',
+        click: () => OpenModalReportInstallation(row)
     }, {
         label: 'View Maps',
+        icon: 'i-heroicons-arrow-right-circle-20-solid',
+        click: () => window.open(row.gmaps_link, '_blank')
+    }, {
+        label: 'Upgrade',
         icon: 'i-heroicons-arrow-right-circle-20-solid',
         click: () => window.open(row.gmaps_link, '_blank')
     }], [{
@@ -112,6 +115,22 @@ const items = (row:Person ) => [
         icon: 'i-heroicons-trash-20-solid'
     }]
 ]
+
+const toast = useToast()
+const modal = useModal()
+const count = ref(0)
+
+function OpenModalReportInstallation(row: { id: number }) {
+    modal.open(FormCustomerInstallation, {
+        count: count.value,
+        onSuccess() {
+            toast.add({
+                title: 'Success !',
+                id: 'modal-success'
+            })
+        }
+    })
+}
 
 </script>
 
