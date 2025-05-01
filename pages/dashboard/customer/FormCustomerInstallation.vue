@@ -9,6 +9,9 @@ const schema = object({
   technician: string()
     .min(3, "Must be at least 3 characters")
     .required("Required"),
+    description: string()
+    .min(3, "Must be at least 3 characters")
+    .required("Required"),
   date: string().required("Required"),
 });
 
@@ -16,6 +19,7 @@ const state = reactive({
   customer: "",
   technician: "",
   date: "",
+  description: "",
 });
 
 type Schema = InferType<typeof schema>;
@@ -56,6 +60,9 @@ function onSuccess() {
         </UFormGroup>
         <UFormGroup label="Technician" name="technician">
             <UInput v-model="state.technician" />
+        </UFormGroup>
+        <UFormGroup label="Description" name="description">
+            <UTextarea autoresize v-model="state.description"  />
         </UFormGroup>
         <UFormGroup label="Date Installation" name="date">
             <UInput v-model="state.date" type="date" />

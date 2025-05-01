@@ -2,12 +2,23 @@
 import FormAddComponent from './FormAddComponent.vue'
 const people = [{
     id: 1,
-    name: 'John Doe',
+    logo: ' aaa',
+    name: 'John aaa',
+    email: 'Johndoe@rmail.com',
+    phone: '1234567890',
 }]
 
 type Person = {
     id: number
     name: string
+    email: string
+    phone: string
+    address: string
+    area_code: string
+    gmaps_link: string
+    packet_internet: string
+    ip_static: string
+    mac_address: string
 }
 
 const columns = [
@@ -15,8 +26,17 @@ const columns = [
         key: 'id',
         label: 'Number'
     }, {
+        key: 'logo',
+        label: 'logo'
+    }, {
         key: 'name',
-        label: 'Name'
+        label: 'Company Name'
+    }, {
+        key: 'email',
+        label: 'Email'
+    }, {
+        key: 'phone',
+        label: 'Phone'
     },{
         key: 'actions',
         label: 'Actions'
@@ -58,6 +78,14 @@ const items = (row: Person) => [
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => console.log('Edit', row.id)
     }], [{
+        label: 'View Maps',
+        icon: 'i-heroicons-arrow-right-circle-20-solid',
+        click: () => window.open(row.gmaps_link, '_blank')
+    }, {
+        label: 'Upgrade',
+        icon: 'i-heroicons-arrow-up-circle-20-solid',
+        click: () => window.open("", '_blank')
+    }], [{
         label: 'Delete',
         icon: 'i-heroicons-trash-20-solid'
     }]
@@ -67,22 +95,12 @@ const toast = useToast()
 const modal = useModal()
 const count = ref(0)
 
-// function OpenModalReportInstallation(row: { id: number }) {
-//     modal.open(FormCustomerInstallation, {
-//         count: count.value,
-//         onSuccess() {
-//             toast.add({
-//                 title: 'Success !',
-//                 id: 'modal-success'
-//             })
-//         }
-//     })
-// }
-
 </script>
 
+
 <template>
-    <UButton label="Add New User Access" @click="isOpen = true" />
+
+    <UButton label="Add Companies" @click="isOpen = true" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
@@ -99,14 +117,12 @@ const count = ref(0)
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
         <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
     </div>
-    
-    <div>
 
+    <div>
         <UModal v-model="isOpen">
             <div class="p-4">
                 <Placeholder class="h-48" />
                 <FormAddComponent></FormAddComponent>
-
             </div>
         </UModal>
     </div>

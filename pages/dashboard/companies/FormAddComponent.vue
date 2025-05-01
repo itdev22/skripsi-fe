@@ -225,8 +225,7 @@ const companies = [
       </div>
     </UFormGroup>
     <UFormGroup label="Packet Internet" name="packet_internet">
-      <USelectMenu v-model="state.packet_internet" :options="type_subscriptions" value-attribute="value"
-        option-attribute="label" />
+      <UInput v-model="state.packet_internet" />
     </UFormGroup>
     <UFormGroup label="Ip Static" name="ip_static">
       <UInput v-model="state.ip_static" />
