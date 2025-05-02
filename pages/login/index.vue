@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { FormError, FormErrorEvent, FormSubmitEvent } from '#ui/types'
+import { authApi } from '@/api/auth'
 
 const state = reactive({
-  email: undefined,
-  password: undefined
+  email: '',
+  password: ''
 })
 
 const validate = (state: any): FormError[] => {
@@ -16,13 +17,19 @@ const validate = (state: any): FormError[] => {
 async function onSubmit(event: FormSubmitEvent<any>) {
   // Do something with data
   const authStore = useAuthStore()
+  const api = useApiHost()
+  console.log(api)
+  authApi().loginAuth(state.email, state.password)
+    .then((response) => {
+      authStore.login(response.data.token)
+      // Redirect to dashboard
+      navigateTo('/dashboard')
+    })
+    .catch((error) => {
+      // Handle error
+      console.error(error)
+    })
 
-
-  // Pastikan ini hanya berjalan di client-side
-  if (event.data.email == "admin@email.com" && event.data.password == 'password') {
-    authStore.login('Token')
-    navigateTo('dashboard')
-  }
 
 
 
@@ -38,7 +45,7 @@ async function onError(event: FormErrorEvent) {
 
 <template>
   <div class="flex items-center justify-center min-h-screen">
-    <div class="p-4 shadow m-4 bg-white rounded-lg">
+    <div class="p-4 m-4 bg-white rounded-lg shadow">
       <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit" @error="onError">
         <UFormGroup label="Email" name="email">
           <UInput v-model="state.email" />
