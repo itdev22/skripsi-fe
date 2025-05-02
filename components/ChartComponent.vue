@@ -17,14 +17,12 @@
     LineElement,
   } from 'chart.js';
   
-  // Registrasi elemen yang diperlukan untuk Chart.js
+  // Register elements needed for chart js
   ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
   
-  // Definisi tipe data untuk props
-
+  // Define props data types
   const props = defineProps<{ data: ChartLine }>();
   
-  // Data chart
   const chartData = {
     labels: props.data.x,
     datasets: [

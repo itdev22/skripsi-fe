@@ -1,38 +1,10 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { defaultStringValidation } from "@/utilities/constants";
+import { asset } from "./asset.model";
 
-const schema = object({
-  email: string().email("Invalid email").required("Required"),
-  password: string()
-    .min(8, "Must be at least 8 characters")
-    .required("Required"),
-  name: string().min(3, "Must be at least 3 characters").required("Required"),
-  phone: string().min(3, "Must be at least 3 characters").required("Required"),
-  address: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  packet_internet: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-});
-
-type Schema = InferType<typeof schema>;
-
-const state = reactive({
-  type: "",
-  brand: "",
-  model: "",
-  serial_number: "",
-  mac_address: "",
-  date: "",
-  site: "",
-  quantity: "",
-  status: "",
-  price: "",
-  description: "",
-  status_in_out: "",
-});
+const state = reactive(asset);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
