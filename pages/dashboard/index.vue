@@ -12,7 +12,7 @@ const CardList = [
         total: 0
     },
     {
-        name: "Packet Pupolar",
+        name: "Packet Popular",
         total: 0
     },
     {
