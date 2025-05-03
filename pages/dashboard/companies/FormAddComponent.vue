@@ -1,14 +1,27 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { companyAdminApi } from "@/api/admin/company";
 
 const schema = object({
   name: string().required("Name is required"),
   url: string().url("URL must be a valid URL").required("URL is required"),
-  email: string().required("Email is required").email("Email must be a valid email"),
-  logo_url: string().url("Logo URL must be a valid URL").required("Logo URL is required"),
-  phone: string().matches(/^\d+$/, "Phone number must be digits").required("Phone number is required"),
+  email: string()
+    .required("Email is required")
+    .email("Email must be a valid email"),
+  logo_url: string()
+    .url("Logo URL must be a valid URL")
+    .required("Logo URL is required"),
+  phone: string()
+    .matches(/^\d+$/, "Phone number must be digits")
+    .required("Phone number is required"),
 });
+
+const emit = defineEmits(["success"]);
+
+function onSuccess() {
+  emit("success");
+}
 
 type Schema = InferType<typeof schema>;
 
@@ -18,39 +31,53 @@ const state = reactive({
   email: "",
   phone: "",
   logo_url: "",
-
+  description: "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
-  console.log(event.data);
+  await companyAdminApi()
+    .createCompanies(state)
+    .then((response) => {
+      console.log("Success creating company", response);
+    })
+    .catch((error) => {
+      console.error("Error creating company:", error);
+    });
 }
-
 </script>
 
 <template>
-  <div class="p-2 mb-4 text-2xl font-bold text-center">
-    <h1>Add New Customer</h1>
-  </div>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Name" name="name">
-      <UInput v-model="state.name" />
-    </UFormGroup>
-    <UFormGroup label="URL" name="url">
-      <UInput v-model="state.url" />
-    </UFormGroup>
-    <UFormGroup label="Email" name="email">
-      <UInput v-model="state.email" />
-    </UFormGroup>
-    <UFormGroup label="Phone" name="phone">
-      <UInput v-model="state.phone" type="number"/>
-    </UFormGroup>
-    <UFormGroup label="Logo URL" name="logo_url">
-      <UInput v-model="state.logo_url" />
-    </UFormGroup>
-
-
-
-    <UButton type="submit"> Submit </UButton>
-  </UForm>
+  <UModal>
+    <div class="p-4">
+      <div class="p-2 mb-4 text-2xl font-bold text-center">
+        <h1>Add New Company</h1>
+      </div>
+      <UForm
+        :schema="schema"
+        :state="state"
+        class="space-y-4"
+        @submit="onSubmit"
+      >
+        <UFormGroup label="Name" name="name">
+          <UInput v-model="state.name" />
+        </UFormGroup>
+        <UFormGroup label="URL" name="url">
+          <UInput v-model="state.url" />
+        </UFormGroup>
+        <UFormGroup label="Email" name="email">
+          <UInput v-model="state.email" />
+        </UFormGroup>
+        <UFormGroup label="Phone" name="phone">
+          <UInput v-model="state.phone" />
+        </UFormGroup>
+        <UFormGroup label="Logo URL" name="logo_url">
+          <UInput v-model="state.logo_url" />
+        </UFormGroup>
+        <UFormGroup label="Description" name="description">
+          <UInput v-model="state.description" />
+        </UFormGroup>
+        <UButton type="submit"> Submit </UButton>
+      </UForm>
+    </div>
+  </UModal>
 </template>
