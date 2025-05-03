@@ -20,15 +20,13 @@ export const authApi = () => {
             }
             return response.json();
         },
-        verifyAuth: async (token: string) => {
+        verifyAuth: async () => {
             const response = await fetch(`${api}/api/auth/verify`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${useCookie("token").value}`,
                 },
-                body: JSON.stringify({
-                    token,
-                }),
             });
             if (!response.ok) {
                 throw new Error('Failed to login');
