@@ -118,11 +118,9 @@ const items = (row: Person) => [
 
 const toast = useToast()
 const modal = useModal()
-const count = ref(0)
 
 function OpenModalReportInstallation(row: { id: number }) {
     modal.open(FormCustomerInstallation, {
-        count: count.value,
         onSuccess() {
             toast.add({
                 title: 'Success !',

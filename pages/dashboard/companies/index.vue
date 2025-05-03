@@ -83,6 +83,19 @@ const filteredRows = computed(() => {
 
 const isOpen = ref(false)
 
+function OpenModalReportInstallation() {
+    modal.open(FormAddComponent, {
+        onSuccess() {
+            toast.add({
+                title: 'Success !',
+                id: 'modal-success'
+            })
+
+            modal.close();
+        }
+    })
+}
+
 const items = (row: Person) => [
     [{
         label: 'Edit',
@@ -111,7 +124,7 @@ const count = ref(0)
 
 <template>
 
-    <UButton label="Add Companies" @click="isOpen = true" />
+    <UButton label="Add Companies" @click="() => OpenModalReportInstallation()" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
@@ -133,7 +146,7 @@ const count = ref(0)
         <UModal v-model="isOpen">
             <div class="p-4">
                 <Placeholder class="h-48" />
-                <FormAddComponent></FormAddComponent>
+                <FormAddComponent onsubmit="isOpen = false"/>
             </div>
         </UModal>
     </div>
