@@ -15,6 +15,11 @@ const items = [
     link: "/dashboard/customer",
   },
   {
+    label: "Area",
+    icon: "i-heroicons-map",
+    link: "/dashboard/area",
+  },
+  {
     label: "Report",
     icon: "i-heroicons-cog-6-tooth-solid",
     link: "/dashboard/report",
