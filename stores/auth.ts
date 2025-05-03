@@ -6,17 +6,14 @@ export const useAuthStore = defineStore('auth', {
     user: { name: "" },
   }),
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isLoggedIn: (state) => !!useCookie('token').value,
   },
   actions: {
     login(token : string) {
-      this.user = { name: 'Eduardo' }
-      this.token = token
       useCookie('token').value = token
     },
     logout() {
-      this.user = { name: '' }
-      this.token = ''
+      useCookie('token').value = ''
     },
   },
 })

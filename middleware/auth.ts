@@ -3,19 +3,22 @@ import { useAuthStore } from '../stores/auth'
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore()
-  console.log('authStore cek auth')
-  authApi().verifyAuth()
+  if(to.path !== '/login'){
+    authApi().verifyAuth()
     .then((response) => {
-      if (response.status === 401) {
-          authStore.logout()
+      console.log(response)
+      if (response.success == false) {
+        // authStore.logout()
       }
     })
     .catch((error) => {
       console.error('authStore cek auth error', error)
     })
-  console.log('authStore cek auth 2', authStore.isLoggedIn)
+  }
+
   if (!authStore.isLoggedIn && to.path !== '/login') {
     authStore.logout()
     return navigateTo('/login')
   }
+
 })

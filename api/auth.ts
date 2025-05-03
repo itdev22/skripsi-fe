@@ -28,9 +28,7 @@ export const authApi = () => {
                     "Authorization": `Bearer ${useCookie("token").value}`,
                 },
             });
-            if (!response.ok) {
-                throw new Error('Failed to login');
-            }
+
             return response.json();
         }
     }
