@@ -101,15 +101,7 @@ const items = (row: Person) => [
         label: 'Edit',
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => console.log('Edit', row.id)
-    }], [{
-        label: 'View Maps',
-        icon: 'i-heroicons-arrow-right-circle-20-solid',
-        click: () => window.open(row.gmaps_link, '_blank')
-    }, {
-        label: 'Upgrade',
-        icon: 'i-heroicons-arrow-up-circle-20-solid',
-        click: () => window.open("", '_blank')
-    }], [{
+    }],[{
         label: 'Delete',
         icon: 'i-heroicons-trash-20-solid'
     }]
