@@ -2,7 +2,32 @@
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import { companyAdminApi } from "@/api/admin/company";
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+});
 
+const state = reactive({
+  name: "",
+  url: "",
+  email: "",
+  phone: "",
+  logo_url: "",
+  description: "",
+});
+
+if (props.id) {
+  await companyAdminApi()
+    .getCompany(props.id)
+    .then((response) => {
+      Object.assign(state, response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching companies:", error);
+    });
+}
 const schema = object({
   name: string().required("Name is required"),
   url: string().url("URL must be a valid URL").required("URL is required"),
@@ -23,26 +48,28 @@ function onSuccess() {
   emit("success");
 }
 
-type Schema = InferType<typeof schema>;
-
-const state = reactive({
-  name: "",
-  url: "",
-  email: "",
-  phone: "",
-  logo_url: "",
-  description: "",
-});
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  await companyAdminApi()
-    .createCompanies(state)
-    .then((response) => {
-      console.log("Success creating company", response);
-    })
-    .catch((error) => {
-      console.error("Error creating company:", error);
-    });
+async function onSubmit() {
+  if (props.id) {
+    await companyAdminApi()
+      .editCompany(props.id, state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
+  } else {
+    await companyAdminApi()
+      .createCompanies(state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
+  }
 }
 </script>
 

@@ -1,153 +1,198 @@
 <script setup lang="ts">
-import { companyAdminApi } from '@/api/admin/company';
-import FormAddComponent from './FormAddComponent.vue'
-import { number } from 'yup';
-const people: any[] = [];
+import { companyAdminApi } from "@/api/admin/company";
+import AddCompanyForm from "./AddCompanyForm.vue";
+let people: any[] = [];
 
-await companyAdminApi().getAllCompanies()
+async function fetchAllCompanies() {
+  await companyAdminApi()
+    .getAllCompanies()
     .then((response) => {
-        people.push(...response.data);
-        response.data.forEach((company: any) => {
-            company.number = response.data.indexOf(company) + 1;
-            company.logo_url = company.logo_url || 'https://via.placeholder.com/150';
-            company.gmaps_link = company.gmaps_link || 'https://www.google.com/maps';
-        });
+      response.data.forEach((company: any) => {
+        company.number = response.data.indexOf(company) + 1;
+        company.logo_url =
+          company.logo_url || "https://via.placeholder.com/150";
+      });
+      people = [...response.data];
+      q.value = "changed";
+      q.value = "";
     })
     .catch((error) => {
-        console.error('Error fetching companies:', error);
+      console.error("Error fetching companies:", error);
     });
-
-
-
-type Person = {
-    id: number
-    name: string
-    email: string
-    phone: string
-    address: string
-    area_code: string
-    gmaps_link: string
-    packet_internet: string
-    ip_static: string
-    mac_address: string
 }
 
+await fetchAllCompanies();
+
+type Person = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  area_code: string;
+  packet_internet: string;
+  ip_static: string;
+  mac_address: string;
+};
+
 const columns = [
-    {
-        key:'number',
-        label: 'No'
-    },  {
-        key: 'email',
-        label: 'Email'
-    }, {
-        key: 'url',
-        label: 'Website'
-    },{
-        key: 'phone',
-        label: 'Phone'
-    }, {
-        key: 'logo_url',
-        label: 'Image'
-    }, {
-        key: 'actions',
-        label: 'Actions'
-    }
-]
+  {
+    key: "number",
+    label: "No",
+  },
+  {
+    key: "name",
+    label: "Name",
+  },
+  {
+    key: "email",
+    label: "Email",
+  },
+  {
+    key: "url",
+    label: "Website",
+  },
+  {
+    key: "phone",
+    label: "Phone",
+  },
+  {
+    key: "logo_url",
+    label: "Image",
+  },
+  {
+    key: "actions",
+    label: "Actions",
+  },
+];
 
-const page = ref(1)
-const pageCount = 5
+const page = ref(1);
+const pageCount = 5;
 
-const rows = computed(() => {
-    return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-})
+const q = ref("");
 
-const q = ref('')
-
-let peopleData = people
+let peopleData = people;
 
 const filteredRows = computed(() => {
-    if (!q.value) {
-        peopleData = people
-        return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-    }
+  if (!q.value) {
+    peopleData = people;
+    return people.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
 
-    const newData = people.filter((person) => {
-        return Object.values(person).some((value) => {
-            // person with paginate
-            return String(value).toLowerCase().includes(q.value.toLowerCase())
-        })
-    })
-    peopleData = newData
-    return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-})
+  const newData = people.filter((person) => {
+    return Object.values(person).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+  peopleData = newData;
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+});
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
-function OpenModalReportInstallation() {
-    modal.open(FormAddComponent, {
-        onSuccess() {
-            toast.add({
-                title: 'Success !',
-                id: 'modal-success'
-            })
+function openAddCompanyModal() {
+  modal.open(AddCompanyForm, {
+    onSuccess: handleSubmitCompany,
+  });
+}
 
-            modal.close();
-        }
-    })
+function openEditCompanyModal(companyId: string) {
+  modal.open(AddCompanyForm, {
+    id: companyId,
+    onSuccess: handleSubmitCompany,
+  });
+}
+
+async function handleSubmitCompany() {
+  toast.add({
+    title: "Success!",
+    id: "modal-success",
+  });
+
+  await fetchAllCompanies();
+  modal.close();
+  isOpen.value = false;
+}
+
+async function deleteCompany(companyId: string) {
+  const confirmed = window.confirm("Are you sure you want to delete this company?");
+  if (!confirmed) return;
+
+  try {
+    await companyAdminApi().deleteCompany(companyId);
+    toast.add({
+      title: "Success!",
+      id: "modal-success",
+    });
+
+    await fetchAllCompanies();
+  } catch (error) {
+    console.error("Error deleting company:", error);
+  }
 }
 
 const items = (row: Person) => [
-    [{
-        label: 'Edit',
-        icon: 'i-heroicons-pencil-square-20-solid',
-        click: () => console.log('Edit', row.id)
-    }], [{
-        label: 'View Maps',
-        icon: 'i-heroicons-arrow-right-circle-20-solid',
-        click: () => window.open(row.gmaps_link, '_blank')
-    }, {
-        label: 'Upgrade',
-        icon: 'i-heroicons-arrow-up-circle-20-solid',
-        click: () => window.open("", '_blank')
-    }], [{
-        label: 'Delete',
-        icon: 'i-heroicons-trash-20-solid'
-    }]
-]
+  [
+    {
+      label: "Edit",
+      icon: "i-heroicons-pencil-square-20-solid",
+      click: () => openEditCompanyModal(row.id.toString()),
+    },
+  ],
+  [
+    {
+      label: "Upgrade",
+      icon: "i-heroicons-arrow-up-circle-20-solid",
+      click: () => window.open("", "_blank"),
+    },
+  ],
+  [
+    {
+      label: "Delete",
+      icon: "i-heroicons-trash-20-solid",
+      click: () => deleteCompany(row.id.toString()),
+    },
+  ],
+];
 
-const toast = useToast()
-const modal = useModal()
-const count = ref(0)
-
+const toast = useToast();
+const modal = useModal();
 </script>
 
-
 <template>
+  <UButton label="Add Companies" @click="() => openAddCompanyModal()" />
+  <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+    <UInput v-model="q" placeholder="Filter people..." />
+  </div>
 
-    <UButton label="Add Companies" @click="() => OpenModalReportInstallation()" />
-    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-        <UInput v-model="q" placeholder="Filter people..." />
-    </div>
+  <UTable :rows="filteredRows" :columns="columns">
+    <template #actions-data="{ row }">
+      <UDropdown :items="items(row)">
+        <UButton
+          color="gray"
+          variant="ghost"
+          icon="i-heroicons-ellipsis-horizontal-20-solid"
+        />
+      </UDropdown>
+    </template>
+  </UTable>
 
-    <UTable :rows="filteredRows" :columns="columns">
+  <div
+    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
+  >
+    <UPagination
+      v-model="page"
+      :page-count="pageCount"
+      :total="peopleData.length"
+    />
+  </div>
 
-        <template #actions-data="{ row }">
-            <UDropdown :items="items(row)">
-                <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-            </UDropdown>
-        </template>
-    </UTable>
-
-    <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-        <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
-    </div>
-
-    <div>
-        <UModal v-model="isOpen">
-            <div class="p-4">
-                <Placeholder class="h-48" />
-                <FormAddComponent onsubmit="isOpen = false"/>
-            </div>
-        </UModal>
-    </div>
+  <div>
+    <UModal v-model="isOpen">
+      <div class="p-4">
+        <Placeholder class="h-48" />
+        <AddCompanyForm />
+      </div>
+    </UModal>
+  </div>
 </template>
