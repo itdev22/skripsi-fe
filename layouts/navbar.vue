@@ -44,6 +44,11 @@ const items = [
     icon: "i-heroicons-user-circle-16-solid",
     link: "/dashboard/user-management",
   },
+  {
+    label: "Area",
+    icon: "i-heroicons-user-group-16-solid",
+    link: "/dashboard/area",
+  },
   // {
   //     label: "User Management",
   //     icon: "i-heroicons-user-circle-16-solid",
