@@ -15,6 +15,11 @@ const items = [
     link: "/dashboard/customer",
   },
   {
+    label: "Area",
+    icon: "i-heroicons-map",
+    link: "/dashboard/area",
+  },
+  {
     label: "Report",
     icon: "i-heroicons-cog-6-tooth-solid",
     link: "/dashboard/report",
@@ -44,58 +49,7 @@ const items = [
     icon: "i-heroicons-user-circle-16-solid",
     link: "/dashboard/user-management",
   },
-  {
-    label: "Area",
-    icon: "i-heroicons-user-group-16-solid",
-    link: "/dashboard/area",
-  },
-  // {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },    {
-  //     label: "User Management",
-  //     icon: "i-heroicons-user-circle-16-solid",
-  //     link: "/dashboard/user-management"
-  // },
-  // {
-  //     label: "Logout",
-  //     icon: "i-heroicons-arrow-right-start-on-rectangle-16-solid"
-  // },
 ];
-const open = ref(false);
 </script>
 
 <template>
@@ -111,10 +65,6 @@ const open = ref(false);
       </div>
     </div>
     <div>
-      <!-- <UInput icon="i-heroicons-magnifying-glass-20-solid" class="w-full" :ui="{ rounded: 'rounded-full' }"
-                color="primary" variant="outline" placeholder="Search..." /> -->
-    </div>
-    <div>
       <UAvatar
         src="https://avatars.githubusercontent.com/u/739984?v=4"
         alt="Avatar"
@@ -122,11 +72,6 @@ const open = ref(false);
         chip-text=""
         chip-position="top-right"
       />
-      <div>
-        <!-- <UDropdown v-model:open="open" :items="items" :popper="{ placement: 'bottom-start' }">
-                            <UButton color="white" label="Options" trailing-icon="i-heroicons-chevron-down-20-solid" />
-                        </UDropdown> -->
-      </div>
     </div>
   </div>
 
@@ -170,57 +115,11 @@ const open = ref(false);
       </div>
     </div>
 
-    <!-- Main Content -->
     <div class="w-full p-12 overflow-auto border bg-gray-50">
       <slot name="header"></slot>
       <slot name="header-child"></slot>
       <hr class="my-8" />
       <slot></slot>
-      <!-- <slot></slot> -->
     </div>
   </div>
-
-  <!-- <div class="flex w-full bg-gray-100">
-        <div class="p-4 bg-gray-200 rounded-br-2xl" :class="{ 'w-1/6': showSidebar, 'w-1/8': !showSidebar }">
-            <div class="flex justify-between gap-2 ">
-                <div class="text-xl font-bold text-gray-800">
-                    Menu
-                </div>
-                <div @click="toggleSidebar">
-                    <UButton color="blue" label="Hide" v-if="showSidebar" />
-                    <UButton color="blue" label="Show" v-if="!showSidebar" />
-                </div>
-            </div>
-            <div class="p-2">
-                <ul>
-                    <li class="flex gap-4 p-2 my-2 bg-white rounded-lg hover:bg-blue-100" v-for="(item, index) in items"
-                        :key="index" @click="open = false">
-                        <div class="">
-                            <UIcon :name="item.icon" class="w-5" />
-                        </div>
-                        <div class="font-bold" v-if="showSidebar">
-                            {{ item.label }}
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-        <div class="w-full row">
-            <div class="flex justify-between w-5/6 w-full p-2 bg-gray-200 h-fit ">
-                <div>
-                    <h1>ISP Malang</h1>
-                </div>
-                <div class="flex gap-2">
-                    
-                </div>
-
-            </div>
-            <div class="w-full h-auto p-2">
-                <slot></slot>
-                <slot name="bottom-content"></slot>
-            </div>
-
-        </div>
-    </div> -->
 </template>

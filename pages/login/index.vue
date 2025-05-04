@@ -15,23 +15,17 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
   const authStore = useAuthStore()
   const api = useApiHost()
   console.log(api)
   authApi().loginAuth(state.email, state.password)
     .then((response) => {
       authStore.login(response.data.token)
-      // Redirect to dashboard
       navigateTo('/dashboard')
     })
     .catch((error) => {
-      // Handle error
       console.error(error)
     })
-
-
-
 
   console.log(event.data)
 }

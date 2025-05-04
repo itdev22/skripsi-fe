@@ -16,6 +16,7 @@ FROM node:20.18.1-slim as production
 
 WORKDIR /usr/src/app
 
+COPY --from=build /usr/src/app/.nuxt ./.nuxt
 COPY --from=build /usr/src/app/.output ./.output
 
 CMD node .output/server/index.mjs
