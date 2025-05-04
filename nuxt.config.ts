@@ -2,6 +2,11 @@
 import type { NuxtPage } from 'nuxt/schema'
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      API_HOST: process.env.NUXT_PUBLIC_API_HOST, // Memastikan API_HOST tersedia
+    },
+  },
   hooks: {
     'pages:extend' (pages) {
       function setMiddleware (pages: NuxtPage[]) {
@@ -39,7 +44,6 @@ export default defineNuxtConfig({
   //   viewer: true,
   //   // and more...
   // },
-  
   pinia: {
     storesDirs: ["./stores/**"],
   },

@@ -1,12 +1,23 @@
 <script setup lang="ts">
+import { companyAdminApi } from '@/api/admin/company';
 import FormAddComponent from './FormAddComponent.vue'
-const people = [{
-    id: 1,
-    logo: ' aaa',
-    name: 'John aaa',
-    email: 'Johndoe@rmail.com',
-    phone: '1234567890',
-}]
+import { number } from 'yup';
+const people: any[] = [];
+
+await companyAdminApi().getAllCompanies()
+    .then((response) => {
+        people.push(...response.data);
+        response.data.forEach((company: any) => {
+            company.number = response.data.indexOf(company) + 1;
+            company.logo_url = company.logo_url || 'https://via.placeholder.com/150';
+            company.gmaps_link = company.gmaps_link || 'https://www.google.com/maps';
+        });
+    })
+    .catch((error) => {
+        console.error('Error fetching companies:', error);
+    });
+
+
 
 type Person = {
     id: number
@@ -23,21 +34,21 @@ type Person = {
 
 const columns = [
     {
-        key: 'id',
-        label: 'Number'
-    }, {
-        key: 'logo',
-        label: 'logo'
-    }, {
-        key: 'name',
-        label: 'Company Name'
-    }, {
+        key:'number',
+        label: 'No'
+    },  {
         key: 'email',
         label: 'Email'
     }, {
+        key: 'url',
+        label: 'Website'
+    },{
         key: 'phone',
         label: 'Phone'
-    },{
+    }, {
+        key: 'logo_url',
+        label: 'Image'
+    }, {
         key: 'actions',
         label: 'Actions'
     }
