@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     .then((response) => {
       console.log(response)
       if (response.success == false) {
-        // authStore.logout()
+        authStore.logout()
       }
     })
     .catch((error) => {

@@ -26,13 +26,12 @@
                     </div>
                 </div>
                 <div>
-                    
                 </div>
             </div>
         </div>
         <div class="flex justify-around">
             <div class="flex flex-col items-center gap-4 p-3 text-center border border-solid rounded-full">
-                <UIcon name="i-heroicons-light-bulb" class="w-5 h-5" />
+                <UIcon name="i-heroicons-light-bulb" class="w-6 h-5" />
                 <p>Payment <br> History</p>
             </div>
             <div class="flex flex-col items-center gap-4 text-center">
