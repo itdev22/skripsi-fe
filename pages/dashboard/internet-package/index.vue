@@ -4,15 +4,15 @@ const people = [
     {
         package_name: "12 Mbps",
         price: "Rp. 120.000",
-        Description: ""
+        description: ""
     }, {
         package_name: "25 Mbps",
         price: "Rp. 250.000",
-        Description: ""
+        description: ""
     }, {
         package_name: "35 Mbps",
         price: "Rp. 350.000",
-        Description: ""
+        description: ""
     }
 ]
 
