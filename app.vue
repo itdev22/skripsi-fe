@@ -11,7 +11,7 @@ const route = useRoute()
       <NuxtLayout name="navbar" v-if="route.path !== '/login' && route.path !== '/customer'">
         <NuxtPage />
       </NuxtLayout>
-      <NuxtPage v-if="route.path == '/login' && route.path !== '/customer'" />
+      <NuxtPage v-if="route.path == '/login' || route.path == '/customer'" />
     </NuxtLayout>
     <UModals />
     <UNotifications />
