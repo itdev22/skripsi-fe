@@ -1,71 +1,128 @@
 <script setup lang="ts">
 import FormAddComponent from './FormAddComponent.vue'
-const people = [
+import { internetPackageAdminApi } from '@/api/admin/internet-package'
+const internetPackages = ref<any[]>([]); // Use ref for reactivity
+const internetPackageList = computed(() => {
+    return internetPackages.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+})
+const column = [
     {
-        package_name: "12 Mbps",
-        price: "Rp. 120.000",
-        description: ""
-    }, {
-        package_name: "25 Mbps",
-        price: "Rp. 250.000",
-        description: ""
-    }, {
-        package_name: "35 Mbps",
-        price: "Rp. 350.000",
-        description: ""
-    }
+        key: "number",
+        label: "Number"
+    },
+    {
+        key: "name",
+        label: "Name"
+    },
+    {
+        key: "price",
+        label: "Price"
+    },
+    {
+        key: "description",
+        label: "Description"
+    },
+    {
+        key: "actions",
+        label: "Action"
+    },
 ]
+
+async function fetchData() {
+    await internetPackageAdminApi().getAllProduct().then((response) => {
+        internetPackages.value = response.data.map((product: any, index: number) => ({
+            ...product,
+            number: index + 1,
+        }));
+        console.log(internetPackages)
+    }).catch((error) => {
+        console.error("Error fetching companies:", error);
+    })
+}
+
+async function pushData() {
+    await internetPackageAdminApi().getAllProduct().then((response) => {
+        const data = response.data.map((product: any, index: number) => ({
+            ...product,
+            number: index + 1,
+        }));
+
+        internetPackages.value.push(...data)
+
+    }).catch((error) => {
+        console.error("Error fetching companies:", error);
+    })
+}
+await fetchData()
 
 const page = ref(1)
 const pageCount = 5
-
-const rows = computed(() => {
-    return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-})
-
 const q = ref('')
 
-let peopleData = people
-
-const filteredRows = computed(() => {
-    if (!q.value) {
-        peopleData = people
-        return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-    }
-
-    const newData = people.filter((person) => {
-        return Object.values(person).some((value) => {
-            // person with paginate
-            return String(value).toLowerCase().includes(q.value.toLowerCase())
-        })
-    })
-    peopleData = newData
-    return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-})
-
 const isOpen = ref(false)
+const modal = useModal()
+
+function openModal() {
+    modal.open(FormAddComponent, {
+        async onSuccess() {
+            try {
+                await fetchData();
+                console.log('Data fetched successfully:');
+                modal.close();
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+                // Optionally show an error message to the user
+                // For example, update FormAddComponent state to display error
+                modal.close(); // Close modal or keep open based on your needs
+            }
+        }
+    })
+}
+const items = (row: any) => [
+    [
+        {
+            label: "Edit",
+            icon: "i-heroicons-pencil-square-20-solid",
+            // click: () => openEditCompanyModal(row.id.toString()),
+        },
+    ],
+    [
+        {
+            label: "Delete",
+            icon: "i-heroicons-trash-20-solid",
+            // click: () => deleteCompany(row.id.toString()),
+        },
+    ],
+];
 
 </script>
 
 <template>
 
 
-    <UButton label="Add Internet Package" @click="isOpen = true" />
+    <UButton label="Add Internet Package" @click="openModal" />
+    <!-- <UButton label="Push" @click="pushData" /> -->
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
-    <UTable :rows="filteredRows" />
+    <UTable :rows="internetPackageList" :columns="column" >
+        <template #actions-data="{ row }">
+            <UDropdown :items="items(row)">
+                <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+        </template>
+    </UTable>
 
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-        <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
+        <UPagination v-model="page" :page-count="pageCount" :total="internetPackages.length" />
     </div>
 
-    <div>
+    <!-- <div>
         <UModal v-model="isOpen">
             <div class="p-4">
                 <Placeholder class="h-48" />
                 <FormAddComponent></FormAddComponent>
             </div>
         </UModal>
-    </div>
+    </div> -->
 </template>
