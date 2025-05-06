@@ -29,7 +29,7 @@ const column = [
 ]
 
 async function fetchData() {
-    await internetPackageAdminApi().getAllProduct().then((response) => {
+    await internetPackageAdminApi().getAllInternetPacket().then((response) => {
         internetPackages.value = response.data.map((product: any, index: number) => ({
             ...product,
             number: index + 1,
@@ -40,19 +40,22 @@ async function fetchData() {
     })
 }
 
-async function pushData() {
-    await internetPackageAdminApi().getAllProduct().then((response) => {
-        const data = response.data.map((product: any, index: number) => ({
-            ...product,
-            number: index + 1,
-        }));
+async function deletePacket(id: string) {
+    await internetPackageAdminApi().deleteInternetPacket(id).then((response) => {
+        useToast().add({
+            title: "Success Delete Product"
+        })
 
-        internetPackages.value.push(...data)
-
+        fetchData();
     }).catch((error) => {
-        console.error("Error fetching companies:", error);
+        useToast().add({
+            title: "Failed Delete Product",
+            color: "red"
+        })
     })
+
 }
+
 await fetchData()
 
 const page = ref(1)
@@ -62,8 +65,10 @@ const q = ref('')
 const isOpen = ref(false)
 const modal = useModal()
 
-function openModal() {
+function openModal(isEdit: boolean, data: any) {
     modal.open(FormAddComponent, {
+        isEdit: isEdit,
+        data: data,
         async onSuccess() {
             try {
                 await fetchData();
@@ -83,14 +88,14 @@ const items = (row: any) => [
         {
             label: "Edit",
             icon: "i-heroicons-pencil-square-20-solid",
-            // click: () => openEditCompanyModal(row.id.toString()),
+            click: () => openModal(true, row),
         },
     ],
     [
         {
             label: "Delete",
             icon: "i-heroicons-trash-20-solid",
-            // click: () => deleteCompany(row.id.toString()),
+            click: () => deletePacket(row.id.toString()),
         },
     ],
 ];
@@ -100,12 +105,12 @@ const items = (row: any) => [
 <template>
 
 
-    <UButton label="Add Internet Package" @click="openModal" />
+    <UButton label="Add Internet Package" @click="openModal(false, null)" />
     <!-- <UButton label="Push" @click="pushData" /> -->
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
-    <UTable :rows="internetPackageList" :columns="column" >
+    <UTable :rows="internetPackageList" :columns="column">
         <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
                 <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />

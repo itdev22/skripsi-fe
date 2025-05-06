@@ -4,7 +4,7 @@ import type { CreateInternetPackageRequest } from "@/types/requests/internet-pac
 export const internetPackageAdminApi = () => {
   const api = useApiHost();
   return {
-    getProduct: async (productId: string) => {
+    getInternetPacket: async (productId: string) => {
       const response = await fetch(`${api}/api/admin/product/${productId}`, {
         method: "GET",
         headers: {
@@ -18,7 +18,7 @@ export const internetPackageAdminApi = () => {
       return response.json();
     },
 
-    getAllProduct: async () => {
+    getAllInternetPacket: async () => {
       const response = await fetch(`${api}/api/admin/product`, {
         method: "GET",
         headers: {
@@ -49,18 +49,11 @@ export const internetPackageAdminApi = () => {
       return response.json();
     },
 
-    editCompany: async (
-      companyId: string,
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+    editInternetPacket: async (
+      productId: string,
+      data: CreateInternetPackageRequest
     ) => {
-      const response = await fetch(`${api}/api/admin/company/${companyId}`, {
+      const response = await fetch(`${api}/api/admin/product/${productId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -74,8 +67,8 @@ export const internetPackageAdminApi = () => {
       return response.json();
     },
 
-    deleteCompany: async (companyId: string) => {
-      const response = await fetch(`${api}/api/admin/company/${companyId}`, {
+    deleteInternetPacket: async (productId: string) => {
+      const response = await fetch(`${api}/api/admin/product/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

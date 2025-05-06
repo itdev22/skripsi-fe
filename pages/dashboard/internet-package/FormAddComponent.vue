@@ -10,12 +10,53 @@ const schema = object({
 })
 
 type Schema = InferType<typeof schema>
+const props = defineProps({
+    isEdit: {
+        type: Boolean,
+        default: false,
+    },
+    data: {
+        type: Object,
+        default: () => ({
+            id: {
+                type: String,
+                default: ''
+            },
+            name: {
+                type: String,
+                default: ''
+            },
+            price: {
+                type: Number,
+                default: 0
+            },
+            description: {
+                type: String,
+                default: ''
+            },
+        })
+    }
+})
 
 const state = reactive({
     name: '',
     price: 0,
     description: ''
 })
+
+watch(
+    () => props.isEdit,
+    (newValue) => {
+        console.log("newValue", props.isEdit, newValue)
+        if (newValue) {
+            state.name = props.data.name
+            state.price = props.data.price
+            state.description = props.data.description
+        }
+    },
+    { immediate: true }
+)
+
 const emit = defineEmits(['success'])
 
 function onSuccess() {
@@ -23,15 +64,22 @@ function onSuccess() {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-    // Do something with event.data
-    console.log(event.data)
-    await internetPackageAdminApi().createInternetPackage(state).then((response) => {
-        useToast().add({ title: "Success Create Product", color: "green", description: response.message })
-        onSuccess()
-
-    }).catch((error) => {
-        useToast().add({ title: "Error Create Product", color: "red", description: error })
-    })
+    if (props.isEdit) {
+        console.log(props.data.id, state)
+        await internetPackageAdminApi().editInternetPacket(props.data.id, state).then((response) => {
+            useToast().add({ title: "Success Update Product", color: "green", description: response.message })
+            onSuccess()
+        }).catch((error) => {
+            useToast().add({ title: "Error Update Product", color: "red", description: error })
+        })
+    } else {
+        await internetPackageAdminApi().createInternetPackage(state).then((response) => {
+            useToast().add({ title: "Success Create Product", color: "green", description: response.message })
+            onSuccess()
+        }).catch((error) => {
+            useToast().add({ title: "Error Create Product", color: "red", description: error })
+        })
+    }
 }
 </script>
 
@@ -41,6 +89,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <div class="p-2 mb-4 text-2xl font-bold text-center">
                 <h1>Add New Internet Package</h1>
             </div>
+            {{ isEdit }}
             <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
                 <UFormGroup label="Package Name" name="name">
