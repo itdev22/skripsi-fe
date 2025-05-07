@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { internetPackageAdminApi } from "@/api/admin/internet-package";
+import { companyAdminApi } from "@/api/admin/company";
 
 const schema = object({
   email: string().email("Invalid email").required("Required"),
@@ -9,7 +11,7 @@ const schema = object({
     .required("Required"),
   name: string().min(3, "Must be at least 3 characters").required("Required"),
   phone: string().min(3, "Must be at least 3 characters").required("Required"),
-  packet_internet: string()
+  internet_package: string()
     .min(3, "Must be at least 3 characters")
     .required("Required"),
   ip_static: string()
@@ -31,7 +33,7 @@ const state = reactive({
   area_code: "",
   latitude: 0,
   longitude: 0,
-  packet_internet: undefined,
+  internet_package: "",
   ip_static: "",
   mac_address: "",
   gender: "",
@@ -121,16 +123,16 @@ const card_identitions = [
   },
 ];
 
-const type_subscriptions = [
-  {
-    label: "PERSONAL",
-    value: "personal",
-  },
-  {
-    label: "BUSINESS",
-    value: "business",
-  },
-];
+const internet_packages = ref([
+
+]);
+
+await internetPackageAdminApi().getAllInternetPacket().then((response) => {
+  internet_packages.value = response.data.map((value: any, index: number) => ({
+    label: value.name,
+    value:value.id
+  }))
+})
 
 const submission_types = [
   {
@@ -154,16 +156,13 @@ const type_of_services = [
   },
 ];
 
-const companies = [
-  {
-    label: "Company 1",
-    value: "id_company 1",
-  },
-  {
-    label: "Company 2",
-    value: "id_company_2",
-  },
-];
+const companies = ref([]);
+await companyAdminApi().getAllCompanies().then((response) => {
+  companies.value = response.data.map((value: any, index: number) => ({
+    label: value.name,
+    value:value.id
+  }))
+})
 </script>
 
 <template>
@@ -201,7 +200,6 @@ const companies = [
     <UFormGroup label="Area Code" name="area_code">
       <UInput v-model="state.area_code" />
     </UFormGroup>
-
     <LMap style="height: 350px" :zoom="6" :center="[state.latitude, state.longitude]" :use-global-leaflet="false">
       <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <LMarker ref="map" :lat-lng="[state.latitude, state.longitude]" draggable @dragend="onMarkerDrag" />
@@ -224,8 +222,8 @@ const companies = [
         </div>
       </div>
     </UFormGroup>
-    <UFormGroup label="Packet Internet" name="packet_internet">
-      <USelectMenu v-model="state.packet_internet" :options="type_subscriptions" value-attribute="value"
+    <UFormGroup label="Packet Internet" name="internet_package">
+      <USelectMenu v-model="state.internet_package" :options="internet_packages" value-attribute="value"
         option-attribute="label" />
     </UFormGroup>
     <UFormGroup label="Ip Static" name="ip_static">
@@ -238,7 +236,7 @@ const companies = [
       <UInput v-model="state.job" />
     </UFormGroup>
     <UFormGroup label="Type Subscription" name="type_subscription">
-      <USelectMenu v-model="state.type_subscription" :options="type_subscriptions" value-attribute="value"
+      <USelectMenu v-model="state.type_subscription" :options="submission_types" value-attribute="value"
         option-attribute="label" />
     </UFormGroup>
 
