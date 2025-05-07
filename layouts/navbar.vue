@@ -36,7 +36,7 @@ const items = [
   },
   {
     label: "Company",
-    icon: "i-heroicons-user-circle-16-solid",
+    icon: "i-heroicons-building-office-16-solid",
     link: "/dashboard/companies",
   },
   {

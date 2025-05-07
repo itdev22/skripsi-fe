@@ -47,9 +47,6 @@ const columns = [
         key: 'area_code',
         label: 'Area Code'
     }, {
-        key: 'gmaps_link',
-        label: 'Gmaps Link'
-    }, {
         key: 'packet_internet',
         label: 'Packet Internet'
     }, {

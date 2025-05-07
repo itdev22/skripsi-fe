@@ -1,10 +1,11 @@
 import type { CreateCompanyRequest } from "@/types/requests/company";
+import type { CreateInternetPackageRequest } from "@/types/requests/internet-package";
 
-export const companyAdminApi = () => {
+export const internetPackageAdminApi = () => {
   const api = useApiHost();
   return {
-    getCompany: async (companyId: string) => {
-      const response = await fetch(`${api}/api/admin/company/${companyId}`, {
+    getInternetPacket: async (productId: string) => {
+      const response = await fetch(`${api}/api/admin/product/${productId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -12,13 +13,13 @@ export const companyAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch company");
+        throw new Error("Failed to fetch product");
       }
       return response.json();
     },
 
-    getAllCompanies: async () => {
-      const response = await fetch(`${api}/api/admin/company`, {
+    getAllInternetPacket: async () => {
+      const response = await fetch(`${api}/api/admin/product`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -26,22 +27,15 @@ export const companyAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch companies");
+        throw new Error("Failed to fetch products");
       }
       return response.json();
     },
 
-    createCompanies: async (
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+    createInternetPackage: async (
+      data: CreateInternetPackageRequest
     ) => {
-      const response = await fetch(`${api}/api/admin/company`, {
+      const response = await fetch(`${api}/api/admin/product`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,18 +49,11 @@ export const companyAdminApi = () => {
       return response.json();
     },
 
-    editCompany: async (
-      companyId: string,
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+    editInternetPacket: async (
+      productId: string,
+      data: CreateInternetPackageRequest
     ) => {
-      const response = await fetch(`${api}/api/admin/company/${companyId}`, {
+      const response = await fetch(`${api}/api/admin/product/${productId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -80,8 +67,8 @@ export const companyAdminApi = () => {
       return response.json();
     },
 
-    deleteCompany: async (companyId: string) => {
-      const response = await fetch(`${api}/api/admin/company/${companyId}`, {
+    deleteInternetPacket: async (productId: string) => {
+      const response = await fetch(`${api}/api/admin/product/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
