@@ -3,47 +3,50 @@ import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import { internetPackageAdminApi } from "@/api/admin/internet-package";
 import { companyAdminApi } from "@/api/admin/company";
+import { areaAdminApi } from "@/api/admin/area";
 
 const schema = object({
-  email: string().email("Invalid email").required("Required"),
-  password: string()
-    .min(8, "Must be at least 8 characters")
-    .required("Required"),
-  name: string().min(3, "Must be at least 3 characters").required("Required"),
-  phone: string().min(3, "Must be at least 3 characters").required("Required"),
-  internet_package: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  ip_static: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  mac_address: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
+  type_of_service: string().required(),
+  email: string().required(),
+  name: string().required(),
+  company: string().required(),
+  gender: string().required(),
+  card_identition: string().required(),
+  no_identition: string().required(),
+  area_code: string().required(),
+  phone: string().required(),
+  address: string().required(),
+  latitude: string().required(),
+  longitude: string().required(),
+  password: string().required(),
+  internet_package: string().required(),
+  ip_static: string().required(),
+  mac_address: string().required(),
+  job: string().required(),
 });
 
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
-  email: undefined,
-  password: undefined,
-  name: undefined,
-  phone: undefined,
-  address: "",
-  area_code: "",
-  latitude: 0,
-  longitude: 0,
-  internet_package: "",
-  ip_static: "",
-  mac_address: "",
+  type_of_service: "",
+  email: "",
+  name: "",
+  company: "",
   gender: "",
   card_identition: "",
   no_identition: 0,
+  area_code: "",
+  phone: "",
+  address: "",
+  latitude: 0,
+  longitude: 0,
+  password: "",
+  internet_package: "",
+  ip_static: "",
+  mac_address: "",
   job: "",
-  type_subscription: "",
-  submission_type: "",
-  type_of_service: "",
-  company: "",
+  // type_subscription: "",
+  // submission_type: "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -89,14 +92,6 @@ async function moveToMyLocation() {
   }
 }
 
-watch(
-  () => state.ip_static,
-  (newIp) => {
-    state.mac_address = newIp;
-    console.log("IP Static changed:", newIp);
-  }
-);
-
 const genders = [
   {
     label: "Male",
@@ -123,27 +118,18 @@ const card_identitions = [
   },
 ];
 
-const internet_packages = ref([
 
-]);
 
-await internetPackageAdminApi().getAllInternetPacket().then((response) => {
-  internet_packages.value = response.data.map((value: any, index: number) => ({
-    label: value.name,
-    value:value.id
-  }))
-})
-
-const submission_types = [
-  {
-    label: "New",
-    value: "new",
-  },
-  {
-    label: "Upgrade",
-    value: "upgrade",
-  },
-];
+// const submission_types = [
+//   {
+//     label: "New",
+//     value: "new",
+//   },
+//   {
+//     label: "Upgrade",
+//     value: "upgrade",
+//   },
+// ];
 
 const type_of_services = [
   {
@@ -160,7 +146,24 @@ const companies = ref([]);
 await companyAdminApi().getAllCompanies().then((response) => {
   companies.value = response.data.map((value: any, index: number) => ({
     label: value.name,
-    value:value.id
+    value: value.id
+  }))
+})
+const internet_packages = ref([
+
+]);
+await internetPackageAdminApi().getAllInternetPacket().then((response) => {
+  internet_packages.value = response.data.map((value: any, index: number) => ({
+    label: value.name,
+    value: value.id
+  }))
+})
+
+const areas = ref([])
+await areaAdminApi().getAllAreas().then((response) => {
+  areas.value = response.data.map((value: any, index: number) => ({
+    label: value.name,
+    value: value.id
   }))
 })
 </script>
@@ -193,12 +196,13 @@ await companyAdminApi().getAllCompanies().then((response) => {
       <UInput v-model="state.no_identition" type="number" />
 
     </UFormGroup>
-    <UFormGroup label="Phone" name="phone">
-      <UInput v-model="state.phone" />
-    </UFormGroup>
+
 
     <UFormGroup label="Area Code" name="area_code">
-      <UInput v-model="state.area_code" />
+      <USelectMenu v-model="state.area_code" :options="areas" value-attribute="value" />
+    </UFormGroup>
+    <UFormGroup label="Phone" name="phone">
+      <UInput v-model="state.phone" />
     </UFormGroup>
     <LMap style="height: 350px" :zoom="6" :center="[state.latitude, state.longitude]" :use-global-leaflet="false">
       <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -235,10 +239,10 @@ await companyAdminApi().getAllCompanies().then((response) => {
     <UFormGroup label="Job" name="job">
       <UInput v-model="state.job" />
     </UFormGroup>
-    <UFormGroup label="Type Subscription" name="type_subscription">
+    <!-- <UFormGroup label="Type Subscription" name="type_subscription">
       <USelectMenu v-model="state.type_subscription" :options="submission_types" value-attribute="value"
         option-attribute="label" />
-    </UFormGroup>
+    </UFormGroup> -->
 
     <UButton type="submit"> Submit </UButton>
   </UForm>
