@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import FormCustomerInstallation from './FormCustomerInstallation.vue'
 import FormAddComponent from './FormAddComponent.vue'
-const people = [{
+import { customerAdminApi } from '@/api/admin/customer';
+
+let people = [{
     id: 1,
     name: 'John Doe',
     email: 'Johndoe@rmail.com',
@@ -13,6 +15,28 @@ const people = [{
     ip_static: '',
     mac_address: '00:1A:2B:3C:4D:5E',
 }]
+
+async function fetchAllCustomers() {
+    await customerAdminApi()
+        .getAllCustomers()
+        .then((response) => {
+            response.data.forEach((customer: any) => {
+                customer.number = response.data.indexOf(customer) + 1;
+                customer.logo_url =
+                customer.logo_url || "https://via.placeholder.com/150";
+            });
+            people = [...response.data];
+            q.value = "changed";
+            q.value = "";
+        })
+        .catch((error) => {
+            console.error("Error fetching companies:", error);
+        });
+}
+
+await fetchAllCustomers();
+
+
 
 type Person = {
     id: number
@@ -94,7 +118,7 @@ const items = (row: Person) => [
     [{
         label: 'Edit',
         icon: 'i-heroicons-pencil-square-20-solid',
-        click: () => console.log('Edit', row.id)
+        click: () => openEditCustomerModal(row.id.toString())
     }], [{
         label: 'Add Report Installation',
         icon: 'i-heroicons-archive-box-20-solid',
@@ -103,13 +127,10 @@ const items = (row: Person) => [
         label: 'View Maps',
         icon: 'i-heroicons-arrow-right-circle-20-solid',
         click: () => window.open(row.gmaps_link, '_blank')
-    }, {
-        label: 'Upgrade',
-        icon: 'i-heroicons-arrow-up-circle-20-solid',
-        click: () => window.open("", '_blank')
     }], [{
         label: 'Delete',
-        icon: 'i-heroicons-trash-20-solid'
+        icon: 'i-heroicons-trash-20-solid',
+        click: () => deleteCompany(row.id.toString())
     }]
 ]
 
@@ -127,12 +148,51 @@ function OpenModalReportInstallation(row: { id: number }) {
     })
 }
 
+function openAddCustomerModal() {
+    modal.open(FormAddComponent, {
+        onSuccess: handleSubmitCompany,
+    });
+}
+
+function openEditCustomerModal(companyId: string) {
+    modal.open(FormAddComponent, {
+        id: companyId,
+        onSuccess: handleSubmitCompany,
+    });
+}
+
+async function handleSubmitCompany() {
+    toast.add({
+        title: "Success!",
+        id: "modal-success",
+    });
+
+    await fetchAllCustomers();
+    modal.close();
+    isOpen.value = false;
+}
+
+async function deleteCompany(companyId: string) {
+    const confirmed = window.confirm("Are you sure you want to delete this company?");
+    if (!confirmed) return;
+
+    try {
+        await customerAdminApi().deleteCustomer(companyId);
+        toast.add({
+            title: "Success!",
+            id: "modal-success",
+        });
+
+        await fetchAllCustomers();
+    } catch (error) {
+        console.error("Error deleting company:", error);
+    }
+}
 </script>
 
 
 <template>
-
-    <UButton label="Add Customer" @click="isOpen = true" />
+    <UButton label="Add Customer" @click="() => openAddCustomerModal()" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
         <UInput v-model="q" placeholder="Filter people..." />
     </div>
@@ -154,7 +214,7 @@ function OpenModalReportInstallation(row: { id: number }) {
         <UModal v-model="isOpen">
             <div class="p-4">
                 <Placeholder class="h-48" />
-                <FormAddComponent></FormAddComponent>
+                <FormAddComponent />
             </div>
         </UModal>
     </div>

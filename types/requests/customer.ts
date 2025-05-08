@@ -1,0 +1,21 @@
+export type CreateCustomerRequest = {
+  email: string | undefined;
+  password: string | undefined;
+  name: string | undefined;
+  phone: string | undefined;
+  address: string;
+  area_code: string;
+  latitude: number;
+  longitude: number;
+  packet_internet: string | undefined;
+  ip_static: string;
+  mac_address: string;
+  gender: string;
+  card_identition: string;
+  no_identition: number;
+  job: string;
+  type_subscription: string;
+  submission_type: string;
+  type_of_service: string;
+  company: string;
+};

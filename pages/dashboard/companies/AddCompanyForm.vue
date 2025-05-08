@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
-import type { FormSubmitEvent } from "#ui/types";
 import { companyAdminApi } from "@/api/admin/company";
 const props = defineProps({
   id: {
