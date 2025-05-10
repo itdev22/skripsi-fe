@@ -17,7 +17,7 @@ const tab_items = [
   {
     label: "Report Customer Installation",
     value: "report-customer",
-  },
+  }
 ];
 </script>
 
