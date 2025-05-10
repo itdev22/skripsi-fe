@@ -13,7 +13,8 @@ export const internetPackageAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch product");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -27,7 +28,8 @@ export const internetPackageAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch products");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -44,7 +46,8 @@ export const internetPackageAdminApi = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -62,7 +65,8 @@ export const internetPackageAdminApi = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -76,7 +80,8 @@ export const internetPackageAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to create company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },

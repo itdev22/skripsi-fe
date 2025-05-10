@@ -12,7 +12,8 @@ export const companyAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -26,7 +27,8 @@ export const companyAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch companies");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -50,7 +52,8 @@ export const companyAdminApi = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -75,7 +78,8 @@ export const companyAdminApi = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -89,7 +93,8 @@ export const companyAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to create company");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
