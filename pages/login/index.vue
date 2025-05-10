@@ -20,11 +20,15 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   console.log(api)
   authApi().loginAuth(state.email, state.password)
     .then((response) => {
+
       authStore.login(response.data.token)
       navigateTo('/dashboard')
     })
     .catch((error) => {
-      console.error(error)
+        useToast().add({
+          title:error,
+          color:"red"
+        })
     })
 
   console.log(event.data)
