@@ -42,7 +42,7 @@ const items = [
   {
     label: "Transaction",
     icon: "i-heroicons-user-circle-16-solid",
-    link: "/dashboard/user-management",
+    link: "/dashboard/transaction",
   },
   {
     label: "User Management",

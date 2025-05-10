@@ -6,9 +6,6 @@
     "paths": {
       "@/*": ["./*"], // Pastikan ini ada
       "#ui/*": ["./node_modules/@nuxt/ui/dist/runtime/*"]
-    },
-    "types": ["node"],  // Tambahkan 'node' di sini
-    "strict": true,  // Opsional: Aktifkan opsi strict
-    "esModuleInterop": true
+    }
   }
 }
