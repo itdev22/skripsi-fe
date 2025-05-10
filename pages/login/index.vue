@@ -25,10 +25,11 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       navigateTo('/dashboard')
     })
     .catch((error) => {
-        useToast().add({
-          title:error,
-          color:"red"
-        })
+console.log(error,"apa ini")
+      useToast().add({
+        title: error,
+        color: "red"
+      })
     })
 
   console.log(event.data)
