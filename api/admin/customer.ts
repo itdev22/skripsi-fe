@@ -12,7 +12,8 @@ export const customerAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch area");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -26,7 +27,8 @@ export const customerAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch customers");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -43,7 +45,8 @@ export const customerAdminApi = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create customer");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -61,7 +64,8 @@ export const customerAdminApi = () => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create customer");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },
@@ -75,7 +79,8 @@ export const customerAdminApi = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to create customer");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
       return response.json();
     },

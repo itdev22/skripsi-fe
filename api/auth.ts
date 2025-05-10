@@ -16,7 +16,8 @@ export const authApi = () => {
                 }),
             });
             if (!response.ok) {
-                throw new Error('Failed to login');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Login failed');
             }
             return response.json();
         },
