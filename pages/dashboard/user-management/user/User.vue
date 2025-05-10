@@ -1,15 +1,28 @@
 <script setup lang="ts">
-import FormRole from "./FormRole.vue";
+import { userAdminApi } from "@/api/admin/user-management";
+import AddUserForm from "./AddUserForm.vue";
+let user: any[] = [];
 
-const dataList = [
-  {
-    id: 1,
-    avatar: "https://github.com/benjamincanac.png",
-    username: "Walton",
-    fullName: "Ahmad Walton",
-    type: "Admin",
-  },
-];
+async function fetchAllUsers() {
+    await userAdminApi()
+        .getAllUsers()
+        .then((response) => {
+            response.data.forEach((user: any) => {
+                user.number = response.data.indexOf(user) + 1;
+                user.avatar = user.logo_url || "https://via.placeholder.com/150";
+            });
+            user = [...response.data];
+            q.value = "changed";
+            q.value = "";
+        })
+        .catch((error) => {
+            console.error("Error fetching user:", error);
+        });
+}
+
+
+await fetchAllUsers();
+
 type User = {
   id: number;
   username: string;
@@ -18,17 +31,36 @@ type User = {
 };
 const columns = [
   { key: "avatar", label: "Avatar" },
-  { key: "username", label: "Username" },
-  { key: "fullName", label: "Full Name" },
-  { key: "type", label: "Type" },
+  { key: "name", label: "Username" },
+  { key: "email", label: "Full Name" },
+  { key: "role", label: "Type" },
   {
     key: "actions",
     label: "Actions",
   },
 ];
+
+const page = ref(1);
+const pageCount = 5;
+
 const q = ref("");
-const page = 0;
-const pageCount = 0;
+
+let userData = user;
+const filteredRows = computed(() => {
+    if (!q.value) {
+        userData = user;
+        return user.slice((page.value - 1) * pageCount, page.value * pageCount);
+    }
+
+    const newData = user.filter((person) => {
+        return Object.values(person).some((value) => {
+            return String(value).toLowerCase().includes(q.value.toLowerCase());
+        });
+    });
+    userData = newData;
+    return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+});
+
 
 function handleClick(row: { id: number }) {
   alert("clicked" + row);
@@ -53,26 +85,59 @@ const items = (row: User) => [
     },
   ],
 ];
-function openModal() {
-  count.value += 1;
-  modal.open(FormRole, {
-    count: count.value,
-    onSuccess() {
-      toast.add({
-        title: "Success !",
-        id: "modal-success",
-      });
-    },
-  });
+
+const isOpen = ref(false);
+
+function openAddUserModal() {
+    modal.open(AddUserForm, {
+        onSuccess: handleSubmitUser,
+    });
 }
+
+function openEditUserModal(companyId: string) {
+    modal.open(AddUserForm, {
+        id: companyId,
+        onSuccess: handleSubmitUser,
+    });
+}
+
+
+async function handleSubmitUser() {
+    toast.add({
+        title: "Success!",
+        id: "modal-success",
+    });
+
+    await fetchAllUsers();
+    modal.close();
+    isOpen.value = false;
+}
+
+async function deleteUser(companyId: string) {
+    const confirmed = window.confirm("Are you sure you want to delete this company?");
+    if (!confirmed) return;
+
+    try {
+        await userAdminApi().deleteUser(companyId);
+        toast.add({
+            title: "Success!",
+            id: "modal-success",
+        });
+
+        await fetchAllUsers();
+    } catch (error) {
+        console.error("Error deleting company:", error);
+    }
+}
+
 </script>
 
 <template>
-  <UButton label="Add User" @click="openModal" />
+  <UButton label="Add User" @click="openAddUserModal" />
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-    <UInput v-model="q" placeholder="Filter people..." />
+    <UInput v-model="q" placeholder="Filter user..." />
   </div>
-  <UTable :rows="dataList" :columns="columns">
+  <UTable :rows="filteredRows" :columns="columns">
     <template #avatar-data="{ row }">
       <UAvatar :src="row.avatar" size="xl" />
     </template>

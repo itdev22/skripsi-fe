@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import FormInternet from "./FormUser.vue";
+import AddRoleForm from './AddRoleForm.vue';
+
 
 const dataList = [
   {
@@ -47,7 +48,7 @@ const modal = useModal();
 const count = ref(0);
 
 function openModal() {
-  modal.open(FormInternet, {
+  modal.open(AddRoleForm, {
     onSuccess() {
       toast.add({
         title: "Success !",

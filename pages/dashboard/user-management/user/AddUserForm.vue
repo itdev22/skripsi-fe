@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+});
 
 const schema = object({
   customer: string()
@@ -40,13 +46,6 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
   console.log(event.data);
 }
-
-defineProps({
-  count: {
-    type: Number,
-    default: 0,
-  },
-});
 
 const emit = defineEmits(["success"]);
 
