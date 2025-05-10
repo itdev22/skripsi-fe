@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
-import { internetPackageAdminApi } from "@/api/admin/internet-package";
-import { companyAdminApi } from "@/api/admin/company";
+import { customerAdminApi } from "@/api/admin/customer";
 import { areaAdminApi } from "@/api/admin/area";
+import { companyAdminApi } from "@/api/admin/company";
+import { internetPackageAdminApi } from "@/api/admin/internet-package";
 
 const schema = object({
   type_of_service: string().required(),
-  email: string().required(),
-  name: string().required(),
-  company: string().required(),
-  gender: string().required(),
-  card_identition: string().required(),
-  no_identition: string().required(),
-  area_code: string().required(),
-  phone: string().required(),
-  address: string().required(),
-  latitude: string().required(),
-  longitude: string().required(),
-  password: string().required(),
-  internet_package: string().required(),
-  ip_static: string().required(),
-  mac_address: string().required(),
-  job: string().required(),
+  // email: string().required(),
+  // name: string().required(),
+  // company: string().required(),
+  // gender: string().required(),
+  // card_identition: string().required(),
+  // no_identition: string().required(),
+  // area_code: string().required(),
+  // phone: string().required(),
+  // address: string().required(),
+  // latitude: string().required(),
+  // longitude: string().required(),
+  // password: string().required(),
+  // internet_package: string().required(),
+  // ip_static: string().required(),
+  // mac_address: string().required(),
+  // job: string().required(),
 });
 
 type Schema = InferType<typeof schema>;
@@ -31,11 +32,11 @@ const state = reactive({
   type_of_service: "",
   email: "",
   name: "",
-  company: "",
+  company_id: "",
   gender: "",
   card_identition: "",
   no_identition: 0,
-  area_code: "",
+  area_id: "",
   phone: "",
   address: "",
   latitude: 0,
@@ -52,6 +53,12 @@ const state = reactive({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
   console.log(event.data);
+  customerAdminApi().createCustomer(state).then((response) => {
+    useToast().add({ title: response.message })
+  }).catch((error) => {
+
+  })
+
 }
 
 function onMarkerDrag(e: any) {
@@ -183,7 +190,7 @@ await areaAdminApi().getAllAreas().then((response) => {
       <UInput v-model="state.name" />
     </UFormGroup>
     <UFormGroup label="Company" name="company">
-      <USelectMenu v-model="state.company" :options="companies" value-attribute="value" option-attribute="label" />
+      <USelectMenu v-model="state.company_id" :options="companies" value-attribute="value" option-attribute="label" />
     </UFormGroup>
     <UFormGroup label="Gender" name="gender">
       <USelectMenu v-model="state.gender" :options="genders" value-attribute="value" option-attribute="label" />
@@ -194,12 +201,9 @@ await areaAdminApi().getAllAreas().then((response) => {
     </UFormGroup>
     <UFormGroup label="No Indetition" name="no_identition">
       <UInput v-model="state.no_identition" type="number" />
-
     </UFormGroup>
-
-
     <UFormGroup label="Area Code" name="area_code">
-      <USelectMenu v-model="state.area_code" :options="areas" value-attribute="value" />
+      <USelectMenu v-model="state.area_id" :options="areas" value-attribute="value" />
     </UFormGroup>
     <UFormGroup label="Phone" name="phone">
       <UInput v-model="state.phone" />
@@ -239,10 +243,6 @@ await areaAdminApi().getAllAreas().then((response) => {
     <UFormGroup label="Job" name="job">
       <UInput v-model="state.job" />
     </UFormGroup>
-    <!-- <UFormGroup label="Type Subscription" name="type_subscription">
-      <USelectMenu v-model="state.type_subscription" :options="submission_types" value-attribute="value"
-        option-attribute="label" />
-    </UFormGroup> -->
 
     <UButton type="submit"> Submit </UButton>
   </UForm>
