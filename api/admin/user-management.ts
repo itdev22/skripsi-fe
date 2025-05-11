@@ -1,6 +1,6 @@
 import type { CreateUserRequest } from "@/types/requests/user-management";
 
-export const userAdminApi = () => {
+export const userManagementAdminApi = () => {
   const api = useApiHost();
   return {
     getUser: async (userId: string) => {
@@ -36,11 +36,12 @@ export const userAdminApi = () => {
     createUser: async (
       data: CreateUserRequest = {
         name: "",
-        url: "",
         email: "",
-        phone: "",
         logo_url: "",
-        description: "",
+        role_id: "",
+        password: "",
+        password_confirm: "",
+        phone:""
       }
     ) => {
       const response = await fetch(`${api}/api/admin/user-management`, {
@@ -62,11 +63,12 @@ export const userAdminApi = () => {
       userId: string,
       data: CreateUserRequest = {
         name: "",
-        url: "",
         email: "",
-        phone: "",
         logo_url: "",
-        description: "",
+        role_id: "",
+        password: "",
+        password_confirm: "",
+        phone:""
       }
     ) => {
       const response = await fetch(`${api}/api/admin/user-management/${userId}`, {
@@ -87,6 +89,21 @@ export const userAdminApi = () => {
     deleteUser: async (userId: string) => {
       const response = await fetch(`${api}/api/admin/user-management/${userId}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      return response.json();
+    },
+
+    getAllRole: async () => {
+      const response = await fetch(`${api}/api/admin/role`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${useCookie("token").value}`,

@@ -1,56 +1,101 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { userManagementAdminApi } from "@/api/admin/user-management";
 const props = defineProps({
   id: {
     type: String,
     required: false,
   },
 });
-
-const schema = object({
-  customer: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  technician: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  date: string().required("Required"),
-});
-
-const user_type = [
-  {
-    label: "Full Administrator",
-    value: "admin",
-  },
-  {
-    label: "Employee",
-    value: "employee",
-  },
-  {
-    label: "Finance",
-    value: "finance",
-  },
-];
+const roles = ref<any[]>([]);
 
 const state = reactive({
-  username: "",
-  fullName: "",
-  user_type: "",
+  name: "",
+  email: "",
+  logo_url: "",
+  role_id: "",
   password: "",
-  confirmPassword: "",
+  password_confirm: "",
+  phone: "",
+});
+onMounted(async () => {
+  await userManagementAdminApi()
+    .getAllRole()
+    .then((response) => {
+      roles.value = response.data.map((role: any) => ({
+        label: role.name,
+        value: role.id,
+      }));
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+  if (props.id) {
+    await userManagementAdminApi()
+      .getUser(props.id)
+      .then((response) => {
+        Object.assign(state,{...response.data,role_id:response.data.role?.id});
+      })
+      .catch((error) => {
+        console.error("Error fetching companies:", error);
+      });
+  }
 });
 
-type Schema = InferType<typeof schema>;
-function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
-  console.log(event.data);
-}
+const schema = object({
+  name: string().required("Name is required"),
+  email: string()
+    .email("Email must be a valid email")
+    .required("Email is required"),
+  role_id: string().required("Role is required"),
+  password: string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  password_confirm: string()
+    .required("Confirm Password is required")
+    .test("passwords-match", "Passwords must match", function (value) {
+      const { password } = this.parent; // Access parent object, which includes the password
+      return password === value; // Compare password and confirmPassword
+    }),
+  phone: string()
+    .matches(/^\d+$/, "Phone number must be digits")
+    .required("Phone number is required"),
+  // logo_url: string()
+  //   .url("Logo URL must be a valid URL")
+  //   .required("Logo URL is required"),
+});
 
 const emit = defineEmits(["success"]);
 
 function onSuccess() {
   emit("success");
+}
+
+async function onSubmit() {
+  console.log("schema", schema);
+  console.log("state", state);
+  if (props.id) {
+    await userManagementAdminApi()
+      .editUser(props.id, state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
+  } else {
+    await userManagementAdminApi()
+      .createUser(state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
+  }
 }
 </script>
 
@@ -66,22 +111,33 @@ function onSuccess() {
         class="space-y-4"
         @submit="onSubmit"
       >
-        <UFormGroup label="Username" name="username">
-          <UInput v-model="state.username" />
+        <UFormGroup label="Username" name="name">
+          <UInput v-model="state.name" />
         </UFormGroup>
-        <UFormGroup label="Full Name" name="fullName">
-          <UInput v-model="state.fullName" />
+        <UFormGroup label="Email" name="email">
+          <UInput v-model="state.email" />
         </UFormGroup>
+        <UFormGroup label="Phone number" name="phone">
+          <UInput v-model="state.phone" />
+        </UFormGroup>
+        <div v-if="roles.length === 0">
+          <span class="text-gray-500">Loading roles...</span>
+        </div>
         <URadioGroup
-          v-model="state.user_type"
-          legend="User Type"
-          :options="user_type"
+          v-else
+          v-model="state.role_id"
+          :options="roles"
+          name="role_id"
+          legend="Role"
         />
         <UFormGroup label="Password" name="password">
-          <UInput v-model="state.password" />
+          <UInput type="password" v-model="state.password" />
         </UFormGroup>
-        <UFormGroup label="Confirm Password" name="confirmPassword">
-          <UInput v-model="state.confirmPassword" />
+        <UFormGroup label="Confirm Password" name="password_confirm">
+          <UInput type="password" v-model="state.password_confirm" />
+        </UFormGroup>
+        <UFormGroup label="Logo URL" name="logo_url">
+          <UInput v-model="state.logo_url" />
         </UFormGroup>
         <UButton type="submit">Submit</UButton>
       </UForm>

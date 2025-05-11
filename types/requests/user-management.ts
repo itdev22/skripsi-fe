@@ -1,8 +1,9 @@
 export type CreateUserRequest = {
-    name: string,
-    url: string,
-    email: string,
-    phone: string,
-    logo_url: string,
-    description: string,
+  name: String,
+  email: String,
+  logo_url: String,
+  role_id: String,
+  password: String,
+  password_confirm: String,
+  phone:String
   }

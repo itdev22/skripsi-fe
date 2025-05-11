@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { userAdminApi } from "@/api/admin/user-management";
+import { userManagementAdminApi } from "@/api/admin/user-management";
 import AddUserForm from "./AddUserForm.vue";
 let user: any[] = [];
 
 async function fetchAllUsers() {
-    await userAdminApi()
+    await userManagementAdminApi()
         .getAllUsers()
         .then((response) => {
             response.data.forEach((user: any) => {
                 user.number = response.data.indexOf(user) + 1;
                 user.avatar = user.logo_url || "https://via.placeholder.com/150";
+                user.role = user.role.name;
             });
             user = [...response.data];
             q.value = "changed";
@@ -75,13 +76,14 @@ const items = (row: User) => [
     {
       label: "Edit",
       icon: "i-heroicons-pencil-square-20-solid",
-      click: () => console.log("Edit", row.id),
+      click: () => openEditUserModal(row.id.toString()),
     },
   ],
   [
     {
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
+      click: () => deleteUser(row.id.toString()),
     },
   ],
 ];
@@ -118,7 +120,7 @@ async function deleteUser(companyId: string) {
     if (!confirmed) return;
 
     try {
-        await userAdminApi().deleteUser(companyId);
+        await userManagementAdminApi().deleteUser(companyId);
         toast.add({
             title: "Success!",
             id: "modal-success",
@@ -155,10 +157,10 @@ async function deleteUser(companyId: string) {
   <div
     class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
   >
-    <!-- <UPagination
+    <UPagination
             v-model="page"
             :page-count="pageCount"
             :total="100"
-          /> -->
+          />
   </div>
 </template>
