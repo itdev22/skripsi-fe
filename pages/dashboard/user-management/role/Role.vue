@@ -51,7 +51,7 @@ const items = (row: Role) => [
     {
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
-      click: () => deleteUser(row.id.toString()),
+      click: () => deleteRole(row.id.toString()),
     },
   ],
 ];
@@ -86,14 +86,14 @@ async function handleSubmitUser() {
   modal.close();
   isOpen.value = false;
 }
-async function deleteUser(companyId: string) {
+async function deleteRole(roleId: string) {
   const confirmed = window.confirm(
     "Are you sure you want to delete this company?"
   );
   if (!confirmed) return;
 
   try {
-    await userManagementAdminApi().deleteUser(companyId);
+    await userManagementAdminApi().deleteRole(roleId);
     toast.add({
       title: "Success!",
       id: "modal-success",

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { userManagementAdminApi } from '@/api/admin/user-management';
 import { object, string } from 'yup';
 const props = defineProps({
   id: {
@@ -9,22 +10,25 @@ const props = defineProps({
 
 const state = reactive({
 
-  customer: "",
-  technician: "",
-  date: "",
+  name: "",
 });
 
 const schema = object({
-  customer: string()
+  name: string()
     .min(3, "Must be at least 3 characters")
     .required("Required"),
-  technician: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  date: string().required("Required"),
 })
 
-
+if (props.id) {
+  await userManagementAdminApi()
+    .getRole(props.id)
+    .then((response) => {
+      Object.assign(state, response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching companies:", error);
+    });
+}
 
 const emit = defineEmits(['success'])
 
@@ -34,16 +38,32 @@ function onSuccess() {
 
 interface SubmitEvent {
     data: {
-        customer: string;
-        technician: string;
-        date: string;
+        name: string;
     };
 }
 
-function onSubmit(event: SubmitEvent) {
-    // Do something with event.data
-    console.log(event.data);
-    onSuccess();
+async function onSubmit(event: SubmitEvent) {
+   if (props.id) {
+    await userManagementAdminApi()
+      .editRole(props.id, state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
+  } else {
+    await userManagementAdminApi()
+      .createRole(state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
+  }
 }
 </script>
 
@@ -59,15 +79,15 @@ function onSubmit(event: SubmitEvent) {
         class="space-y-4"
         @submit="onSubmit"
         >
-        <UFormGroup label="Customer" name="customer">
-            <UInput v-model="state.customer" />
+        <UFormGroup label="Role name" name="name">
+            <UInput v-model="state.name" />
         </UFormGroup>
-        <UFormGroup label="Technician" name="technician">
+        <!-- <UFormGroup label="Technician" name="technician">
             <UInput v-model="state.technician" />
         </UFormGroup>
         <UFormGroup label="Date Installation" name="date">
             <UInput v-model="state.date" type="date" />
-        </UFormGroup>
+        </UFormGroup> -->
         <UButton type="submit">Submit</UButton>
         </UForm>
     </div>
