@@ -4,7 +4,9 @@ import type { FormSubmitEvent } from "#ui/types";
 import { areaAdminApi } from "@/api/admin/area";
 
 const schema = object({
-  name: string().required("Name is required"),
+  name: string().required("Name is required").max(3, "max 3 words"),
+  name: string().required("Name is required").max(3, "max 3 words"),
+  name: string().required("Name is required").max(3, "max 3 words"),
 });
 
 type Schema = InferType<typeof schema>;
@@ -21,7 +23,15 @@ const props = defineProps({
         type: String,
         default: ''
       },
-      name: {
+      name_city: {
+        type: String,
+        default: ''
+      },
+      name_subdistrict: {
+        type: String,
+        default: ''
+      },
+      name_village: {
         type: String,
         default: ''
       }
@@ -29,7 +39,9 @@ const props = defineProps({
   }
 })
 const state = reactive({
-  name: "",
+  name_city: "",
+  name_subdistrict: "",
+  name_village: "",
 });
 
 watch(
@@ -37,10 +49,11 @@ watch(
   (newValue) => {
     console.log("newValue", props.isEdit, newValue)
     if (newValue) {
-      state.name = props.data.name
+      state.name_city = props.data.name_city
+      state.name_subdistrict = props.data.name_subdistrict
+      state.name_village = props.data.name_village
     } else {
       clearState()
-
     }
   },
   { immediate: true }
