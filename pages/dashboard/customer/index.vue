@@ -1,21 +1,11 @@
 <script setup lang="ts">
 import FormCustomerInstallation from './FormCustomerInstallation.vue'
 import FormAddComponent from './FormAddComponent.vue'
-const people = [{
-    id: 1,
-    name: 'John Doe',
-    email: 'Johndoe@rmail.com',
-    phone: '1234567890',
-    address: '123 Main St',
-    area_code: '12345',
-    gmaps_link: 'https://www.google.com/maps/place/-6.2113333,106.6425833',
-    packet_internet: '100 Mbps',
-    ip_static: '',
-    mac_address: '00:1A:2B:3C:4D:5E',
-}]
+import { customerAdminApi } from '@/api/admin/customer'
+let customer = ref<any[]>([])
 
-type Person = {
-    id: number
+type Customer = {
+    id: string
     name: string
     email: string
     phone: string
@@ -27,9 +17,43 @@ type Person = {
     mac_address: string
 }
 
+async function getData() {
+    await customerAdminApi().getAllCustomers().then((response) => {
+        response.data.forEach((customer: any) => {
+            customer.number = response.data.indexOf(customer) + 1;
+            customer.area_name = customer.area.name
+            customer.product_name = customer.product.name
+            customer.gmaps_link = "https://www.google.com/maps/place/" + customer.latitude + "," + customer.longitude
+        })
+
+        customer.value = [...response.data]
+    }).catch((err) => {
+        useToast().add({
+            title: err,
+            color: "red"
+        })
+    })
+}
+
+async function deleteData(id: string) {
+    await customerAdminApi().deleteCustomer(id).then((response) => {
+        getData()
+        useToast().add({
+            title: response.message,
+        })
+    }).catch((err) => {
+        useToast().add({
+            title: err,
+            color: "red"
+        })
+    })
+}
+
+await getData();
+
 const columns = [
     {
-        key: 'id',
+        key: 'number',
         label: 'Number'
     }, {
         key: 'name',
@@ -44,10 +68,10 @@ const columns = [
         key: 'address',
         label: 'Address'
     }, {
-        key: 'area_code',
+        key: 'area_name',
         label: 'Area Code'
     }, {
-        key: 'packet_internet',
+        key: 'product_name',
         label: 'Packet Internet'
     }, {
         key: 'ip_static',
@@ -65,40 +89,40 @@ const page = ref(1)
 const pageCount = 5
 
 const rows = computed(() => {
-    return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    return customer.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
 const q = ref('')
 
-let peopleData = people
+let customerData = customer
 
-const filteredRows = computed(() => {
-    if (!q.value) {
-        peopleData = people
-        return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-    }
+// const filteredRows = computed(() => {
+//     if (!q.value) {
+//         customerData = customer
+//         return customer.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+//     }
 
-    const newData = people.filter((person) => {
-        return Object.values(person).some((value) => {
-            // person with paginate
-            return String(value).toLowerCase().includes(q.value.toLowerCase())
-        })
-    })
-    peopleData = newData
-    return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-})
+//     const newData = customer.value.filter((person) => {
+//         return Object.values(person).some((value) => {
+//             // person with paginate
+//             return String(value).toLowerCase().includes(q.value.toLowerCase())
+//         })
+//     })
+//     customerData.value = newData
+//     return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+// })
 
 const isOpen = ref(false)
 
-const items = (row: Person) => [
+const items = (row: Customer) => [
     [{
         label: 'Edit',
         icon: 'i-heroicons-pencil-square-20-solid',
-        click: () => console.log('Edit', row.id)
+        click: () => OpenModalAddCustomer(true, row)
     }], [{
         label: 'Add Report Installation',
         icon: 'i-heroicons-archive-box-20-solid',
-        click: () => OpenModalReportInstallation(row)
+        click: () => OpenModalReportInstallation(true, row)
     }, {
         label: 'View Maps',
         icon: 'i-heroicons-arrow-right-circle-20-solid',
@@ -109,35 +133,50 @@ const items = (row: Person) => [
         click: () => window.open("", '_blank')
     }], [{
         label: 'Delete',
-        icon: 'i-heroicons-trash-20-solid'
+        icon: 'i-heroicons-trash-20-solid',
+        click: () => deleteData(row.id)
     }]
 ]
 
 const toast = useToast()
 const modal = useModal()
 
-function OpenModalReportInstallation(row: { id: number }) {
-    modal.open(FormCustomerInstallation, {
-        onSuccess() {
-            toast.add({
-                title: 'Success !',
-                id: 'modal-success'
-            })
+function OpenModalAddCustomer(isEdit: boolean, data: any) {
+    modal.open(FormAddComponent, {
+        isEdit,
+        data,
+        async onSuccess() {
+            await getData()
+            modal.close()
         }
     })
 }
 
+function OpenModalReportInstallation(isEdit: boolean, data: any) {
+    modal.open(FormCustomerInstallation, {
+        isEdit,
+        data,
+        async onSuccess() {
+            await getData()
+            toast.add({
+                title: 'Success !',
+                id: 'modal-success'
+            })
+            modal.close()
+        }
+    })
+}
 </script>
 
 
 <template>
 
-    <UButton label="Add Customer" @click="isOpen = true" />
+    <UButton label="Add Customer" @click="OpenModalAddCustomer(false, null)" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-        <UInput v-model="q" placeholder="Filter people..." />
+        <UInput v-model="q" placeholder="Filter customer..." />
     </div>
 
-    <UTable :rows="filteredRows" :columns="columns">
+    <UTable :rows="customer" :columns="columns">
 
         <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
@@ -147,15 +186,7 @@ function OpenModalReportInstallation(row: { id: number }) {
     </UTable>
 
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-        <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
+        <UPagination v-model="page" :page-count="pageCount" :total="6" />
     </div>
 
-    <div>
-        <UModal v-model="isOpen">
-            <div class="p-4">
-                <Placeholder class="h-48" />
-                <FormAddComponent></FormAddComponent>
-            </div>
-        </UModal>
-    </div>
 </template>

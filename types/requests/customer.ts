@@ -12,7 +12,7 @@ export type CreateCustomerRequest = {
   latitude: Number
   longitude: Number
   password: String
-  internet_package: String
+  product_id: String
   ip_static: String
   mac_address: String
   job: String
