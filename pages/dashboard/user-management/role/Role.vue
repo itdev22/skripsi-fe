@@ -1,24 +1,39 @@
 <script setup lang="ts">
-import AddRoleForm from './AddRoleForm.vue';
+import { userManagementAdminApi } from "@/api/admin/user-management";
+import AddRoleForm from "./AddRoleForm.vue";
+let role: any[] = [];
 
-
-const dataList = [
-  {
-    id: 1,
-    customer: "Lindsay Walton",
-    internet_packet: "12 mbps",
-    date: "2024-05-01",
-  },
-];
+async function fetchAllRole() {
+  await userManagementAdminApi()
+    .getAllRole()
+    .then((response) => {
+      response.data.forEach((user: any) => {
+        user.number = response.data.indexOf(user) + 1;
+      });
+      role = [...response.data];
+      q.value = "changed";
+      q.value = "";
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+}
+await fetchAllRole();
 
 const columns = [
+  { key: "number", label: "Number" },
   { key: "name", label: "Name" },
-  { key: "manage", label: "Manage" },
   {
     key: "actions",
     label: "Actions",
   },
 ];
+
+const page = ref(1);
+const pageCount = 5;
+
+const q = ref("");
+
 type Role = {
   id: number;
   name: string;
@@ -29,45 +44,77 @@ const items = (row: Role) => [
     {
       label: "Edit",
       icon: "i-heroicons-pencil-square-20-solid",
-      click: () => console.log("Edit", row.id),
+      click: () => openEditUserModal(row.id.toString()),
     },
   ],
   [
     {
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
+      click: () => deleteUser(row.id.toString()),
     },
   ],
 ];
 
 
-const q = ref("");
-
 const toast = useToast();
 const modal = useModal();
 const count = ref(0);
 
-function openModal() {
+const isOpen = ref(false);
+
+function openAddUserModal() {
   modal.open(AddRoleForm, {
-    onSuccess() {
-      toast.add({
-        title: "Success !",
-        id: "modal-success",
-      });
-    },
+    onSuccess: handleSubmitUser,
   });
+}
+
+function openEditUserModal(companyId: string) {
+  modal.open(AddRoleForm, {
+    id: companyId,
+    onSuccess: handleSubmitUser,
+  });
+}
+
+async function handleSubmitUser() {
+  toast.add({
+    title: "Success!",
+    id: "modal-success",
+  });
+
+  await fetchAllRole();
+  modal.close();
+  isOpen.value = false;
+}
+async function deleteUser(companyId: string) {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this company?"
+  );
+  if (!confirmed) return;
+
+  try {
+    await userManagementAdminApi().deleteUser(companyId);
+    toast.add({
+      title: "Success!",
+      id: "modal-success",
+    });
+
+    await fetchAllRole();
+  } catch (error) {
+    console.error("Error deleting company:", error);
+  }
 }
 </script>
 
 <template>
-  <UButton label="Add Role" @click="openModal" />
+  <UButton label="Add Role" @click="openAddUserModal" />
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Filter people..." />
   </div>
   <!-- <div
     class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700"
   ></div> -->
-  <UTable :rows="dataList" :columns="columns">
+  <UTable :rows="role" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
         <UButton
@@ -82,10 +129,10 @@ function openModal() {
   <div
     class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
   >
-    <!-- <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="peopleData.length"
-          /> -->
+    <UPagination
+      v-model="page"
+      :page-count="pageCount"
+      :total="role.length"
+    />
   </div>
 </template>

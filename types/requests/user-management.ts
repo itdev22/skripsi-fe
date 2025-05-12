@@ -7,3 +7,7 @@ export type CreateUserRequest = {
   password_confirm: String,
   phone:String
   }
+
+  export type CreateRoleRequest = {
+  name: String,
+  }

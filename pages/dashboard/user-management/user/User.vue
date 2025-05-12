@@ -31,6 +31,7 @@ type User = {
   Type: string;
 };
 const columns = [
+  { key: "number", label: "Number" },
   { key: "avatar", label: "Avatar" },
   { key: "name", label: "Username" },
   { key: "email", label: "Full Name" },

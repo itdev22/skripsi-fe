@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { object, string } from 'yup';
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+});
 
 const state = reactive({
 
