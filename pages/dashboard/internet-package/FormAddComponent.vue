@@ -89,7 +89,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <div class="p-2 mb-4 text-2xl font-bold text-center">
                 <h1>Add New Internet Package</h1>
             </div>
-            {{ isEdit }}
             <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
                 <UFormGroup label="Package Name" name="name">

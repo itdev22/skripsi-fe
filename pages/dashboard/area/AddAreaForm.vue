@@ -33,15 +33,22 @@ const state = reactive({
 });
 
 watch(
-    () => props.isEdit,
-    (newValue) => {
-        console.log("newValue", props.isEdit, newValue)
-        if (newValue) {
-            state.name = props.data.name
-        }
-    },
-    { immediate: true }
+  () => props.isEdit,
+  (newValue) => {
+    console.log("newValue", props.isEdit, newValue)
+    if (newValue) {
+      state.name = props.data.name
+    } else {
+      clearState()
+
+    }
+  },
+  { immediate: true }
 )
+
+function clearState() {
+  state.name = ""
+}
 
 const emit = defineEmits(["success"]);
 
@@ -51,7 +58,7 @@ function onSuccess() {
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
   if (props.isEdit) {
-    areaAdminApi().editArea(props.data.id,state).then((response) => {
+    areaAdminApi().editArea(props.data.id, state).then((response) => {
       useToast().add({ title: response.message, color: "green" })
       onSuccess()
     }).catch((error) => {
