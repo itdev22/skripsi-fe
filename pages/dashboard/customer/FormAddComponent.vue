@@ -294,7 +294,7 @@ await internetPackageAdminApi().getAllInternetPacket().then((response) => {
 const areas = ref([])
 await areaAdminApi().getAllAreas().then((response) => {
   areas.value = response.data.map((value: any, index: number) => ({
-    label: value.name,
+    label: value.name_city + "-" + value.name_subdistrict + "-" + value.name_village,
     value: value.id
   }))
 })

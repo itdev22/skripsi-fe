@@ -4,9 +4,9 @@ import type { FormSubmitEvent } from "#ui/types";
 import { areaAdminApi } from "@/api/admin/area";
 
 const schema = object({
-  name_city: string().required("Name is required").max(3, "max 3 words"),
-  name_subdistrict: string().required("Name is required").max(3, "max 3 words"),
-  name_village: string().required("Name is required").max(3, "max 3 words"),
+  name_city: string().required("Name is required").min(3, "min 3 words"),
+  name_subdistrict: string().required("Name is required").min(4, "min 4 words"),
+  name_village: string().required("Name is required").min(4, "min 4 words"),
 });
 
 type Schema = InferType<typeof schema>;
@@ -97,13 +97,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </div>
 
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Name City" name="name">
+        <UFormGroup label="Name City" name="name_city">
           <UInput v-model="state.name_city" />
         </UFormGroup>        
-        <UFormGroup label="Name Subdistrict" name="name">
+        <UFormGroup label="Name Subdistrict" name="name_subdistrict">
           <UInput v-model="state.name_subdistrict" />
         </UFormGroup>        
-        <UFormGroup label="Name Village" name="name">
+        <UFormGroup label="Name Village" name="name_village">
           <UInput v-model="state.name_village" />
         </UFormGroup>
 
