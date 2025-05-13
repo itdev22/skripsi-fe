@@ -4,9 +4,9 @@ import type { FormSubmitEvent } from "#ui/types";
 import { areaAdminApi } from "@/api/admin/area";
 
 const schema = object({
-  name: string().required("Name is required").max(3, "max 3 words"),
-  name: string().required("Name is required").max(3, "max 3 words"),
-  name: string().required("Name is required").max(3, "max 3 words"),
+  name_city: string().required("Name is required").max(3, "max 3 words"),
+  name_subdistrict: string().required("Name is required").max(3, "max 3 words"),
+  name_village: string().required("Name is required").max(3, "max 3 words"),
 });
 
 type Schema = InferType<typeof schema>;
@@ -60,7 +60,7 @@ watch(
 )
 
 function clearState() {
-  state.name = ""
+  state.name_city = ""
 }
 
 const emit = defineEmits(["success"]);
@@ -97,8 +97,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </div>
 
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Name" name="name">
-          <UInput v-model="state.name" />
+        <UFormGroup label="Name City" name="name">
+          <UInput v-model="state.name_city" />
+        </UFormGroup>        
+        <UFormGroup label="Name Subdistrict" name="name">
+          <UInput v-model="state.name_subdistrict" />
+        </UFormGroup>        
+        <UFormGroup label="Name Village" name="name">
+          <UInput v-model="state.name_village" />
         </UFormGroup>
 
         <UButton type="submit" color="blue"> Submit </UButton>

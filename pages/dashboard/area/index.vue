@@ -10,8 +10,16 @@ const areaList = computed(()=>{
 })
 const columns = [
   {
-    key: "name",
-    label: "Area",
+    key: "name_city",
+    label: "City",
+  },
+  {
+    key: "name_subdistrict",
+    label: "Subdistrict",
+  },
+  {
+    key: "name_village",
+    label: "Village",
   },
   {
     key: "actions",
