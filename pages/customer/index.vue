@@ -75,7 +75,7 @@ function handlePayment() {
                 </UButton>
             </div>
 
-            <div class="p-6 bg-white border border-gray-200 shadow-lg rounded-xl">
+             <div class="p-6 bg-white border border-gray-200 shadow-lg rounded-xl">
                 <h2 class="mb-4 text-lg font-bold text-gray-800">Recent Invoices</h2>
                 <UTable :rows="transaction" :columns="columns" class="w-full" :class="{
                     'text-gray-800': true,
