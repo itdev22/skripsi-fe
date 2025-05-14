@@ -21,7 +21,7 @@ async function getData() {
     await customerAdminApi().getAllCustomers().then((response) => {
         response.data.forEach((customer: any) => {
             customer.number = response.data.indexOf(customer) + 1;
-            customer.area_name = customer.area.name
+            customer.area_name = customer.area.name_city + "-" + customer.area.name_subdistrict + "-" + customer.area.name_village
             customer.product_name = customer.product.name
             customer.gmaps_link = "https://www.google.com/maps/place/" + customer.latitude + "," + customer.longitude
         })
