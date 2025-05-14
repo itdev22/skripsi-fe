@@ -21,7 +21,7 @@ async function getData() {
     await customerAdminApi().getAllCustomers().then((response) => {
         response.data.forEach((customer: any) => {
             customer.number = response.data.indexOf(customer) + 1;
-            customer.area_name = customer.area.name
+            customer.area_name = customer.area.name_city + "-" + customer.area.name_subdistrict + "-" + customer.area.name_village
             customer.product_name = customer.product.name
             customer.gmaps_link = "https://www.google.com/maps/place/" + customer.latitude + "," + customer.longitude
         })
@@ -127,10 +127,6 @@ const items = (row: Customer) => [
         label: 'View Maps',
         icon: 'i-heroicons-arrow-right-circle-20-solid',
         click: () => window.open(row.gmaps_link, '_blank')
-    }, {
-        label: 'Upgrade',
-        icon: 'i-heroicons-arrow-up-circle-20-solid',
-        click: () => window.open("", '_blank')
     }], [{
         label: 'Delete',
         icon: 'i-heroicons-trash-20-solid',

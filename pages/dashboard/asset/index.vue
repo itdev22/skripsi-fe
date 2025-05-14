@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { assetAdminApi } from '@/api/admin/asset'
 import FormAddComponent from './AddAssetForm.vue'
 import { defaultAssets } from './asset.model'
 import { tableColumns } from './table'
@@ -8,45 +9,106 @@ const pageCount = 5
 
 const q = ref('')
 
-let peopleData = defaultAssets
+let assetData: any = defaultAssets
 
 const filteredRows = computed(() => {
     if (!q.value) {
-        peopleData = defaultAssets
-        return defaultAssets.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+        return defaultAssets.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
     }
 
-    const newData = defaultAssets.filter((person) => {
+    const newData = defaultAssets.value.filter((person) => {
         return Object.values(person).some((value) => {
             // person with paginate
             return String(value).toLowerCase().includes(q.value.toLowerCase())
         })
     })
-    peopleData = newData
     return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
+async function getData() {
+    await assetAdminApi().getAllAssets().then((response) => {
+        response.data.forEach((asset: any) => {
+            asset.number = response.data.indexOf(asset) + 1;
+        });
+
+        defaultAssets.value = [...response.data]
+    }).catch()
+}
+
+async function deleteAsset(assetId: string) {
+    await assetAdminApi().deleteAsset(assetId).then((response) => {
+        useToast().add({
+            title: response.message
+        })
+        getData()
+
+
+    }).catch((err) => {
+        useToast().add({
+            title: err,
+            color: "red"
+        })
+        getData()
+
+    })
+
+}
+
+await getData()
 const isOpen = ref(false)
+
+const toast = useToast()
+const modal = useModal()
+
+function OpenModalAddAsset(isEdit: boolean, data: any) {
+    modal.open(FormAddComponent, {
+        isEdit,
+        data,
+        async onSuccess() {
+            await getData()
+            modal.close()
+        }
+    })
+}
+
+const items = (row: any) => [
+    [{
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        click: () => OpenModalAddAsset(true, row)
+    }], [{
+        label: 'Add Report Installation',
+        icon: 'i-heroicons-archive-box-20-solid',
+        click: () => "a"
+    }, {
+        label: 'View Maps',
+        icon: 'i-heroicons-arrow-right-circle-20-solid',
+        click: () => "a"
+    }], [{
+        label: 'Delete',
+        icon: 'i-heroicons-trash-20-solid',
+        click: () => deleteAsset(row.id)
+    }]
+]
 
 </script>
 
 <template>
-    <UButton label="Add Asset" @click="isOpen = true" />
+    <UButton label="Add Asset" @click="OpenModalAddAsset(false, null)" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-        <UInput v-model="q" placeholder="Filter people..." />
+        <UInput v-model="q" placeholder="Filter asset..." />
     </div>
-    <UTable :columns="tableColumns" :rows="filteredRows" />
+    <UTable :columns="tableColumns" :rows="filteredRows">
+        <template #actions-data="{ row }">
+            <UDropdown :items="items(row)">
+                <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+            </UDropdown>
+        </template>
+    </UTable>
+
 
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-        <UPagination v-model="page" :page-count="pageCount" :total="peopleData.length" />
+        <UPagination v-model="page" :page-count="pageCount" :total="assetData.length" />
     </div>
 
-    <div>
-        <UModal v-model="isOpen">
-            <div class="p-4">
-                <Placeholder class="h-48" />
-                <FormAddComponent />
-            </div>
-        </UModal>
-    </div>
 </template>
