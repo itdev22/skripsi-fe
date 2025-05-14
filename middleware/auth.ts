@@ -6,7 +6,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if(to.path !== '/login'){
     authApi().verifyAuth()
     .then((response) => {
-      console.log(response)
       if (response.success == false) {
         authStore.logout()
       }

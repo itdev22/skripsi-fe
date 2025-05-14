@@ -93,7 +93,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <UModal>
     <div class="p-4">
       <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>Add New Area</h1>
+        <h1 v-if="!props.isEdit">Add New Area</h1>
+        <h1 v-if="props.isEdit">Edit Area</h1>
       </div>
 
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
