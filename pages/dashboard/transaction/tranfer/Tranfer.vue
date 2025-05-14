@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const dataList = [
-  {
-    id: 1,
-    avatar: "https://github.com/benjamincanac.png",
-    username: "Walton",
-    fullName: "Ahmad Walton",
-    type: "Admin",
-  },
-];
+const props = defineProps<{
+  data: { name: string; amount: number }[]
+}>()
+const rows = ref(props.data);
+
+watch(() => props.data, (newData) => {
+  rows.value = newData;
+}, { immediate: true });
+
 type User = {
   id: number;
   username: string;
@@ -15,10 +15,14 @@ type User = {
   Type: string;
 };
 const columns = [
-  { key: "id", label: "Number" },
+  { key: "number", label: "Number" },
   { key: "tranfer", label: "Account" },
   { key: "description", label: "Description" },
   { key: "amount", label: "Amount" },
+  {
+    key: "actions",
+    label: "Actions",
+  },
 ];
 const q = ref("");
 const page = 0;
@@ -66,7 +70,7 @@ const items = (row: User) => [
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Filter people..." />
   </div>
-  <UTable :rows="dataList" :columns="columns">
+  <UTable :rows="rows" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
         <UButton

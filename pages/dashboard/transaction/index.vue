@@ -1,12 +1,57 @@
 <script setup lang="ts">
-import BalanceSheet from './balance-sheet/BalanceSheet.vue';
-import Deposit from './deposit/Deposit.vue';
-import Expense from './expense/Expense.vue';
-import Tranfer from './tranfer/Tranfer.vue';
-import ViewTransaction from './view-transaction/ViewTransaction.vue';
+import { transactionAdminApi } from "@/api/admin/transaction";
+import BalanceSheet from "./balance-sheet/BalanceSheet.vue";
+import Deposit from "./deposit/Deposit.vue";
+import Expense from "./expense/Expense.vue";
+import Tranfer from "./tranfer/Tranfer.vue";
+import ViewTransaction from "./view-transaction/ViewTransaction.vue";
+const activeTab = ref(0);
 
+let transaction: any[] = [];
+const q = ref("");
+const isLoading = ref(true); // Flag untuk menandakan apakah data sedang dimuat
 
+async function fetchAllTransaction(params: any) {
+  await transactionAdminApi()
+    .getAllTransactions(params)
+    .then((response) => {
+      response.data.forEach((company: any) => {
+        company.number = response.data.indexOf(company) + 1;
+        company.logo_url =
+          company.logo_url || "https://via.placeholder.com/150";
+      });
+      transaction = [...response.data];
+      q.value = "changed";
+      q.value = "";
+    })
+    .catch((error) => {
+      console.error("Error fetching companies:", error);
+    })
+    .finally(() => {
+      console.log("succss");
+      
+      isLoading.value = false;
+    });
+}
+const queries: any = {
+  0: { type: "debit" },
+  1: { type: "credit" },
+  2: { type_cash: "cashflow" },
+  3: {},
+  4: {},
+};
 
+watch(
+  activeTab,
+  (tab) => {
+    const query = queries[tab]; // aman karena pakai Record<string, {type: string}>
+    if ( tab != 4) {
+      isLoading.value = true; // Menandakan data sedang dimuat
+      fetchAllTransaction(query);
+    }
+  },
+  { immediate: true }
+);
 
 const tab_items = [
   {
@@ -29,32 +74,27 @@ const tab_items = [
     label: "Balance Sheet",
     value: "balance-sheet",
   },
-  // {
-  //   label: "Report Customer Installation",
-  //   value: "report-customer",
-  // },
 ];
 </script>
 
 <template>
-  <UTabs :items="tab_items" class="w-full">
+  <UTabs :items="tab_items" class="w-full" v-model="activeTab">
     <template #item="{ item }">
       <div v-if="item.value == 'deposit'">
-        <Deposit />
+        <Deposit :data="transaction" v-if="!isLoading" />
       </div>
       <div v-if="item.value == 'expense'">
-        <Expense />
+        <Expense  :data="transaction" v-if="!isLoading"/>
       </div>
       <div v-if="item.value == 'tranfer'">
-        <Tranfer />
-      </div>
+        <Tranfer :data="transaction" v-if="!isLoading" />
+        </div>
       <div v-if="item.value == 'view-transaction'">
-        <ViewTransaction />
+        <ViewTransaction  :data="transaction" v-if="!isLoading"/>
       </div>
       <div v-if="item.value == 'balance-sheet'">
         <BalanceSheet />
       </div>
-
       <!-- <div v-if="item.value == 'report-customer'">
         <CustomerInstallation />
 

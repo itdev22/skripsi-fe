@@ -21,7 +21,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   authApi().loginAuth(state.email, state.password)
     .then((response) => {
 
-      authStore.login(response.data.token)
+      authStore.login({token:response.data.token,role_id:response.data.user.role.id})
       navigateTo('/dashboard')
     })
     .catch((error) => {
