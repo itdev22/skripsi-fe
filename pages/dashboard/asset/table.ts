@@ -1,6 +1,8 @@
+import { assetAdminApi } from "@/api/admin/asset";
+
 export const tableColumns = [
   {
-    key: "id",
+    key: "number",
     label: "Number",
   },
   {
@@ -34,5 +36,10 @@ export const tableColumns = [
   {
     key: "description",
     label: "Description",
+  },  {
+    key: "actions",
+    label: "Action",
   },
 ];
+
+
