@@ -28,14 +28,12 @@ const transaction: Transaction[] = [
 
 const status = 'active' as 'active' | 'non active';
 function handlePayment() {
-    // Placeholder for payment logic
     alert('Redirecting to payment gateway...');
 }
 </script>
 
 <template>
     <div class="min-h-screen bg-gray-100">
-        <!-- Header -->
         <div class="flex items-center justify-between p-4 text-white bg-green-600 shadow-md">
             <div>
                 <p class="text-sm">Hello, Welcome</p>
@@ -46,9 +44,7 @@ function handlePayment() {
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="max-w-4xl p-4 mx-auto space-y-6">
-            <!-- Next Payment Card -->
             <div class="p-6 bg-white border border-gray-200 shadow-lg rounded-xl">
                 <div class="mb-4 text-center">
                     <h2 class="text-xl font-bold text-gray-800">Next Payment</h2>
@@ -66,7 +62,6 @@ function handlePayment() {
                 </div>
             </div>
 
-            <!-- Status and Payment Button -->
             <div class="flex flex-col items-center gap-4">
                 <div class="flex flex-col items-center justify-center w-full max-w-md p-6 transition-all duration-300 rounded-lg"
                     :class="status === 'active' ? 'bg-green-500' : 'bg-red-500'">
@@ -80,7 +75,6 @@ function handlePayment() {
                 </UButton>
             </div>
 
-            <!-- Recent Invoices -->
             <div class="p-6 bg-white border border-gray-200 shadow-lg rounded-xl">
                 <h2 class="mb-4 text-lg font-bold text-gray-800">Recent Invoices</h2>
                 <UTable :rows="transaction" :columns="columns" class="w-full" :class="{
