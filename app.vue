@@ -8,7 +8,7 @@ const route = useRoute()
     <!-- <NuxtWelcome /> -->
     <!-- <NuxtUIProvider> -->
     <NuxtLayout>
-      <NuxtLayout name="navbar" v-if="route.path !== '/login' && route.path !== '/customer'">
+      <NuxtLayout name="navbar" v-if="route.path !== '/login' && route.path !== '/customer' && route.path !== '/'">
         <NuxtPage />
       </NuxtLayout>
       <NuxtPage v-if="route.path == '/login' || route.path == '/customer'" />
