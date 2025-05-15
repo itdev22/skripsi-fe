@@ -80,7 +80,6 @@ async function deleteData(id: string){
 <template>
   <div class="flex gap-2">
     <UButton icon="fa-plus" color="blue" label="Add New Area" @click="openModal(false,null)" />
-    <UButton icon="fa-download" color="blue" label="Reorder" />
   </div>
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Filter Area..." />
@@ -89,7 +88,6 @@ async function deleteData(id: string){
   <UTable :rows="areaList" :columns="columns">
     <template #actions-data="{ row }">
       <div class="flex gap-2">
-        <UButton icon="fa-bars" color="blue" label="List Contacts" />
         <UButton icon="fa-pencil" color="yellow" label="Edit" @click="openModal(true,row)" />
         <UButton icon="fa-trash" color="red" label="Delete" @click="deleteData(row.id)" />
       </div>
