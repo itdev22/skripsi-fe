@@ -4,21 +4,21 @@ import AddUserForm from "./AddUserForm.vue";
 let user: any[] = [];
 
 async function fetchAllUsers() {
-    await userManagementAdminApi()
-        .getAllUsers()
-        .then((response) => {
-            response.data.forEach((user: any) => {
-                user.number = response.data.indexOf(user) + 1;
-                user.avatar = user.logo_url || "https://via.placeholder.com/150";
-                user.role = user.role.name;
-            });
-            user = [...response.data];
-            q.value = "changed";
-            q.value = "";
-        })
-        .catch((error) => {
-            console.error("Error fetching user:", error);
-        });
+  await userManagementAdminApi()
+    .getAllUsers({ query: { role: "" } })
+    .then((response) => {
+      response.data.forEach((user: any) => {
+        user.number = response.data.indexOf(user) + 1;
+        user.avatar = user.logo_url || "https://via.placeholder.com/150";
+        user.role = user.role.name;
+      });
+      user = [...response.data];
+      q.value = "changed";
+      q.value = "";
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
 }
 
 
@@ -49,18 +49,18 @@ const q = ref("");
 
 let userData = user;
 const filteredRows = computed(() => {
-    if (!q.value) {
-        userData = user;
-        return user.slice((page.value - 1) * pageCount, page.value * pageCount);
-    }
+  if (!q.value) {
+    userData = user;
+    return user.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
 
-    const newData = user.filter((person) => {
-        return Object.values(person).some((value) => {
-            return String(value).toLowerCase().includes(q.value.toLowerCase());
-        });
+  const newData = user.filter((person) => {
+    return Object.values(person).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
-    userData = newData;
-    return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+  });
+  userData = newData;
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
 
@@ -92,45 +92,45 @@ const items = (row: User) => [
 const isOpen = ref(false);
 
 function openAddUserModal() {
-    modal.open(AddUserForm, {
-        onSuccess: handleSubmitUser,
-    });
+  modal.open(AddUserForm, {
+    onSuccess: handleSubmitUser,
+  });
 }
 
 function openEditUserModal(companyId: string) {
-    modal.open(AddUserForm, {
-        id: companyId,
-        onSuccess: handleSubmitUser,
-    });
+  modal.open(AddUserForm, {
+    id: companyId,
+    onSuccess: handleSubmitUser,
+  });
 }
 
 
 async function handleSubmitUser() {
-    toast.add({
-        title: "Success!",
-        id: "modal-success",
-    });
+  toast.add({
+    title: "Success!",
+    id: "modal-success",
+  });
 
-    await fetchAllUsers();
-    modal.close();
-    isOpen.value = false;
+  await fetchAllUsers();
+  modal.close();
+  isOpen.value = false;
 }
 
 async function deleteUser(companyId: string) {
-    const confirmed = window.confirm("Are you sure you want to delete this company?");
-    if (!confirmed) return;
+  const confirmed = window.confirm("Are you sure you want to delete this company?");
+  if (!confirmed) return;
 
-    try {
-        await userManagementAdminApi().deleteUser(companyId);
-        toast.add({
-            title: "Success!",
-            id: "modal-success",
-        });
+  try {
+    await userManagementAdminApi().deleteUser(companyId);
+    toast.add({
+      title: "Success!",
+      id: "modal-success",
+    });
 
-        await fetchAllUsers();
-    } catch (error) {
-        console.error("Error deleting company:", error);
-    }
+    await fetchAllUsers();
+  } catch (error) {
+    console.error("Error deleting company:", error);
+  }
 }
 
 </script>
@@ -146,22 +146,12 @@ async function deleteUser(companyId: string) {
     </template>
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton
-          color="gray"
-          variant="ghost"
-          icon="i-heroicons-ellipsis-horizontal-20-solid"
-        />
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
       </UDropdown>
     </template>
   </UTable>
 
-  <div
-    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-  >
-    <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="100"
-          />
+  <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+    <UPagination v-model="page" :page-count="pageCount" :total="100" />
   </div>
 </template>

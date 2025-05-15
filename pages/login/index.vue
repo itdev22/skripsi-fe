@@ -25,7 +25,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       navigateTo('/dashboard')
     })
     .catch((error) => {
-console.log(error,"apa ini")
+      console.log(error, "apa ini")
       useToast().add({
         title: error,
         color: "red"
@@ -43,19 +43,29 @@ async function onError(event: FormErrorEvent) {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen">
-    <div class="p-4 m-4 bg-white rounded-lg shadow">
-      <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit" @error="onError">
-        <UFormGroup label="Email" name="email">
-          <UInput v-model="state.email" />
+  <div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-green-800 to-black">
+    <div
+      class="w-full max-w-md p-8 m-4 border shadow-lg backdrop-blur-lg bg-green-400/10 border-green-500/20 rounded-2xl">
+      <div class="flex justify-center mb-6">
+        <p class="text-3xl font-bold text-white">
+          Lilly <span class="text-green-400">ISP</span>
+        </p>
+      </div>
+
+      <UForm :validate="validate" :state="state" class="space-y-6" @submit="onSubmit" @error="onError">
+        <UFormGroup name="email">
+          <h1 class="mb-1 text-xl font-semibold text-white animate-fade-in-up">Email</h1>
+          <UInput v-model="state.email" size="lg" />
         </UFormGroup>
 
-        <UFormGroup label="Password" name="password">
-          <UInput v-model="state.password" type="password" />
+        <UFormGroup name="password">
+          <h1 class="mb-1 text-xl font-semibold text-white delay-100 animate-fade-in-up">Password</h1>
+          <UInput v-model="state.password" type="password" size="lg" />
         </UFormGroup>
 
-        <UButton type="submit">
-          Submit
+        <UButton type="submit"
+          class="flex justify-center w-full py-2 text-lg font-semibold text-white transition duration-200 ease-in-out bg-green-500 rounded-lg hover:bg-green-400">
+          Sign In
         </UButton>
       </UForm>
     </div>

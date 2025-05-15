@@ -275,29 +275,34 @@ const type_of_services = [
 ];
 
 const companies = ref([]);
-await companyAdminApi().getAllCompanies().then((response) => {
-  companies.value = response.data.map((value: any, index: number) => ({
-    label: value.name,
-    value: value.id
-  }))
-})
-const internet_packages = ref([
-
-]);
-await internetPackageAdminApi().getAllInternetPacket().then((response) => {
-  internet_packages.value = response.data.map((value: any, index: number) => ({
-    label: value.name,
-    value: value.id
-  }))
-})
-
+const internet_packages = ref([]);
 const areas = ref([])
-await areaAdminApi().getAllAreas().then((response) => {
-  areas.value = response.data.map((value: any, index: number) => ({
-    label: value.name_city + "-" + value.name_subdistrict + "-" + value.name_village,
-    value: value.id
-  }))
-})
+
+async function getDataOptions() {
+  companyAdminApi().getAllCompanies().then((response) => {
+    companies.value = response.data.map((value: any, index: number) => ({
+      label: value.name,
+      value: value.id
+    }))
+  })
+
+  internetPackageAdminApi().getAllInternetPacket().then((response) => {
+    internet_packages.value = response.data.map((value: any, index: number) => ({
+      label: value.name,
+      value: value.id
+    }))
+  })
+
+  areaAdminApi().getAllAreas().then((response) => {
+    areas.value = response.data.map((value: any, index: number) => ({
+      label: value.name_city + "-" + value.name_subdistrict + "-" + value.name_village,
+      value: value.id
+    }))
+  })
+}
+await getDataOptions()
+
+
 </script>
 
 <template>
