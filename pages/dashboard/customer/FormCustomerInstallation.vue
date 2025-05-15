@@ -2,6 +2,7 @@
 import { boolean, object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import { userManagementAdminApi } from "@/api/admin/user-management";
+import { customerAdminApi } from "@/api/admin/customer";
 
 const props = defineProps({
   isEdit: {
@@ -52,7 +53,16 @@ watch(
 
 
 type Schema = InferType<typeof schema>;
-function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+   await customerAdminApi()
+      .createCustomerInstallation(state)
+      .then((response) => {
+        console.log("Success creating / editing company", response);
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error creating company:", error);
+      });
   // Do something with event.data
   console.log(event.data);
 }

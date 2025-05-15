@@ -42,6 +42,8 @@ export const transactionAdminApi = () => {
         phone: "",
         logo_url: "",
         description: "",
+    npwp: "",
+    address: "",
       }
     ) => {
       const response = await fetch(`${api}/api/admin/transaction`, {
@@ -68,6 +70,8 @@ export const transactionAdminApi = () => {
         phone: "",
         logo_url: "",
         description: "",
+    npwp: "",
+    address: "",
       }
     ) => {
       const response = await fetch(`${api}/api/admin/transaction/${transactionId}`, {

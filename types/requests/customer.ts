@@ -17,3 +17,14 @@ export type CreateCustomerRequest = {
   mac_address: String
   job: String
 }
+
+export type CreateCustomerInstallationRequest = {
+  customer_id: String,
+  technician_id: String,
+  date: String,
+  description:  String,
+  images: File[] ,
+  previews: String[] ,
+  selectedImage: String,
+  showModal: boolean,
+}
