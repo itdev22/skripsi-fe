@@ -16,6 +16,8 @@ const state = reactive({
   phone: "",
   logo_url: "",
   description: "",
+  npwp: "",
+  address: "",
 });
 
 if (props.id) {
@@ -99,6 +101,12 @@ async function onSubmit() {
         </UFormGroup>
         <UFormGroup label="Logo URL" name="logo_url">
           <UInput v-model="state.logo_url" />
+        </UFormGroup>
+        <UFormGroup label="NPWP" name="npwp">
+          <UInput v-model="state.npwp" />
+        </UFormGroup>
+        <UFormGroup label="Address" name="address">
+          <UInput v-model="state.address" />
         </UFormGroup>
         <UFormGroup label="Description" name="description">
           <UInput v-model="state.description" />

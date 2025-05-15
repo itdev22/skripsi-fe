@@ -76,15 +76,7 @@ const items = (row: any) => [
         label: 'Edit',
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => OpenModalAddAsset(true, row)
-    }], [{
-        label: 'Add Report Installation',
-        icon: 'i-heroicons-archive-box-20-solid',
-        click: () => "a"
     }, {
-        label: 'View Maps',
-        icon: 'i-heroicons-arrow-right-circle-20-solid',
-        click: () => "a"
-    }], [{
         label: 'Delete',
         icon: 'i-heroicons-trash-20-solid',
         click: () => deleteAsset(row.id)

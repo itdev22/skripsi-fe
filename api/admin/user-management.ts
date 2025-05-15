@@ -18,13 +18,18 @@ export const userManagementAdminApi = () => {
       return response.json();
     },
 
-    getAllUsers: async () => {
-      const response = await fetch(`${api}/api/admin/user-management`, {
+    getAllUsers: async ({ query = { role: "" } }: { query?: { role?: string } }) => {
+      let querySearch =""
+      if(query.role != ""){
+        querySearch = `?role=${query.role}`
+      }
+
+      const response = await fetch(`${api}/api/admin/user-management${querySearch}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${useCookie("token").value}`,
-        },
+        }
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -41,7 +46,7 @@ export const userManagementAdminApi = () => {
         role_id: "",
         password: "",
         password_confirm: "",
-        phone:""
+        phone: ""
       }
     ) => {
       const response = await fetch(`${api}/api/admin/user-management`, {
@@ -68,7 +73,7 @@ export const userManagementAdminApi = () => {
         role_id: "",
         password: "",
         password_confirm: "",
-        phone:""
+        phone: ""
       }
     ) => {
       const response = await fetch(`${api}/api/admin/user-management/${userId}`, {
@@ -129,7 +134,7 @@ export const userManagementAdminApi = () => {
       }
       return response.json();
     },
-       
+
 
     createRole: async (
       data: CreateRoleRequest = {

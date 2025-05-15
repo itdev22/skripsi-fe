@@ -141,13 +141,6 @@ const items = (row: Person) => [
     ],
     [
         {
-            label: "Upgrade",
-            icon: "i-heroicons-arrow-up-circle-20-solid",
-            click: () => window.open("", "_blank"),
-        },
-    ],
-    [
-        {
             label: "Delete",
             icon: "i-heroicons-trash-20-solid",
             click: () => deleteCompany(row.id.toString()),

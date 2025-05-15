@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { boolean, object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { userManagementAdminApi } from "@/api/admin/user-management";
 
 const props = defineProps({
   isEdit: {
@@ -9,31 +10,46 @@ const props = defineProps({
   },
   data: {
     type: Object,
-    default: () => {
-
-    }
+    default: () => ({
+      customer_id: {
+        type: string,
+        default: ""
+      },
+      technician_id: {
+        type: string,
+        default: ""
+      }
+    })
   }
 })
 
 const schema = object({
-  customer: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  technician: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  description: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  date: string().required("Required"),
+
 });
 
 const state = reactive({
-  customer: "",
-  technician: "",
+  customer_id: "",
+  technician_id: "",
   date: "",
   description: "",
+  images: [] as File[],
+  previews: [] as string[],
+  selectedImage: "",
+  showModal: false,
 });
+
+state.date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1).toString().padStart(2, '0') + "-" + (new Date().getDate()).toString().padStart(2, '0')
+
+watch(
+  () => props.isEdit,
+  (newValue) => {
+    if (newValue) {
+      state.customer_id = props.data.id
+    }
+  },
+  { immediate: true }
+)
+
 
 type Schema = InferType<typeof schema>;
 function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -46,6 +62,54 @@ const emit = defineEmits(["success"]);
 function onSuccess() {
   emit("success");
 }
+
+const getFormattedMonth = () => {
+  return (new Date().getMonth() + 1).toString().padStart(2, '0');
+};
+
+// Handle file upload with safe event handling
+const handleFileUpload = (event: FileList) => {
+  const input = event;
+
+  if (input) {
+    const files = input;
+    state.images.push(...Array.from(files));
+    // state.images = Array.from(files); // Store selected files
+    // state.previews = []; // Clear previous previews
+    const month = getFormattedMonth(); // e.g., "05" for May
+
+    Array.from(files).forEach((file, index) => {
+      console.log(`Selected file: ${file.name} for month ${month}`);
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target?.result) {
+            state.previews.push(e.target.result as string); // Add base64 preview
+          }
+        };
+        reader.readAsDataURL(file); // Convert to base64 for preview
+      } else {
+        console.warn(`File ${file.name} is not an image`);
+      }
+    });
+  } else {
+    console.error('No files selected or input element not found');
+  }
+};
+
+const options = ref<any[]>([])
+
+async function getTechnicianData(){
+    userManagementAdminApi().getAllUsers({query:{role:"TECHNICIAN"}}).then((response)=>{
+        options.value = [...response.data]
+    })
+}
+
+await getTechnicianData()
+
+
+
+
 </script>
 
 <template>
@@ -56,11 +120,10 @@ function onSuccess() {
         <h1>Add New Customer Installation</h1>
       </div>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Customer" name="customer">
-          <UInput v-model="state.customer" />
-        </UFormGroup>
-        <UFormGroup label="Technician" name="technician">
-          <UInput v-model="state.technician" />
+        <UFormGroup label="Technician" name="technician_id">
+          <USelectMenu v-model="state.technician_id" :options="options" placeholder="Select a person" searchable
+            searchable-placeholder="Search by Technician name" option-attribute="name" value-attribute="id"
+            :search-attributes="['name']" />
         </UFormGroup>
         <UFormGroup label="Description" name="description">
           <UTextarea autoresize v-model="state.description" />
@@ -68,11 +131,17 @@ function onSuccess() {
         <UFormGroup label="Date Installation" name="date">
           <UInput v-model="state.date" type="date" />
         </UFormGroup>
-        <UFormGroup label="Upload Photos" name="upload_photos">
-          <UInput type="file" size="sm" icon="i-heroicons-folder" />
+        <UFormGroup label="Upload Photos" name="upload_photos" help="Select multiple images (PNG, JPG, etc.)">
+          <UInput ref="fileInput" type="file" size="sm" icon="i-heroicons-folder" multiple accept="image/*"
+            @change="handleFileUpload" />
         </UFormGroup>
+        <div v-if="state.previews.length" class="grid grid-cols-3 gap-2 mt-4">
+          <img v-for="(preview, index) in state.previews" :key="index" :src="preview" alt="Preview"
+            class="object-cover w-full h-32 rounded-md" />
+        </div>
         <UButton type="submit">Submit</UButton>
       </UForm>
     </div>
   </UModal>
+
 </template>
