@@ -35,14 +35,7 @@ export const transactionAdminApi = () => {
     },
 
     createTransactions: async (
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+      data: CreateCompanyRequest
     ) => {
       const response = await fetch(`${api}/api/admin/transaction`, {
         method: "POST",
@@ -61,14 +54,7 @@ export const transactionAdminApi = () => {
 
     editTransaction: async (
       transactionId: string,
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+      data: CreateCompanyRequest
     ) => {
       const response = await fetch(`${api}/api/admin/transaction/${transactionId}`, {
         method: "PUT",
