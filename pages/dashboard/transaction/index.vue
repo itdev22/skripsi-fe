@@ -29,7 +29,7 @@ async function fetchAllTransaction(params: any) {
     })
     .finally(() => {
       console.log("succss");
-      
+
       isLoading.value = false;
     });
 }
@@ -45,7 +45,7 @@ watch(
   activeTab,
   (tab) => {
     const query = queries[tab]; // aman karena pakai Record<string, {type: string}>
-    if ( tab != 4) {
+    if (tab != 4) {
       isLoading.value = true; // Menandakan data sedang dimuat
       fetchAllTransaction(query);
     }
@@ -81,16 +81,20 @@ const tab_items = [
   <UTabs :items="tab_items" class="w-full" v-model="activeTab">
     <template #item="{ item }">
       <div v-if="item.value == 'deposit'">
-        <Deposit :data="transaction" v-if="!isLoading" />
+        <Deposit
+          :data="transaction"
+          v-if="!isLoading"
+          :onRefresh="() => fetchAllTransaction(queries[activeTab])"
+        />
       </div>
       <div v-if="item.value == 'expense'">
-        <Expense  :data="transaction" v-if="!isLoading"/>
+        <Expense :data="transaction" v-if="!isLoading" />
       </div>
       <div v-if="item.value == 'tranfer'">
         <Tranfer :data="transaction" v-if="!isLoading" />
-        </div>
+      </div>
       <div v-if="item.value == 'view-transaction'">
-        <ViewTransaction  :data="transaction" v-if="!isLoading"/>
+        <ViewTransaction :data="transaction" v-if="!isLoading" />
       </div>
       <div v-if="item.value == 'balance-sheet'">
         <BalanceSheet />

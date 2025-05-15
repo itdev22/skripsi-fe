@@ -1,39 +1,54 @@
 <script setup lang="ts">
 import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import { transactionAdminApi } from "@/api/admin/transaction";
 
-const schema = object({
-  customer: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  technician: string()
-    .min(3, "Must be at least 3 characters")
-    .required("Required"),
-  date: string().required("Required"),
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
 });
-
-const user_type = [
-  {
-    label: "Full Administrator",
-    value: "admin",
-  },
-  {
-    label: "Employee",
-    value: "employee",
-  },
-  {
-    label: "Finance",
-    value: "finance",
-  },
-];
-
 const state = reactive({
-  username: "",
-  fullName: "",
-  user_type: "",
-  password: "",
-  confirmPassword: "",
+  account_id: "",
+  date: "",
+  description: "",
+  file: "",
+  amount: "",
+  category_id: "",
+  tags: "",
+  payer_id: "",
+  method_id: "",
+  ref: "",
 });
+if (props.id) {
+  await transactionAdminApi()
+    .getTransaction(props.id)
+    .then((response) => {
+      Object.assign(state, response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching companies:", error);
+    });
+}
+const schema = object({
+  account_id: string()
+    .min(3, "Must be at least 3 characters")
+    .required("Required"),
+});
+
+const isAdvanced = ref(false);
+
+const accounts = ref(["TEST1", "TEST2", "TEST3"]);
+// await companyAdminApi().getAllCompanies().then((response) => {
+//   companies.value = response.data.map((value: any, index: number) => ({
+//     label: value.name,
+//     value: value.id
+//   }))
+// })
+
+
 
 type Schema = InferType<typeof schema>;
 function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -41,12 +56,6 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log(event.data);
 }
 
-defineProps({
-  count: {
-    type: Number,
-    default: 0,
-  },
-});
 
 const emit = defineEmits(["success"]);
 
@@ -58,7 +67,7 @@ function onSuccess() {
 <template>
   <UModal>
     <div class="p-2 mb-4 text-2xl font-bold text-center">
-      <h1>Add New User</h1>
+      <h1>Add Deposit</h1>
     </div>
     <div class="p-4">
       <UForm
@@ -67,23 +76,70 @@ function onSuccess() {
         class="space-y-4"
         @submit="onSubmit"
       >
-        <UFormGroup label="Username" name="username">
-          <UInput v-model="state.username" />
-        </UFormGroup>
-        <UFormGroup label="Full Name" name="fullName">
-          <UInput v-model="state.fullName" />
-        </UFormGroup>
-        <URadioGroup
-          v-model="state.user_type"
-          legend="User Type"
-          :options="user_type"
-        />
-        <UFormGroup label="Password" name="password">
-          <UInput v-model="state.password" />
-        </UFormGroup>
-        <UFormGroup label="Confirm Password" name="confirmPassword">
-          <UInput v-model="state.confirmPassword" />
-        </UFormGroup>
+        <div class="flex gap-4 flex-row-2">
+          <div class="w-full">
+            <UFormGroup label="Account" name="account">
+              <USelectMenu
+                v-model="state.account_id"
+                :options="accounts"
+                value-attribute="value"
+                option-attribute="label"
+              />
+            </UFormGroup>
+            <UFormGroup label="Date" name="date">
+              <UInput v-model="state.date" type="date" />
+            </UFormGroup>
+            <UFormGroup label="Description" name="description">
+              <UInput v-model="state.description" />
+            </UFormGroup>
+            <UFormGroup label="Amount" name="amount">
+              <UInput v-model="state.amount" />
+            </UFormGroup>
+            <div class="flex justify-end">
+              <UButton
+                variant="link"
+                color="cyan"
+                @click="isAdvanced = !isAdvanced"
+              >
+                Advanced
+              </UButton>
+            </div>
+          </div>
+          <div class="w-full" v-if="isAdvanced">
+            <UFormGroup label="Category" name="category">
+              <USelectMenu
+                v-model="state.category_id"
+                :options="accounts"
+                value-attribute="value"
+                option-attribute="label"
+              />
+            </UFormGroup>
+            <UFormGroup label="Tags" name="tags">
+              <UInput v-model="state.tags" />
+            </UFormGroup>
+            <UFormGroup label="Payer" name="payer">
+              <USelectMenu
+                v-model="state.payer_id"
+                :options="accounts"
+                value-attribute="value"
+                option-attribute="label"
+              />
+            </UFormGroup>
+            <UFormGroup label="Method" name="method">
+              <USelectMenu
+                v-model="state.method_id"
+                :options="accounts"
+                value-attribute="value"
+                option-attribute="label"
+              />
+            </UFormGroup>
+            <UFormGroup label="Ref#" name="ref">
+              <UInput v-model="state.ref" />
+            </UFormGroup>
+            <p class="text-xs text-gray-500">e.g. Transaction ID, Check No.</p>
+          </div>
+        </div>
+
         <UButton type="submit">Submit</UButton>
       </UForm>
     </div>
