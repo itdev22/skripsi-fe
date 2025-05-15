@@ -34,14 +34,7 @@ export const companyAdminApi = () => {
     },
 
     createCompanies: async (
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+      data: CreateCompanyRequest
     ) => {
       const response = await fetch(`${api}/api/admin/company`, {
         method: "POST",
@@ -60,14 +53,7 @@ export const companyAdminApi = () => {
 
     editCompany: async (
       companyId: string,
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
-        description: "",
-      }
+      data: CreateCompanyRequest
     ) => {
       const response = await fetch(`${api}/api/admin/company/${companyId}`, {
         method: "PUT",
