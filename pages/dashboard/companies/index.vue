@@ -98,6 +98,7 @@ function openAddCompanyModal() {
 
 function openEditCompanyModal(companyId: string) {
     modal.open(AddCompanyForm, {
+        isEdit: true,
         id: companyId,
         onSuccess: handleSubmitCompany,
     });

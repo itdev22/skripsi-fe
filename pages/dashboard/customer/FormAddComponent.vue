@@ -311,7 +311,7 @@ await getDataOptions()
 
 
       <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>Add New Customer</h1>
+        <h1>{{ props.isEdit ? "Edit" : "Add New" }} Customer</h1>
       </div>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <!-- <URadioGroup v-model="state.submission_type" legend="Submission Type" :options="submission_types" /> -->

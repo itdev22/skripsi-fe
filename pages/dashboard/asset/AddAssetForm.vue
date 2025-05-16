@@ -157,8 +157,7 @@ async function onSubmit(event: FormSubmitEvent<AssetSchema>) {
 
 
       <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1 v-if="!props.isEdit">Add New Asset</h1>
-        <h1 v-if="props.isEdit">Edit Asset</h1>
+        <h1>{{ props.isEdit ? "Edit" : "Add New" }} Asset</h1>
       </div>
       <UForm :schema="assetSchema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Type" name="type">

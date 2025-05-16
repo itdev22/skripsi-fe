@@ -3,6 +3,10 @@ import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import { companyAdminApi } from "@/api/admin/company";
 const props = defineProps({
+  isEdit: {
+    type: Boolean,
+    default: false,
+  },
   id: {
     type: String,
     required: false,
@@ -79,7 +83,7 @@ async function onSubmit() {
   <UModal>
     <div class="p-4">
       <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>Add New Company</h1>
+        <h1>{{ props.isEdit ? "Edit" : "Add New" }} Company</h1>
       </div>
       <UForm
         :schema="schema"

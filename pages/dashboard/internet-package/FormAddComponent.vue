@@ -87,7 +87,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <UModal>
         <div class="p-4">
             <div class="p-2 mb-4 text-2xl font-bold text-center">
-                <h1>Add New Internet Package</h1>
+                <h1>{{ props.isEdit ? "Edit" : "Add New" }} Internet Package</h1>
             </div>
             <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
