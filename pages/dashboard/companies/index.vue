@@ -51,6 +51,12 @@ const columns = [
     {
         key: "url",
         label: "Website",
+    },    {
+        key: "npwp",
+        label: "NPWP",
+    },    {
+        key: "address",
+        label: "Address",
     },
     {
         key: "phone",
