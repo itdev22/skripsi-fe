@@ -36,7 +36,7 @@ async function getData() {
     res.data.map((item:any) => {
       item.customer = item.customer.name;
       item.technician = item.technician.name;
-      item.date = new Date(item.date).toLocaleDateString();
+      item.date = item.date.split("T")[0];
     });
     dataList.value = res.data;
   }).catch((err) => {
