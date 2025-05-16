@@ -14,14 +14,14 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-async function onSubmit(event: FormSubmitEvent<any>) {
+async function onSubmitEmployee(event: FormSubmitEvent<any>) {
   const authStore = useAuthStore()
   const api = useApiHost()
   console.log(api)
   authApi().loginAuth(state.email, state.password)
     .then((response) => {
 
-      authStore.login({token:response.data.token,role_id:response.data.user.role.id})
+      authStore.login({ token: response.data.token, role_id: response.data.user.role.id })
       navigateTo('/dashboard')
     })
     .catch((error) => {
@@ -40,6 +40,18 @@ async function onError(event: FormErrorEvent) {
   element?.focus()
   element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
+
+const items = [{
+  key: 'customer',
+  label: 'Customer',
+  description: 'Login as customer',
+},
+{
+  key: 'employee',
+  label: 'Employee',
+  description: 'Login as Employee',
+}
+]
 </script>
 
 <template>
@@ -52,22 +64,32 @@ async function onError(event: FormErrorEvent) {
         </p>
       </div>
 
-      <UForm :validate="validate" :state="state" class="space-y-6" @submit="onSubmit" @error="onError">
-        <UFormGroup name="email">
-          <h1 class="mb-1 text-xl font-semibold text-white animate-fade-in-up">Email</h1>
-          <UInput v-model="state.email" size="lg" />
-        </UFormGroup>
+      <UTabs :items="items" class="w-full">
+        <template #item="{ item }">
+          <div v-if="item.key === 'customer'" class="space-y-3">
 
-        <UFormGroup name="password">
-          <h1 class="mb-1 text-xl font-semibold text-white delay-100 animate-fade-in-up">Password</h1>
-          <UInput v-model="state.password" type="password" size="lg" />
-        </UFormGroup>
+          </div>
+          <div v-if="item.key === 'employee'" class="space-y-3">
+            <UForm :validate="validate" :state="state" class="space-y-6" @submit="onSubmitEmployee" @error="onError">
+              <UFormGroup name="email">
+                <h1 class="mb-1 text-xl font-semibold text-white animate-fade-in-up">Email</h1>
+                <UInput v-model="state.email" size="lg" />
+              </UFormGroup>
 
-        <UButton type="submit"
-          class="flex justify-center w-full py-2 text-lg font-semibold text-white transition duration-200 ease-in-out bg-green-500 rounded-lg hover:bg-green-400">
-          Sign In
-        </UButton>
-      </UForm>
+              <UFormGroup name="password">
+                <h1 class="mb-1 text-xl font-semibold text-white delay-100 animate-fade-in-up">Password</h1>
+                <UInput v-model="state.password" type="password" size="lg" />
+              </UFormGroup>
+
+              <UButton type="submit"
+                class="flex justify-center w-full py-2 text-lg font-semibold text-white transition duration-200 ease-in-out bg-green-500 rounded-lg hover:bg-green-400">
+                Sign In
+              </UButton>
+            </UForm>
+          </div>
+        </template>
+      </UTabs>
+
     </div>
   </div>
 </template>

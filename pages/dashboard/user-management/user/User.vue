@@ -99,6 +99,7 @@ function openAddUserModal() {
 
 function openEditUserModal(companyId: string) {
   modal.open(AddUserForm, {
+    isEdit: true,
     id: companyId,
     onSuccess: handleSubmitUser,
   });

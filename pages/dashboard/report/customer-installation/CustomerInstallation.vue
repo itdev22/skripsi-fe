@@ -1,15 +1,10 @@
 <script setup lang="ts">
+import { archiveInstallationAdminApi } from '@/api/admin/archive-installation';
 import FormCustomerInstallation from './FormCustomerInstallation.vue';
+import ImageViewComponent from './ImageViewComponent.vue';
 
 
-const dataList = [
-  {
-    id: 1,
-    customer: "Ahmad Walton",
-    technician: "Arul Lapangan",
-    date: "2024-05-01",
-  },
-];
+const dataList = ref([]);
 const columns = [
   { key: "customer", label: "Customer" },
   { key: "technician", label: "Technician" },
@@ -23,26 +18,34 @@ const q = ref("");
 const page = 0;
 const pageCount = 0;
 
-function handleClick(row:{id:number}) {
-  alert("clicked"+ row);
-}
-
 const toast = useToast()
 const modal = useModal()
-const count = ref(0)
 
-function openModal() {
-  count.value += 1
-  modal.open(FormCustomerInstallation, {
-    count: count.value,
-    onSuccess() {
-      toast.add({
-        title: 'Success !',
-        id: 'modal-success'
-      })
-    }
-  })
+function handleClick(row:any) {
+  modal.open(ImageViewComponent, {
+    image: row.images.map((item:any) => "https://skripsi-api.rtrsite.com/"+item.full_path),
+    onClose: () => {
+      modal.close();
+    },
+  });
 }
+
+
+async function getData() {
+  archiveInstallationAdminApi().getAllArchiveInstallation().then((res) => {
+    res.data.map((item:any) => {
+      item.customer = item.customer.name;
+      item.technician = item.technician.name;
+      item.date = new Date(item.date).toLocaleDateString();
+    });
+    dataList.value = res.data;
+  }).catch((err) => {
+    console.log(err);
+  });
+
+}
+
+getData();
 </script>
 
 <template>

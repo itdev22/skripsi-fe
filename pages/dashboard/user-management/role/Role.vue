@@ -71,6 +71,7 @@ function openAddUserModal() {
 
 function openEditUserModal(companyId: string) {
   modal.open(AddRoleForm, {
+    isEdit: true,
     id: companyId,
     onSuccess: handleSubmitUser,
   });

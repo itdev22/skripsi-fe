@@ -93,17 +93,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <UModal>
     <div class="p-4">
       <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1 v-if="!props.isEdit">Add New Area</h1>
-        <h1 v-if="props.isEdit">Edit Area</h1>
+        <h1>{{ props.isEdit ? "Edit" : "Add New" }} Area</h1>
       </div>
 
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Name City" name="name_city">
           <UInput v-model="state.name_city" />
-        </UFormGroup>        
+        </UFormGroup>
         <UFormGroup label="Name Subdistrict" name="name_subdistrict">
           <UInput v-model="state.name_subdistrict" />
-        </UFormGroup>        
+        </UFormGroup>
         <UFormGroup label="Name Village" name="name_village">
           <UInput v-model="state.name_village" />
         </UFormGroup>

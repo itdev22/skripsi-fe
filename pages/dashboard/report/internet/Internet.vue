@@ -1,29 +1,44 @@
 <script setup lang="ts">
+import { reportAdminApi } from '@/api/admin/report';
 import FormInternet from './FormInternet.vue';
 
 
-const dataList = [
-  {
-    id: 1,
-    customer: "Lindsay Walton",
-    internet_packet: "12 mbps",
-    date: "2024-05-01",
-  },
-];
+const dataList = ref([
+])
 
 const columns = [
+  { key: "number", label: "Number" },
   { key: "customer", label: "Customer" },
   { key: "internet_packet", label: "Internet Packet" },
   { key: "date", label: "Date Installation" },
-  {
-    key:"actions",
-    label: "Actions",
-  }
+  // {
+  //   key:"actions",
+  //   label: "Actions",
+  // }
 ];
 
 const toast = useToast()
 const modal = useModal()
-const count = ref(0)
+
+
+async function getDataReport() {
+  reportAdminApi().getReportInternet().then((res) => {
+    dataList.value = res.data.map((item:any) => {
+      return {
+        number: res.data.indexOf(item) + 1,
+        customer: item.name,
+        internet_packet: item.product,
+        date: item.installation_date.split('T')[0],
+      }
+    })
+  }).catch((err) => {
+    toast.add({
+      title: err.message,
+    })
+  })
+}
+
+getDataReport()
 
 function openModal() {
   modal.open(FormInternet, {

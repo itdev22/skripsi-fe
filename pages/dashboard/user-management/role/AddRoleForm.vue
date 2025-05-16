@@ -2,6 +2,10 @@
 import { userManagementAdminApi } from '@/api/admin/user-management';
 import { object, string } from 'yup';
 const props = defineProps({
+  isEdit: {
+    type: Boolean,
+    default: false,
+  },
   id: {
     type: String,
     required: false,
@@ -71,7 +75,7 @@ async function onSubmit(event: SubmitEvent) {
   <UModal>
     <div class="p-4">
         <div class="p-2 mb-4 text-2xl font-bold text-center">
-            <h1>Add New Customer Installation</h1>
+            <h1>{{ props.isEdit ? "Edit" : "Add New" }} Role</h1>
         </div>
         <UForm
         :schema="schema"

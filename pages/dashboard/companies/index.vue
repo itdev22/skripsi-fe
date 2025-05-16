@@ -51,6 +51,12 @@ const columns = [
     {
         key: "url",
         label: "Website",
+    },    {
+        key: "npwp",
+        label: "NPWP",
+    },    {
+        key: "address",
+        label: "Address",
     },
     {
         key: "phone",
@@ -98,6 +104,7 @@ function openAddCompanyModal() {
 
 function openEditCompanyModal(companyId: string) {
     modal.open(AddCompanyForm, {
+        isEdit: true,
         id: companyId,
         onSuccess: handleSubmitCompany,
     });
