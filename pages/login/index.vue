@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormError, FormErrorEvent, FormSubmitEvent } from '#ui/types'
 import { authApi } from '@/api/auth'
+import { authCustomerApi } from '@/api/customer/auth'
 
 const state = reactive({
   email: '',
@@ -35,6 +36,26 @@ async function onSubmitEmployee(event: FormSubmitEvent<any>) {
   console.log(event.data)
 }
 
+async function onSubmitCustomer(event: FormSubmitEvent<any>) {
+  const authStore = useAuthStore()
+  const api = useApiHost()
+  console.log(api)
+  authCustomerApi().loginAuth(state.email, state.password)
+    .then((response) => {
+
+      authStore.login({ token: response.data.token, })
+      navigateTo('/customer')
+    })
+    .catch((error) => {
+      console.log(error, "apa ini")
+      useToast().add({
+        title: error,
+        color: "red"
+      })
+    })
+
+  console.log(event.data)
+}
 async function onError(event: FormErrorEvent) {
   const element = document.getElementById(event.errors[0].id)
   element?.focus()
@@ -67,7 +88,22 @@ const items = [{
       <UTabs :items="items" class="w-full">
         <template #item="{ item }">
           <div v-if="item.key === 'customer'" class="space-y-3">
+             <UForm :validate="validate" :state="state" class="space-y-6" @submit="onSubmitCustomer" @error="onError">
+              <UFormGroup name="email">
+                <h1 class="mb-1 text-xl font-semibold text-white animate-fade-in-up">No. Handphone</h1>
+                <UInput v-model="state.email" size="lg" />
+              </UFormGroup>
 
+              <UFormGroup name="password">
+                <h1 class="mb-1 text-xl font-semibold text-white delay-100 animate-fade-in-up">Password</h1>
+                <UInput v-model="state.password" type="password" size="lg" />
+              </UFormGroup>
+
+              <UButton type="submit"
+                class="flex justify-center w-full py-2 text-lg font-semibold text-white transition duration-200 ease-in-out bg-green-500 rounded-lg hover:bg-green-400">
+                Sign In
+              </UButton>
+            </UForm>
           </div>
           <div v-if="item.key === 'employee'" class="space-y-3">
             <UForm :validate="validate" :state="state" class="space-y-6" @submit="onSubmitEmployee" @error="onError">

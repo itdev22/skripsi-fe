@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: (state) => !!useCookie('token').value,
   },
   actions: {
-    login({token,role_id}:{token:string,role_id:string}) {
+    login({token,role_id}:{token:string,role_id?:string}) {
       console.log(token, " role ",role_id)
       useCookie('token').value = token
       useCookie('role_id').value = role_id
