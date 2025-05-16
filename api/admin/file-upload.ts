@@ -6,13 +6,17 @@ export const uploadFileAdminApi = () => {
     createUploadFile: async (
       data: CreateFileUploadRequest
     ) => {
-      const response = await fetch(`${api}/api/admin/customer`, {
+      
+  const formData = new FormData();
+  formData.append("name", data.name);
+  formData.append("path", data.path);
+  formData.append("file", data.file); // pa
+      const response = await fetch(`${api}/api/file-upload`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${useCookie("token").value}`,
         },
-        body: JSON.stringify(data),
+        body: formData,
       });
       if (!response.ok) {
         const errorData = await response.json();
