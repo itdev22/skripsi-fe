@@ -6,6 +6,7 @@ import { formatIDR } from "@/helper/currency";
 const props = defineProps<{
   data: any[];
   onRefresh: () => Promise<void>;
+  type?: any;
 }>();
 const q = ref("");
 const page = 0;
@@ -33,10 +34,10 @@ const columns = [
   { key: "number", label: "Number" },
   { key: "description", label: "Description" },
   { key: "amount", label: "Amount" },
-  {
-    key: "actions",
-    label: "Actions",
-  },
+  // {
+  //   key: "actions",
+  //   label: "Actions",
+  // },
 ];
 
 function handleClick(row: { id: number }) {
@@ -68,6 +69,7 @@ const isOpen = ref(false);
 
 function openAddDepositModal() {
   modal.open(FormDeposit, {
+    type: props.type,
     onSuccess: handleSubmitDeposit,
   });
 }
@@ -75,6 +77,7 @@ function openAddDepositModal() {
 function openEditDepositModal(transactionId: string) {
   modal.open(FormDeposit, {
     id: transactionId,
+    type: props.type,
     onSuccess: handleSubmitDeposit,
   });
 }
@@ -111,6 +114,7 @@ async function deleteDeposit(transactionId: string) {
 }
 
 console.log("succss " + rows);
+
 </script>
 
 <template>

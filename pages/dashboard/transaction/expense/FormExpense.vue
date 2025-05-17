@@ -99,7 +99,7 @@ await getAccountData();
 <template>
   <UModal>
     <div class="p-2 mb-4 text-2xl font-bold text-center">
-      <h1>Add Deposit</h1>
+      <h1>Add Expense</h1>
     </div>
     <div class="p-4">
       <UForm

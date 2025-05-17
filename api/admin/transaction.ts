@@ -1,4 +1,5 @@
 import type { CreateCompanyRequest} from "@/types/requests/company";
+import type { CreateTransactionRequest } from "@/types/requests/transaction";
 
 export const transactionAdminApi = () => {
   const api = useApiHost();
@@ -35,15 +36,19 @@ export const transactionAdminApi = () => {
     },
 
     createTransactions: async (
-      data: CreateCompanyRequest = {
-        name: "",
-        url: "",
-        email: "",
-        phone: "",
-        logo_url: "",
+      data: CreateTransactionRequest = {
+        type_cash: "",
+        type_in_out: "",
+        account_id: "",
+        date: "",
         description: "",
-    npwp: "",
-    address: "",
+        file: "",
+        amount: "",
+        category_id: "",
+        tags: "",
+        payer_id: "",
+        method_id: "",
+        ref: "",
       }
     ) => {
       const response = await fetch(`${api}/api/admin/transaction`, {

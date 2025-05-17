@@ -27,9 +27,7 @@ const props = defineProps({
 
 const schema = object({
   technician_id: string().required("Customer is required"),
-  date: string()
-    .url("Logo URL must be a valid URL")
-    .required("Logo URL is required"),
+  date: string().required("Date is required"),
   image: string().required("Image is required"),
 });
 

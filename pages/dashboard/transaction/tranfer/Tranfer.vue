@@ -20,10 +20,10 @@ const columns = [
   { key: "account", label: "Account" },
   { key: "description", label: "Description" },
   { key: "amount", label: "Amount" },
-  {
-    key: "actions",
-    label: "Actions",
-  },
+  // {
+  //   key: "actions",
+  //   label: "Actions",
+  // },
 ];
 const q = ref("");
 const page = 0;

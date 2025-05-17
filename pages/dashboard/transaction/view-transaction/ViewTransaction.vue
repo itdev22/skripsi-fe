@@ -8,7 +8,7 @@ const rows = computed(() => {
   props.data.forEach((item, index) => {
     item.account = item.account.name;
     item.type = item.type_in_out;
-    item.balance = item.account.saldo;
+    item.balance = item.account?.saldo ??0;
   });
   return [...props.data];
 });
@@ -37,7 +37,7 @@ const columns = [
   // { key: "dr", label: "Dr." },
   // { key: "cr", label: "CR." },
   { key: "balance", label: "Balance" },
-  { key: "actions", label: "Actions" },
+  // { key: "actions", label: "Actions" },
 ];
 const q = ref("");
 const page = 0;
@@ -105,7 +105,7 @@ const items = (row: User) => [
       <p >{{ formatIDR(row.amount) }}</p>
     </template>
     <template #balance-data="{ row }">
-      <p >{{ formatIDR(row.account.saldo) }}</p>
+      <p >{{ formatIDR(row?.account?.saldo??0) }}</p>
     </template>
   </UTable>
 
