@@ -19,6 +19,8 @@
     "Math": "^0.0.1-security",
     "chart.js": "^4.4.8",
     "date-fns": "^4.1.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "nuxt": "^3.15.4",
     "nuxt-storage": "^1.2.2",
     "ohash": "^2.0.11",
