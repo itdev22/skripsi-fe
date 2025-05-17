@@ -159,7 +159,11 @@ function openModal() {
 <template>
     <!-- <UButton label="Add Report Cash Flow" @click="openModal" /> -->
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-        <UInput v-model="q" placeholder="Filter people..." />
+        <UInput v-model="q" placeholder="Search" />
+        <UButton
+            label="Generate PDF"
+            class="ml-2"
+            @click="navigateTo('/dashboard/psf')"></UButton>
     </div>
     <UTable :rows="filteredRows" />
 

@@ -113,7 +113,7 @@ async function deleteDeposit(transactionId: string) {
 <template>
   <UButton label="Add Deposit" @click="openAddDepositModal" />
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-    <UInput v-model="q" placeholder="Filter people..." />
+    <UInput v-model="q" placeholder="Search" />
   </div>
   <UTable v-if="rows.length" :rows="rows" :columns="columns">
     <template #actions-data="{ row }">
