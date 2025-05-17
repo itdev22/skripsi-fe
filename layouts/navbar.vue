@@ -21,12 +21,12 @@ const items = [
   },
   {
     label: "Report",
-    icon: "i-heroicons-cog-6-tooth-solid",
+    icon: "i-heroicons-book-open-solid",
     link: "/dashboard/report",
   },
   {
     label: "Internet Package",
-    icon: "i-heroicons-user-circle-16-solid",
+    icon: "i-heroicons-wifi-16-solid",
     link: "/dashboard/internet-package",
   },
   {
@@ -41,7 +41,7 @@ const items = [
   },
   {
     label: "Transaction",
-    icon: "i-heroicons-user-circle-16-solid",
+    icon: "i-heroicons-document-currency-dollar-16-solid",
     link: "/dashboard/transaction",
   },
   {

@@ -7,9 +7,9 @@
         <div class="bg-white p-6 w-[800px] text-sm text-black" ref="pdfContentRef">
           <!-- Header -->
           <div class="p-3 text-white bg-blue-800">
-            <h1 class="font-bold">PT Jaringan Rtrwnet Nusantara</h1>
-            <p class="text-xs">Neraca Saldo</p>
-            <p class="text-xs">Per Akhir <span class="float-right">31 Desember 2024</span></p>
+            <h1 class="font-bold">Lilly Apps</h1>
+            <p class="text-xs">Saldo Pemasukan dan Pengeluaran</p>
+            <p class="text-xs">Per Akhir <span class="float-right">{{ new Date() }}</span></p>
           </div>
 
           <!-- Section: Aktiva -->
