@@ -162,7 +162,7 @@ const modal = useModal();
 <template>
     <UButton label="Add Companies" @click="() => openAddCompanyModal()" />
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-        <UInput v-model="q" placeholder="Filter people..." />
+        <UInput v-model="q" placeholder="Search" />
     </div>
 
     <UTable :rows="filteredRows" :columns="columns">

@@ -6,71 +6,71 @@
       <client-only>
         <div class="bg-white p-6 w-[800px] text-sm text-black" ref="pdfContentRef">
           <!-- Header -->
-          <div class="p-3 text-white bg-blue-800">
-            <h1 class="font-bold">PT Jaringan Rtrwnet Nusantara</h1>
-            <p class="text-xs">Neraca Saldo</p>
-            <p class="text-xs">Per Akhir <span class="float-right">31 Desember 2024</span></p>
+          <div class="p-3 text-white bg-green-800">
+            <h1 class="font-bold">Lilly Apps</h1>
+            <p class="text-xs">Saldo Pemasukan dan Pengeluaran</p>
+            <p class="text-xs">Per Akhir <span class="float-right">{{ new Date() }}</span></p>
           </div>
 
           <!-- Section: Aktiva -->
           <div class="mt-4">
-            <h2 class="font-semibold text-blue-700">Aktiva Lancar</h2>
+            <h2 class="font-semibold text-green-700">Aktiva Lancar</h2>
             <table class="w-full mt-1">
               <tbody>
                 <tr v-for="item in aktivaLancar" :key="item.name">
                   <td class="pl-2">{{ item.name }}</td>
                   <td class="pr-2 text-right">{{ format(item.amount) }}</td>
                 </tr>
-                <tr class="font-bold text-blue-700 border-t">
+                <tr class="font-bold text-green-700 border-t">
                   <td class="pl-2">Total Aktiva Lancar</td>
                   <td class="pr-2 text-right">{{ format(total(aktivaLancar)) }}</td>
                 </tr>
               </tbody>
             </table>
 
-            <h2 class="mt-4 font-semibold text-blue-700">Aktiva Tidak Lancar</h2>
+            <h2 class="mt-4 font-semibold text-green-700">Aktiva Tidak Lancar</h2>
             <table class="w-full mt-1">
               <tbody>
                 <tr v-for="item in aktivaTidakLancar" :key="item.name">
                   <td class="pl-2">{{ item.name }}</td>
                   <td class="pr-2 text-right">{{ format(item.amount) }}</td>
                 </tr>
-                <tr class="font-bold text-blue-700 border-t">
+                <tr class="font-bold text-green-700 border-t">
                   <td class="pl-2">Total Aktiva Tidak Lancar</td>
                   <td class="pr-2 text-right">{{ format(total(aktivaTidakLancar)) }}</td>
                 </tr>
               </tbody>
             </table>
 
-            <div class="py-1 mt-3 font-bold text-right text-blue-900 border-t border-b">
+            <div class="py-1 mt-3 font-bold text-right text-green-900 border-t border-b">
               Total Assets: {{ format(total(aktivaLancar) + total(aktivaTidakLancar)) }}
             </div>
           </div>
 
           <!-- Section: Kewajiban -->
           <div class="mt-6">
-            <h2 class="font-semibold text-blue-700">Kewajiban Lancar</h2>
+            <h2 class="font-semibold text-green-700">Kewajiban Lancar</h2>
             <table class="w-full mt-1">
               <tbody>
                 <tr v-for="item in kewajibanLancar" :key="item.name">
                   <td class="pl-2">{{ item.name }}</td>
                   <td class="pr-2 text-right">{{ format(item.amount) }}</td>
                 </tr>
-                <tr class="font-bold text-blue-700 border-t">
+                <tr class="font-bold text-green-700 border-t">
                   <td class="pl-2">Total Kewajiban Lancar</td>
                   <td class="pr-2 text-right">{{ format(total(kewajibanLancar)) }}</td>
                 </tr>
               </tbody>
             </table>
 
-            <h2 class="mt-4 font-semibold text-blue-700">Kewajiban Tidak Lancar</h2>
+            <h2 class="mt-4 font-semibold text-green-700">Kewajiban Tidak Lancar</h2>
             <table class="w-full mt-1">
               <tbody>
                 <tr v-for="item in kewajibanTidakLancar" :key="item.name">
                   <td class="pl-2">{{ item.name }}</td>
                   <td class="pr-2 text-right">{{ format(item.amount) }}</td>
                 </tr>
-                <tr class="font-bold text-blue-700 border-t">
+                <tr class="font-bold text-green-700 border-t">
                   <td class="pl-2">Total Kewajiban Tidak Lancar</td>
                   <td class="pr-2 text-right">{{ format(total(kewajibanTidakLancar)) }}</td>
                 </tr>
@@ -87,7 +87,7 @@
     </div>
     
   </div>
-  <button @click="generatePDF" class="px-4 py-2 mt-4 text-white bg-blue-500 rounded">Download PDF</button>
+  <button @click="generatePDF" class="px-4 py-2 mt-4 text-white bg-green-500 rounded">Download PDF</button>
 </template>
 
 <script setup>

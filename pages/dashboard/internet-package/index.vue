@@ -108,7 +108,7 @@ const items = (row: any) => [
     <UButton label="Add Internet Package" @click="openModal(false, null)" />
     <!-- <UButton label="Push" @click="pushData" /> -->
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-        <UInput v-model="q" placeholder="Filter people..." />
+        <UInput v-model="q" placeholder="Search" />
     </div>
     <UTable :rows="internetPackageList" :columns="column">
         <template #actions-data="{ row }">
