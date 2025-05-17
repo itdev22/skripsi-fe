@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@pinia/nuxt", "@nuxt/ui",'@nuxtjs/leaflet'],
+  modules: ["@pinia/nuxt", "@nuxt/ui",'@nuxtjs/leaflet','@i2d/nuxt-pdf-frame'],
   // tailwindcss: {
   //   cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],
   //   config: {},

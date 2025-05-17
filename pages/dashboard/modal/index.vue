@@ -20,7 +20,5 @@ function openModal() {
 </script>
 
 <template>
-  {{ count }}
-  <UButton label="Reveal modal" @click="openModal" />
+ 
 </template>
-
