@@ -1,16 +1,25 @@
 <script setup lang="ts">
-const props = defineProps<{
-  data: { name: string; amount: number }[];
-}>();
-const rows = ref(props.data);
+import { formatIDR } from '@/helper/currency';
 
-watch(
-  () => props.data,
-  (newData) => {
-    rows.value = newData;
-  },
-  { immediate: true }
-);
+const props = defineProps<{
+  data: any[];
+}>();
+const rows = computed(() => {
+  props.data.forEach((item, index) => {
+    item.account = item.account.name;
+    item.type = item.type_in_out;
+    item.balance = item.account.saldo;
+  });
+  return [...props.data];
+});
+
+// watch(
+//   () => props.data,
+//   (newData) => {
+//     rows.value = newData;
+//   },
+//   { immediate: true }
+// );
 
 type User = {
   id: number;
@@ -21,14 +30,14 @@ type User = {
 const columns = [
   { key: "number", label: "Number" },
   { key: "date", label: "Date" },
-  { key: "tranfer", label: "Account" },
+  { key: "account", label: "Account" },
   { key: "type", label: "Type" },
   { key: "amount", label: "Amount" },
   { key: "description", label: "Description" },
-  { key: "dr", label: "Dr." },
-  { key: "cr", label: "CR." },
+  // { key: "dr", label: "Dr." },
+  // { key: "cr", label: "CR." },
   { key: "balance", label: "Balance" },
-  { key: "actions", label: "Actions" }
+  { key: "actions", label: "Actions" },
 ];
 const q = ref("");
 const page = 0;
@@ -85,6 +94,18 @@ const items = (row: User) => [
           icon="i-heroicons-ellipsis-horizontal-20-solid"
         />
       </UDropdown>
+    </template>
+    <template #date-data="{ row }">
+      <p>{{ row.date.split("T")[0] }}</p>
+    </template>
+    <template #type-data="{ row }">
+      <p class="capitalize">{{ row.type }}</p>
+    </template>
+     <template #amount-data="{ row }">
+      <p >{{ formatIDR(row.amount) }}</p>
+    </template>
+    <template #balance-data="{ row }">
+      <p >{{ formatIDR(row.account.saldo) }}</p>
     </template>
   </UTable>
 

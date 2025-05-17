@@ -1,14 +1,19 @@
 <script setup lang="ts">
+import { formatIDR } from "@/helper/currency";
 import FormRole from "./FormDeposit.vue";
 
 const props = defineProps<{
-  data: { name: string; amount: number }[]
-}>()
+  data: { name: string; amount: number }[];
+}>();
 const rows = ref(props.data);
 
-watch(() => props.data, (newData) => {
-  rows.value = newData;
-}, { immediate: true });
+watch(
+  () => props.data,
+  (newData) => {
+    rows.value = newData;
+  },
+  { immediate: true }
+);
 
 type User = {
   id: number;
@@ -19,7 +24,8 @@ type User = {
 const columns = [
   { key: "number", label: "Number" },
   { key: "description", label: "Description" },
-  { key: "amount", label: "Amount" }, {
+  { key: "amount", label: "Amount" },
+  {
     key: "actions",
     label: "Actions",
   },
@@ -79,6 +85,9 @@ function openModal() {
           icon="i-heroicons-ellipsis-horizontal-20-solid"
         />
       </UDropdown>
+    </template>
+    <template #amount-data="{ row }">
+      <p>{{ formatIDR(row.amount) }}</p>
     </template>
   </UTable>
 

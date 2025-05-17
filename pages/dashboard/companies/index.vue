@@ -3,6 +3,10 @@ import { companyAdminApi } from "@/api/admin/company";
 import AddCompanyForm from "./AddCompanyForm.vue";
 let people: any[] = [];
 
+const page = ref(1);
+const pageCount = 5;
+
+const q = ref("");
 async function fetchAllCompanies() {
     await companyAdminApi()
         .getAllCompanies()
@@ -72,10 +76,6 @@ const columns = [
     },
 ];
 
-const page = ref(1);
-const pageCount = 5;
-
-const q = ref("");
 
 let peopleData = people;
 

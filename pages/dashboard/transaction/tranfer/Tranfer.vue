@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatIDR } from "@/helper/currency";
 const props = defineProps<{
   data: { name: string; amount: number }[]
 }>()
@@ -16,7 +17,7 @@ type User = {
 };
 const columns = [
   { key: "number", label: "Number" },
-  { key: "tranfer", label: "Account" },
+  { key: "account", label: "Account" },
   { key: "description", label: "Description" },
   { key: "amount", label: "Amount" },
   {
@@ -79,6 +80,13 @@ const items = (row: User) => [
           icon="i-heroicons-ellipsis-horizontal-20-solid"
         />
       </UDropdown>
+    </template>
+    
+     <template #account-data="{ row }">
+      <p >{{row.account.name}}</p>
+    </template>
+     <template #amount-data="{ row }">
+      <p >{{ formatIDR(row.amount) }}</p>
     </template>
   </UTable>
 

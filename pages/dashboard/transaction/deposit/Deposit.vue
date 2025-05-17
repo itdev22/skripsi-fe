@@ -2,24 +2,28 @@
 import { transactionAdminApi } from "@/api/admin/transaction";
 import FormDeposit from "./FormDeposit.vue";
 import FormRole from "./FormDeposit.vue";
+import { formatIDR } from "@/helper/currency";
 const props = defineProps<{
-  data: { name: string; amount: number }[];
+  data: any[];
   onRefresh: () => Promise<void>;
 }>();
-const rows = ref(props.data);
+const q = ref("");
+const page = 0;
+const pageCount = 0;
+const rows = computed(() => props.data);
 
-watch(
-  props.data,
-  (newData) => {
-    console.log("newData", newData);
-    
-    rows.value = newData;
-  },
-  { immediate: true }
-);
+// watch(
+//   props.data,
+//   (newData) => {
+//     console.log("newData", newData);
+
+//     rows.value = newData;
+//   },
+//   { immediate: true }
+// );
 
 type Deposit = {
-  id: number;
+  id: string;
   username: string;
   fullName: string;
   Type: string;
@@ -34,9 +38,6 @@ const columns = [
     label: "Actions",
   },
 ];
-const q = ref("");
-const page = 0;
-const pageCount = 0;
 
 function handleClick(row: { id: number }) {
   alert("clicked" + row);
@@ -108,6 +109,8 @@ async function deleteDeposit(transactionId: string) {
     console.error("Error deleting company:", error);
   }
 }
+
+console.log("succss " + rows);
 </script>
 
 <template>
@@ -115,7 +118,7 @@ async function deleteDeposit(transactionId: string) {
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Filter people..." />
   </div>
-  <UTable v-if="rows.length" :rows="rows" :columns="columns">
+  <UTable v-if="rows" :rows="rows" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
         <UButton
@@ -124,6 +127,9 @@ async function deleteDeposit(transactionId: string) {
           icon="i-heroicons-ellipsis-horizontal-20-solid"
         />
       </UDropdown>
+    </template>
+    <template #amount-data="{ row }">
+      <p>{{ formatIDR(row.amount) }}</p>
     </template>
   </UTable>
 

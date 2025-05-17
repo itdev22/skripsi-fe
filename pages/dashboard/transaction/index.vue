@@ -34,9 +34,9 @@ async function fetchAllTransaction(params: any) {
     });
 }
 const queries: any = {
-  0: { type: "debit" },
-  1: { type: "credit" },
-  2: { type_cash: "cashflow" },
+  0: { type: "debit", type_cash: "cash_flow" },
+  1: { type: "credit", type_cash: "cash_flow" },
+  2: { type_cash: "cash_flow" },
   3: {},
   4: {},
 };
@@ -82,19 +82,31 @@ const tab_items = [
     <template #item="{ item }">
       <div v-if="item.value == 'deposit'">
         <Deposit
+          v-if="!isLoading"
+          :data="transaction"
+          :onRefresh="() => fetchAllTransaction(queries[activeTab])"
+        />
+      </div>
+      <div v-if="item.value == 'expense'">
+        <Expense
           :data="transaction"
           v-if="!isLoading"
           :onRefresh="() => fetchAllTransaction(queries[activeTab])"
         />
       </div>
-      <div v-if="item.value == 'expense'">
-        <Expense :data="transaction" v-if="!isLoading" />
-      </div>
       <div v-if="item.value == 'tranfer'">
-        <Tranfer :data="transaction" v-if="!isLoading" />
+        <Tranfer
+          :data="transaction"
+          v-if="!isLoading"
+          :onRefresh="() => fetchAllTransaction(queries[activeTab])"
+        />
       </div>
       <div v-if="item.value == 'view-transaction'">
-        <ViewTransaction :data="transaction" v-if="!isLoading" />
+        <ViewTransaction
+          :data="transaction"
+          v-if="!isLoading"
+          :onRefresh="() => fetchAllTransaction(queries[activeTab])"
+        />
       </div>
       <div v-if="item.value == 'balance-sheet'">
         <BalanceSheet />
