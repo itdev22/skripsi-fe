@@ -36,7 +36,7 @@ const columns = [
   { key: "description", label: "Description" },
   // { key: "dr", label: "Dr." },
   // { key: "cr", label: "CR." },
-  { key: "balance", label: "Balance" },
+  // { key: "balance", label: "Balance" },
   // { key: "actions", label: "Actions" },
 ];
 const q = ref("");
