@@ -39,6 +39,11 @@ const items = [
     icon: "i-heroicons-building-office-16-solid",
     link: "/dashboard/companies",
   },
+    {
+    label: "Invoice",
+    icon: "i-heroicons-document-currency-dollar-16-solid",
+    link: "/dashboard/invoice",
+  },
   {
     label: "Transaction",
     icon: "i-heroicons-document-currency-dollar-16-solid",
