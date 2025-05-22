@@ -17,6 +17,7 @@ type Customer = {
     mac_address: string
 }
 
+
 async function getData() {
     await customerAdminApi().getAllCustomers().then((response) => {
         response.data.forEach((customer: any) => {
@@ -172,7 +173,7 @@ function OpenModalReportInstallation(isEdit: boolean, data: any) {
         <UInput v-model="q" placeholder="Filter customer..." />
     </div>
 
-    <UTable :rows="customer" :columns="columns">
+    <UTable :rows="rows" :columns="columns">
 
         <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
