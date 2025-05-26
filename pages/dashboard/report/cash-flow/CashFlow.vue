@@ -35,7 +35,7 @@ const columns = [
     label: "Number",
   },
   {
-    key: "created_at",
+    key: "createdAt",
     label: "date",
   },
   {
@@ -55,16 +55,12 @@ const columns = [
     label: "Description",
   },
   {
-    key: "Dr.",
-    label: "DR.",
+    key: "Dr",
+    label: "Debit",
   },
   {
-    key: "Cr.",
-    label: "Cr.",
-  },
-  {
-    key: "balance",
-    label: "Balance",
+    key: "Cr",
+    label: "Credit",
   },
   {
     key: "actions",
@@ -97,10 +93,14 @@ async function fetchAllAccount() {
   await transactionAdminApi()
     .getAllTransactions({})
     .then((response) => {
-      response.data.forEach((company: any) => {
-        company.number = response.data.indexOf(company) + 1;
-        company.logo_url =
-          company.logo_url || "https://via.placeholder.com/150";
+      response.data.forEach((transaction: any) => {
+        transaction.number = response.data.indexOf(transaction) + 1;
+        transaction.createdAt = formatDateToYMD(transaction.createdAt);
+        transaction.type_in_out = transaction.type_in_out === "debit" ? "Debit" : "Credit";
+        transaction.Dr = transaction.type_in_out !== "Debit" ? "-" : formatIDR(transaction.amount);
+        transaction.Cr = transaction.type_in_out !== "Credit" ? "-" : formatIDR(transaction.amount);
+        transaction.balance = formatIDR(transaction.account.saldo);
+
       });
       transaction = [...response.data];
       q.value = "changed";

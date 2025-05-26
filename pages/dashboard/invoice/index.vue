@@ -60,12 +60,16 @@ const columns = [
     label: "Number",
   },
   {
-    key: "customer",
+    key: "customer.name",
     label: "Customer",
   },
   {
     key: "amount",
     label: "Amount",
+  },
+  {
+    key: "status",
+    label: "Status",
   },
   //  {
   //     key: 'mac_address',
@@ -115,13 +119,6 @@ const items = (row: Customer) => [
       label: "Edit",
       icon: "i-heroicons-pencil-square-20-solid",
       click: () => OpenModalAddCustomer(true, row),
-    },
-  ],
-  [
-    {
-      label: "View Maps",
-      icon: "i-heroicons-arrow-right-circle-20-solid",
-      click: () => window.open(row.gmaps_link, "_blank"),
     },
   ],
   [
