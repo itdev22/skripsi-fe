@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { routerKey } from 'vue-router';
+
 const showSidebar = ref(true);
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value;
@@ -55,6 +57,17 @@ const items = [
     link: "/dashboard/user-management",
   },
 ];
+const router = useRouter()
+
+const ProfileDropdown = [
+  [{
+    label: 'Logout',
+    click: async () => {
+      await useAuthStore().logout()
+      router.push('/login')
+    }
+  }]
+]
 </script>
 
 <template>
@@ -70,13 +83,15 @@ const items = [
       </div>
     </div>
     <div>
-      <UAvatar
+      <UDropdown :items="ProfileDropdown" mode="hover" :popper="{ placement: 'bottom-start' }">
+        <UAvatar
         src="https://avatars.githubusercontent.com/u/739984?v=4"
         alt="Avatar"
         chip-color="blue"
         chip-text=""
         chip-position="top-right"
-      />
+        />
+      </UDropdown>
     </div>
   </div>
 

@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { dashboardAdminApi } from "@/api/admin/dashboard";
 import { invoiceAdminApi } from "@/api/admin/invoice";
 import { formatIDR } from "@/helper/currency";
 import { formatDateToYMD } from "@/helper/date";
 
 let invoices = ref<any[]>([]);
+let totalIncome = ref<any>(0);
+let totalExpenses = ref<any>(0);
+let totalNetWorth = ref<any>(0);
+let totalSales = ref<any>(0);
+
 definePageMeta({
   layout: false,
 });
@@ -69,7 +75,7 @@ const columns = [
   },
 ];
 async function getData() {
-  await invoiceAdminApi()
+   invoiceAdminApi()
     .getAllInvoices()
     .then((response) => {
       response.data
@@ -86,53 +92,94 @@ async function getData() {
         color: "red",
       });
     });
+
+   dashboardAdminApi()
+    .totalIncomeDashboard()
+    .then((response) => {
+      totalIncome.value = response.data.total_income;
+    })
+    .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
+
+     dashboardAdminApi()
+    .totalExpensesDashboard()
+    .then((response) => {
+      totalExpenses.value = response.data.total_expenses;
+    })
+    .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
+
+     dashboardAdminApi()
+    .totalNetWorthDashboard()
+    .then((response) => {
+      totalNetWorth.value = response.data.total_net_worth;
+    })
+    .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
+
+     dashboardAdminApi()
+    .totalSalesDashboard()
+    .then((response) => {
+      totalSales.value = response.data.total_sales;
+    })
+    .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
 }
-await getData();
+getData();
 </script>
 
 <template>
   <div class="flex justify-around gap-4 py-4 flex-col-4">
-    <div
-      class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg"
-    >
+    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
       <div class="flex items-center justify-between gap-2">
         <h1 class="text-2xl font-bold">Total Income</h1>
         <h1 class="text-2xl font-bold">$</h1>
       </div>
       <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">Rp. 10000000</h1>
+
+        <h1 class="text-2xl font-bold">{{ formatIDR(totalIncome) }}</h1>
       </div>
     </div>
-    <div
-      class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg"
-    >
+    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
       <div class="flex items-center justify-between gap-2">
         <h1 class="text-2xl font-bold">Total Expenses</h1>
         <h1 class="text-2xl font-bold">$</h1>
       </div>
       <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">Rp. 10000000</h1>
+        <h1 class="text-2xl font-bold">{{ formatIDR(totalExpenses) }}</h1>
       </div>
     </div>
-    <div
-      class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg"
-    >
+    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
       <div class="flex items-center justify-between gap-2">
         <h1 class="text-2xl font-bold">Net Worth</h1>
         <h1 class="text-2xl font-bold">$</h1>
       </div>
       <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">Rp. 10000000</h1>
+        <h1 class="text-2xl font-bold">{{ formatIDR(totalNetWorth)  }}</h1>
       </div>
     </div>
-    <div
-      class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg"
-    >
+    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
       <div class="flex items-center justify-between gap-2">
         <h1 class="text-2xl font-bold">Sales</h1>
       </div>
       <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">400</h1>
+        <h1 class="text-2xl font-bold">{{ totalSales }}</h1>
       </div>
     </div>
   </div>
