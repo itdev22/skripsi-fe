@@ -15,12 +15,10 @@ const columns = [
   }
 ];
 const q = ref("");
-const page = 0;
-const pageCount = 0;
+const page = ref(1);
+const pageCount = 5;
 
-const toast = useToast()
 const modal = useModal()
-
 function handleClick(row:any) {
   modal.open(ImageViewComponent, {
     image: row.images.map((item:any) => "https://skripsi-api.rtrsite.com/"+item.full_path),
@@ -42,8 +40,21 @@ async function getData() {
   }).catch((err) => {
     console.log(err);
   });
-
 }
+
+const rows = computed(() => {
+    if (!q.value) {
+        return dataList.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+    }
+
+    const newData = dataList.value.filter((data) => {
+        return Object.values(data).some((value) => {
+            return String(value).toLowerCase().includes(q.value.toLowerCase());
+        });
+    });
+
+    return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+});
 
 getData();
 </script>
@@ -54,7 +65,7 @@ getData();
         >
           <UInput v-model="q" placeholder="Search" />
         </div>
-        <UTable :rows="dataList" :columns="columns">
+        <UTable :rows="rows" :columns="columns">
 
             <template #actions-data="{ row }">
                 <UButton @click="handleClick(row)">View Image</UButton>
@@ -67,10 +78,10 @@ getData();
         <div
           class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
         >
-          <!-- <UPagination
+          <UPagination
             v-model="page"
             :page-count="pageCount"
-            :total="100"
-          /> -->
+            :total="dataList.length"
+          />
         </div>
 </template>

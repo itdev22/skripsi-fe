@@ -3,7 +3,19 @@ import FormAddComponent from './FormAddComponent.vue'
 import { internetPackageAdminApi } from '@/api/admin/internet-package'
 const internetPackages = ref<any[]>([]); // Use ref for reactivity
 const internetPackageList = computed(() => {
-    return internetPackages.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    if (!q.value) {
+
+        return internetPackages.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+    }
+
+    const newData = internetPackages.value.filter((transaction) => {
+        return Object.values(transaction).some((value) => {
+            // person with paginate
+            return String(value).toLowerCase().includes(q.value.toLowerCase());
+        });
+    });
+
+    return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
 })
 const column = [
     {

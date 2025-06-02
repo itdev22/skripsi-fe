@@ -6,7 +6,18 @@ import AddAreaForm from "./AddAreaForm.vue";
 
 const area = ref<any[]>([]);
 const areaList = computed(()=>{
-  return area.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    if (!q.value) {
+    areaData = area;
+    return areaData.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
+
+  const newData = area.value.filter((oneArea) => {
+    return Object.values(oneArea).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
 })
 const columns = [
   {

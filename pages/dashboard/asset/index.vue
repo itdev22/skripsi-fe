@@ -18,7 +18,6 @@ const filteredRows = computed(() => {
 
     const newData = defaultAssets.value.filter((person) => {
         return Object.values(person).some((value) => {
-            // person with paginate
             return String(value).toLowerCase().includes(q.value.toLowerCase())
         })
     })

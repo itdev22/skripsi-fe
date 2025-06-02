@@ -18,7 +18,7 @@ type Customer = {
 };
 
 async function getData() {
-  await invoiceAdminApi()
+  invoiceAdminApi()
     .getAllInvoices()
     .then((response) => {
       response.data.forEach((customer: any) => {
@@ -85,10 +85,17 @@ const page = ref(1);
 const pageCount = 5;
 
 const rows = computed(() => {
-  return customer.value.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount
-  );
+  if (!q.value) {
+    return customer.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
+
+  const newData = customer.value.filter((transaction) => {
+    return Object.values(transaction).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
 const q = ref("");
@@ -151,14 +158,10 @@ function OpenModalAddCustomer(isEdit: boolean, data: any) {
     <UInput v-model="q" placeholder="Filter customer..." />
   </div>
 
-  <UTable :rows="customer" :columns="columns">
+  <UTable :rows="rows" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton
-          color="gray"
-          variant="ghost"
-          icon="i-heroicons-ellipsis-horizontal-20-solid"
-        />
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
       </UDropdown>
     </template>
     <template #amount-data="{ row }">
@@ -166,9 +169,7 @@ function OpenModalAddCustomer(isEdit: boolean, data: any) {
     </template>
   </UTable>
 
-  <div
-    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-  >
-    <UPagination v-model="page" :page-count="pageCount" :total="6" />
+  <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+    <UPagination v-model="page" :page-count="pageCount" :total="customer.length" />
   </div>
 </template>

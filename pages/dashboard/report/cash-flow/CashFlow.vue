@@ -115,10 +115,19 @@ async function fetchAllAccount() {
 }
 await fetchAllAccount();
 const rows = computed(() => {
-  return transaction.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount
-  );
+    if (!q.value) {
+
+        return transaction.slice((page.value - 1) * pageCount, page.value * pageCount);
+    }
+
+    const newData = transaction.filter((transaction) => {
+        return Object.values(transaction).some((value) => {
+            // person with paginate
+            return String(value).toLowerCase().includes(q.value.toLowerCase());
+        });
+    });
+
+    return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 </script>
 
