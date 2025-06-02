@@ -290,6 +290,15 @@ async function getData() {
 getData();
 
 
+import { useLoading } from '@/composables/useLoading'
+
+const { show, hide } = useLoading()
+
+onMounted(async () => {
+  show()
+})
+
+
 </script>
 
 <template>

@@ -1,5 +1,10 @@
 <script setup>
 const route = useRoute()
+
+import LoadingComponent from '@/components/LoadingComponent.vue'
+import { useLoading } from '@/composables/useLoading'
+
+const { isLoading } = useLoading()
 </script>
 
 <template>
