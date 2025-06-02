@@ -16,7 +16,7 @@ let peopleData = transaction;
 
 // const filteredRows = computed(() => {
 //     if (!q.value) {
-//         peopleData = transaction;
+
 //         return transaction.slice((page.value - 1) * pageCount, page.value * pageCount);
 //     }
 
@@ -26,7 +26,7 @@ let peopleData = transaction;
 //             return String(value).toLowerCase().includes(q.value.toLowerCase());
 //         });
 //     });
-//     peopleData = newData;
+
 //     return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
 // });
 const columns = [
