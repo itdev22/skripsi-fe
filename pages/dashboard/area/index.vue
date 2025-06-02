@@ -96,7 +96,7 @@ async function deleteData(id: string){
     <UInput v-model="q" placeholder="Filter Area..." />
   </div>
 
-  <UTable :rows="areaList" :columns="columns">
+  <UTable :rows="filteredRows" :columns="columns">
     <template #actions-data="{ row }">
       <div class="flex gap-2">
         <UButton icon="fa-pencil" color="yellow" label="Edit" @click="openModal(true,row)" />

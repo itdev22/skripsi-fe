@@ -36,16 +36,15 @@ if (props.id) {
 }
 const schema = object({
   name: string().required("Name is required"),
-  url: string().url("URL must be a valid URL").required("URL is required"),
+  // url: string().url("URL must be a valid URL").required("URL is required"),
   email: string()
     .required("Email is required")
     .email("Email must be a valid email"),
-  logo_url: string()
-    .url("Logo URL must be a valid URL")
-    .required("Logo URL is required"),
   phone: string()
     .matches(/^\d+$/, "Phone number must be digits")
     .required("Phone number is required"),
+  npwp: string().required("NPWP is required"),
+  address: string().required("Address is required"),
 });
 
 const emit = defineEmits(["success"]);
