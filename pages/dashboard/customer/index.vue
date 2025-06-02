@@ -89,11 +89,20 @@ const columns = [
 const page = ref(1)
 const pageCount = 5
 
+const q = ref('')
 const rows = computed(() => {
-    return customer.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    if (!q.value) {
+        return customer.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    }
+    const newData = customerData.value.filter((customer) => {
+        return Object.values(customer).some((value) => {
+            return String(value).toLowerCase().includes(q.value.toLowerCase())
+        })
+    })
+
+    return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
-const q = ref('')
 
 let customerData = customer
 
@@ -183,7 +192,7 @@ function OpenModalReportInstallation(isEdit: boolean, data: any) {
     </UTable>
 
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-        <UPagination v-model="page" :page-count="pageCount" :total="6" />
+        <UPagination v-model="page" :page-count="pageCount" :total="customer.length" />
     </div>
 
 </template>

@@ -45,9 +45,13 @@ for (const card of cards.value) {
     y: [],
     label: "name",
   };
+
+
+  if (card.name == "Customer"){
   for (let index = 0; index < 10; index++) {
     ob.y.push(Math.floor(Math.random() * (99 - 1) + 1));
     ob.x.push(String(index));
+  }
   }
   data.value.push(ob);
 }
@@ -58,7 +62,7 @@ const columns = [
     label: "Number",
   },
   {
-    key: "name",
+    key: "customer.name",
     label: "Name",
   },
   {
@@ -68,6 +72,9 @@ const columns = [
   {
     key: "amount",
     label: "amount",
+  },  {
+    key: "status",
+    label: "Status",
   },
   {
     key: "plan",
@@ -79,9 +86,8 @@ async function getData() {
     .getAllInvoices()
     .then((response) => {
       response.data
-        .filter((invoice: any) => invoice.status === "paid")
         .forEach((customer: any) => {
-          customer.number = response.data.indexOf(customer) + 1;
+          customer.number = response.data.indexOf(customer)+1;
         });
 
       invoices.value = [...response.data];
@@ -145,74 +151,65 @@ getData();
 </script>
 
 <template>
-  <div class="flex justify-around gap-4 py-4 flex-col-4">
-    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
-      <div class="flex items-center justify-between gap-2">
-        <h1 class="text-2xl font-bold">Total Income</h1>
-        <h1 class="text-2xl font-bold">$</h1>
-      </div>
-      <div class="flex justify-center mt-10">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-6">
 
-        <h1 class="text-2xl font-bold">{{ formatIDR(totalIncome) }}</h1>
+    <div class="w-full p-6 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white rounded-2xl shadow-xl transition-transform hover:scale-[1.03] duration-300">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-base font-medium uppercase tracking-wider opacity-90">Total Income</h1>
+        <span class="text-lg font-semibold">$</span>
+      </div>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold">{{ formatIDR(totalIncome) }}</h1>
       </div>
     </div>
-    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
-      <div class="flex items-center justify-between gap-2">
-        <h1 class="text-2xl font-bold">Total Expenses</h1>
-        <h1 class="text-2xl font-bold">$</h1>
+
+    <div class="w-full p-6 bg-gradient-to-br from-red-500 via-orange-400 to-yellow-300 text-white rounded-2xl shadow-xl transition-transform hover:scale-[1.03] duration-300">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-base font-medium uppercase tracking-wider opacity-90">Total Expenses</h1>
+        <span class="text-lg font-semibold">$</span>
       </div>
-      <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">{{ formatIDR(totalExpenses) }}</h1>
-      </div>
-    </div>
-    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
-      <div class="flex items-center justify-between gap-2">
-        <h1 class="text-2xl font-bold">Net Worth</h1>
-        <h1 class="text-2xl font-bold">$</h1>
-      </div>
-      <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">{{ formatIDR(totalNetWorth)  }}</h1>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold">{{ formatIDR(totalExpenses) }}</h1>
       </div>
     </div>
-    <div class="items-center justify-between w-full p-4 bg-white border-2 border-gray-200 rounded-lg">
-      <div class="flex items-center justify-between gap-2">
-        <h1 class="text-2xl font-bold">Sales</h1>
+
+    <div class="w-full p-6 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-500 text-white rounded-2xl shadow-xl transition-transform hover:scale-[1.03] duration-300">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-base font-medium uppercase tracking-wider opacity-90">Net Worth</h1>
+        <span class="text-lg font-semibold">$</span>
       </div>
-      <div class="flex justify-center mt-10">
-        <h1 class="text-2xl font-bold">{{ totalSales }}</h1>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold">{{ formatIDR(totalNetWorth) }}</h1>
+      </div>
+    </div>
+
+    <div class="w-full p-6 bg-gradient-to-br from-blue-500 via-sky-400 to-cyan-300 text-white rounded-2xl shadow-xl transition-transform hover:scale-[1.03] duration-300">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-base font-medium uppercase tracking-wider opacity-90">Sales</h1>
+      </div>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold">{{ totalSales }}</h1>
       </div>
     </div>
   </div>
-  <div class="grid gap-2 md:grid-cols-4 sm:grid-cols-2">
-    <!-- <div v-for="i in 8" :key="i" class="p-4 bg-gray-200 rounded-lg">
-                <div class="flex justify-between py-2">
-                    <div>
-                        Customer
-                    </div>
-                    <div>
-                        900
-                    </div>
-                </div>
-                <div class="p-2 bg-white rounded-lg">
-                    for analytics
-                    <ChartComponent :data="data"/>
-                </div>
-            </div> -->
 
+  <div class="grid gap-6 md:grid-cols-4 sm:grid-cols-2 mb-10">
     <div v-for="(card, index) in cards" :key="index">
       <CardComponent :dataChart="data[index]" :dataCard="card" />
     </div>
   </div>
 
-  <div class="p-4 my-10 bg-white border-2 border-gray-200 rounded-lg">
-    <h1 class="p-2 text-2xl font-bold">Recent Invoices</h1>
+  <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-lg">
+    <h1 class="text-xl font-semibold text-slate-800 mb-4">Recent Invoices</h1>
     <UTable :columns="columns" :rows="invoices" :page-size="5">
       <template #amount-data="{ row }">
-        <p>{{ formatIDR(row.amount) }}</p>
+        <p class=" font-medium">{{ formatIDR(row.amount) }}</p>
       </template>
       <template #created_at-data="{ row }">
-        <p>{{ formatDateToYMD(row.created_at) }}</p>
+        <p class="text-slate-500">{{ formatDateToYMD(row.created_at) }}</p>
       </template>
     </UTable>
   </div>
 </template>
+
+

@@ -4,27 +4,11 @@ import { authCustomerApi } from '@/api/customer/auth'
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore()
-  if(to.path !== '/login' ) {
-     if (to.path.startsWith('/customer')) {
-      authCustomerApi().verifyAuth()
-        .then((response) => {
-          if (response.success == false) {
-            authStore.logout()
-          }
-        })
-        .catch((error) => {
-          console.error('authStore cek auth error', error)
-        })
+  if (to.path !== '/login') {
+    if (to.path.startsWith('/customer')) {
+      checkAuth();
     } else {
-      authApi().verifyAuth()
-        .then((response) => {
-          if (response.success == false) {
-            authStore.logout()
-          }
-        })
-        .catch((error) => {
-          console.error('authStore cek auth error', error)
-        })
+      checkAuth();
     }
   }
 
@@ -34,3 +18,23 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
 })
+
+async function checkAuth() {
+  const authStore = useAuthStore()
+  authApi().verifyAuth()
+    .then((response) => {
+      if (response.success == false) {
+        authStore.logout()
+      }
+      authStore.user = response.data
+    })
+    .catch((error) => {
+      console.error('authStore cek auth error', error)
+    })
+}
+
+async function checkPermission() {
+  const authStore = useAuthStore()
+  
+  authStore.user.role
+}
