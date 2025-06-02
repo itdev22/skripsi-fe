@@ -59,5 +59,20 @@ export const dashboardAdminApi = () => {
       }
       return response.json();
     },
+
+     cardCustomerDashboard: async () => {
+      const response = await fetch(`${api}/api/admin/dashboard/card-customer`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      return response.json();
+    },
   };
 };

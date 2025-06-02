@@ -1,28 +1,35 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import type { NuxtPage } from 'nuxt/schema'
+import type { NuxtPage } from "nuxt/schema";
 
 export default defineNuxtConfig({
+  plugins: ["~/plugins/echarts.ts"],
+  echarts: {
+    charts: ["BarChart", "LineChart", "PieChart"],
+    components: ["DatasetComponent", "GridComponent", "TooltipComponent"],
+    features: ["LabelLayout", "UniversalTransition"],
+    renderer: ["svg", "canvas"],
+  },
   runtimeConfig: {
     public: {
       API_HOST: process.env.NUXT_PUBLIC_API_HOST, // Memastikan API_HOST tersedia
     },
   },
   hooks: {
-    'pages:extend' (pages) {
-      function setMiddleware (pages: NuxtPage[]) {
+    "pages:extend"(pages) {
+      function setMiddleware(pages: NuxtPage[]) {
         for (const page of pages) {
           if (/* some condition */ true) {
-            page.meta ||= {}
+            page.meta ||= {};
             // Note that this will override any middleware set in `definePageMeta` in the page
-            page.meta.middleware = ['auth']
+            page.meta.middleware = ["auth"];
           }
           if (page.children) {
-            setMiddleware(page.children)
+            setMiddleware(page.children);
           }
         }
       }
-      setMiddleware(pages)
-    }
+      setMiddleware(pages);
+    },
   },
   app: {
     head: {
@@ -36,7 +43,13 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@pinia/nuxt", "@nuxt/ui",'@nuxtjs/leaflet','@i2d/nuxt-pdf-frame'],
+  modules: [
+    "@pinia/nuxt",
+    "@nuxt/ui",
+    "@nuxtjs/leaflet",
+    "@i2d/nuxt-pdf-frame",
+    "nuxt-echarts",
+  ],
   // tailwindcss: {
   //   cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],
   //   config: {},
