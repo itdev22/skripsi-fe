@@ -1,4 +1,4 @@
-FROM node:20.18.1 as build
+FROM node:22.16.0 as build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -11,7 +11,7 @@ RUN yarn
 
 RUN yarn build
 
-FROM node:20.18.1 as production
+FROM node:22.16.0 as production
 
 WORKDIR /usr/src/app
 
