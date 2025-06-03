@@ -39,7 +39,7 @@ const state = reactive({
   invoice_items: [
     {
       name: "",
-      quantity: 0,
+      qty: 0,
       price: 0,
       total: 0,
     },
@@ -49,7 +49,7 @@ const state = reactive({
 function addItem() {
   state.invoice_items.push({
     name: "",
-    quantity: 0,
+    qty: 0,
     price: 0,
     total: 0,
   });
@@ -61,7 +61,7 @@ function updateTotal(index: number) {
   const item = state.invoice_items[index];
   state.invoice_items[index] = {
     ...item,
-    total: item.quantity * item.price,
+    total: item.qty * item.price,
   };
   console.log(state.invoice_items[index].total);
 }
@@ -91,7 +91,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         useToast().add({ title: response.message });
         onSuccess();
       })
-      .catch((error) => {});
+      .catch((error) => { });
   } else {
     invoiceAdminApi()
       .createInvoice(state)
@@ -99,11 +99,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         useToast().add({ title: response.message });
         onSuccess();
       })
-      .catch((error) => {});
+      .catch((error) => { });
   }
 }
 
 const customer = ref([]);
+const searchOptions = ref();
 const productOptions = ref<any[]>([])
 
 async function getDataOptions() {
@@ -116,20 +117,26 @@ async function getDataOptions() {
       }));
     });
 }
-async function searchProduct(q: string) {
-  console.log("AAAA");
-  
-  loadingProduct.value = true;
 
-  await internetPackageAdminApi()
-    .getAllInternetPacket()
-    .then((response) => {
-      productOptions.value= response.data.map((value: any, index: number) => value.name);
-    })
-    .finally(() => {
-      loadingProduct.value = false;
-    });
+function search(q: any) {
+  const data =  productOptions.value.filter((option: any) =>
+    option.toLowerCase().includes(q.toLowerCase())
+  );
+  if (data.length > 0) {
+    return data
+  }
+
+  return [q]
 }
+
+await internetPackageAdminApi()
+  .getAllInternetPacket()
+  .then((response) => {
+    productOptions.value = response.data.map((value: any, index: number) => value.name);
+  })
+  .finally(() => {
+    loadingProduct.value = false;
+  });
 await getDataOptions();
 </script>
 
@@ -139,70 +146,34 @@ await getDataOptions();
       <div class="p-2 mb-4 text-2xl font-bold text-center">
         <h1>{{ props.isEdit ? "Edit" : "Add New" }} Invoice</h1>
       </div>
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-4"
-        @submit="onSubmit"
-      >
+      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Customer" name="customer_id">
-          <USelectMenu
-            v-model="state.customer_id"
-            :options="customer"
-            value-attribute="value"
-            option-attribute="label"
-          />
+          <USelectMenu v-model="state.customer_id" :options="customer" value-attribute="value"
+            option-attribute="label" />
         </UFormGroup>
         <UFormGroup label="Amount" name="amount">
           <UInput v-model="state.amount" type="number" />
         </UFormGroup>
-        <div
-          v-for="(item, index) in state.invoice_items"
-          :key="index"
-          class="space-y-4"
-        >
-          <UFormGroup
-            :label="`Product ${index + 1} Name`"
-            :name="`item-name-${index}`"
-          >
-            <UInputMenu
-              v-model="item.name"
-              :popper="{ arrow: true }"
-              :loading="loadingProduct"
-              :searchable="true"
-              trailing
-              by="id"
-              @search="searchProduct"
-            />
+        <div v-for="(item, index) in state.invoice_items" :key="index" class="space-y-4">
+          <UFormGroup :label="`Product ${index + 1} Name`" :name="`item-name-${index}`">
+            <UInputMenu v-model="item.name" :loading="loadingProduct" by="id" :options="productOptions"
+              :search="search" />
           </UFormGroup>
 
           <div class="flex space-x-4">
             <UFormGroup label="Quantity">
-              <UInput
-                v-model.number="item.quantity"
-                type="number"
-                @update:modelValue="() => updateTotal(index)"
-              />
+              <UInput v-model.number="item.qty" type="number" @update:modelValue="() => updateTotal(index)" />
             </UFormGroup>
 
             <UFormGroup label="Price">
-              <UInput
-                v-model.number="item.price"
-                type="number"
-                @update:modelValue="() => updateTotal(index)"
-              />
+              <UInput v-model.number="item.price" type="number" @update:modelValue="() => updateTotal(index)" />
             </UFormGroup>
             <UFormGroup label="Total">
               <UInput v-model.number="item.total" type="number" disabled />
             </UFormGroup>
           </div>
 
-          <UButton
-            color="red"
-            variant="soft"
-            @click="removeItem(index)"
-            v-if="state.invoice_items.length > 1"
-          >
+          <UButton color="red" variant="soft" @click="removeItem(index)" v-if="state.invoice_items.length > 1">
             Hapus Item
           </UButton>
         </div>

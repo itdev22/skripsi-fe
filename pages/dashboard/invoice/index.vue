@@ -122,7 +122,6 @@ let customerData = customer;
 //     return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 // })
 
-const isOpen = ref(false);
 
 const items = (row: Customer) => [
   [
@@ -162,6 +161,7 @@ const toast = useToast();
 const modal = useModal();
 
 function OpenModalAddCustomer(isEdit: boolean, data: any) {
+  console.log("Open Modal")
   modal.open(FormAddComponent, {
     isEdit,
     data,
