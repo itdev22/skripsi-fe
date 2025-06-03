@@ -59,16 +59,16 @@ async function fetchAllAccount() {
 const queries: any = {
   0: { type: "debit", type_cash: "cash_flow" },
   1: { type: "credit", type_cash: "cash_flow" },
-  2: { type_cash: "cash_flow" },
+  // 2: { type_cash: "cash_flow" },
+  2: {},
   3: {},
-  4: {},
 };
 
 watch(
   activeTab,
   (tab) => {
     const query = queries[tab]; // aman karena pakai Record<string, {type: string}>
-    if (tab != 4) {
+    if (tab != 3) {
       isLoading.value = true; // Menandakan data sedang dimuat
       fetchAllTransaction(query);
     } else {
@@ -88,10 +88,10 @@ const tab_items = [
     label: "Expense",
     value: "expense",
   },
-  {
-    label: "Tranfer",
-    value: "tranfer",
-  },
+  // {
+  //   label: "Tranfer",
+  //   value: "tranfer",
+  // },
   {
     label: "View Transaction",
     value: "view-transaction",
@@ -122,13 +122,13 @@ const tab_items = [
           :onRefresh="() => fetchAllTransaction(queries[activeTab])"
         />
       </div>
-      <div v-if="item.value == 'tranfer'">
+      <!-- <div v-if="item.value == 'tranfer'">
         <Tranfer
           :data="transaction"
           v-if="!isLoading"
           :onRefresh="() => fetchAllTransaction(queries[activeTab])"
         />
-      </div>
+      </div> -->
       <div v-if="item.value == 'view-transaction'">
         <ViewTransaction
           :data="transaction"
