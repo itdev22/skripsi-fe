@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   }
   const check = checkPermission(to);
-  if(check == "disallow"){
+  if (check == "disallow") {
     return navigateTo("/dashboard");
   }
   if (!authStore.isLoggedIn && to.path !== "/login") {
@@ -40,24 +40,36 @@ function checkPermission(to: RouteLocationNormalizedGeneric) {
   const authStore = useAuthStore();
 
   const restrictedForAdmins = [""];
-  const restrictedForTechnicians = [""];
-  const restrictedForFinances = ["/dashboard/companies","/dashboard/asset","/dashboard/area","/dashboard/internet-package"];
+  const restrictedForTechnicians = [
+    "/dashboard/user-management",
+    "/dashboard/report",
+    "/dashboard/invoice",
+    "/dashboard/transaction",
+    "/dashboard/companies"
+  ];
+  const restrictedForFinances = [
+    "/dashboard/user-management",
+    "/dashboard/companies",
+    "/dashboard/asset",
+    "/dashboard/area",
+    "/dashboard/internet-package",
+  ];
   if (
     authStore.user.role === "ADMIN" &&
     restrictedForAdmins.includes(to.path)
   ) {
-    return "disallow"
+    return "disallow";
   }
   if (
     authStore.user.role === "TECHNICIAN" &&
     restrictedForTechnicians.includes(to.path)
   ) {
-    return "disallow"
+    return "disallow";
   }
   if (
     authStore.user.role === "FINANCE" &&
     restrictedForFinances.includes(to.path)
   ) {
-    return "disallow"
+    return "disallow";
   }
 }

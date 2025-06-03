@@ -76,7 +76,8 @@ const filterMenu = computed(() => {
     return items.filter(item => !hideMenu.includes(item.label));
   }
   if (authStore.user.role === 'TECHNICIAN') {
-    const hideMenu = ['User Management']
+    // const hideMenu = ['User Management','Report','Invoice','Transaction','Company']
+    const hideMenu = ['']
     return items.filter(item => !hideMenu.includes(item.label));
   }
   if (authStore.user.role === 'FINANCE') {
