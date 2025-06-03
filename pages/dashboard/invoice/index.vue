@@ -24,6 +24,7 @@ async function getData() {
     .then((response) => {
       response.data.forEach((customer: any) => {
         customer.number = response.data.indexOf(customer) + 1;
+        customer.created_at = customer.created_at.split("T")[0]
       });
 
       customer.value = [...response.data];
@@ -72,10 +73,10 @@ const columns = [
     key: "status",
     label: "Status",
   },
-  //  {
-  //     key: 'mac_address',
-  //     label: 'Mac Address'
-  // },
+  {
+    key: "created_at",
+    label: "Date",
+  },
   {
     key: "actions",
     label: "Actions",
