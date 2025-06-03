@@ -41,7 +41,7 @@ function checkPermission(to: RouteLocationNormalizedGeneric) {
 
   const restrictedForAdmins = [""];
   const restrictedForTechnicians = [""];
-  const restrictedForFinances = [""];
+  const restrictedForFinances = ["/dashboard/companies","/dashboard/asset","/dashboard/area","/dashboard/internet-package"];
   if (
     authStore.user.role === "ADMIN" &&
     restrictedForAdmins.includes(to.path)

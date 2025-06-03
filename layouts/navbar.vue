@@ -80,7 +80,7 @@ const filterMenu = computed(() => {
     return items.filter(item => !hideMenu.includes(item.label));
   }
   if (authStore.user.role === 'FINANCE') {
-    const hideMenu = ['User Management']
+    const hideMenu = ['Company','Assets','Internet Package','Area']
     return items.filter(item => !hideMenu.includes(item.label));
   }
   return items;
