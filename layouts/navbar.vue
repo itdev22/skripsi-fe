@@ -41,7 +41,7 @@ const items = [
     icon: "i-heroicons-building-office-16-solid",
     link: "/dashboard/companies",
   },
-    {
+  {
     label: "Invoice",
     icon: "i-heroicons-document-currency-dollar-16-solid",
     link: "/dashboard/invoice",
@@ -68,13 +68,27 @@ const ProfileDropdown = [
     }
   }]
 ]
+
+const authStore = useAuthStore()
+const filterMenu = computed(() => {
+  if (authStore.user.role === 'ADMIN') {
+    const hideMenu = ['']
+    return items.filter(item => !hideMenu.includes(item.label));
+  }
+  if (authStore.user.role === 'TECHNICIAN') {
+    const hideMenu = ['User Management']
+    return items.filter(item => !hideMenu.includes(item.label));
+  }
+  if (authStore.user.role === 'FINANCE') {
+    const hideMenu = ['User Management']
+    return items.filter(item => !hideMenu.includes(item.label));
+  }
+  return items;
+})
 </script>
 
 <template>
-  <div
-    class="sticky top-0 z-10 flex justify-between w-full h-16 h-full p-4 bg-white border"
-    id="navbar"
-  >
+  <div class="sticky top-0 z-10 flex justify-between w-full h-16 h-full p-4 bg-white border" id="navbar">
     <div class="flex gap-4">
       <div>
         <p class="text-xl font-bold">
@@ -84,50 +98,30 @@ const ProfileDropdown = [
     </div>
     <div>
       <UDropdown :items="ProfileDropdown" mode="hover" :popper="{ placement: 'bottom-start' }">
-        <UAvatar
-        src="https://avatars.githubusercontent.com/u/739984?v=4"
-        alt="Avatar"
-        chip-color="blue"
-        chip-text=""
-        chip-position="top-right"
-        />
+        <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" alt="Avatar" chip-color="blue" chip-text=""
+          chip-position="top-right" />
       </UDropdown>
     </div>
   </div>
 
   <div class="fixed flex w-full h-screen top-16">
     <!-- Sidebar -->
-    <div
-      class="flex flex-col"
-      :class="[
-        'border transition-all duration-300',
-        !showSidebar ? 'w-full md:w-1/6' : 'w-20',
-      ]"
-    >
+    <div class="flex flex-col" :class="[
+      'border transition-all duration-300',
+      !showSidebar ? 'w-full md:w-1/6' : 'w-20',
+    ]">
       <!-- Collapse Button -->
       <div class="flex justify-center p-4 border-t" @click="toggleSidebar">
         <div>
-          <UIcon
-            name="i-line-md-arrow-open-right"
-            v-if="showSidebar"
-            class="w-5"
-          />
-          <UIcon
-            name="i-line-md-arrow-close-left"
-            v-if="!showSidebar"
-            class="w-5"
-          />
+          <UIcon name="i-line-md-arrow-open-right" v-if="showSidebar" class="w-5" />
+          <UIcon name="i-line-md-arrow-close-left" v-if="!showSidebar" class="w-5" />
         </div>
       </div>
       <div class="flex-col p-4 overflow-auto no-scrollbar">
         <ul>
-          <li
-            v-for="(item, index) in items"
-            :key="index"
+          <li v-for="(item, index) in filterMenu" :key="index"
             class="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100"
-            :class="[showSidebar ? 'justify-center' : '']"
-            @click="navigateTo(item.link)"
-          >
+            :class="[showSidebar ? 'justify-center' : '']" @click="navigateTo(item.link)">
             <UIcon :name="item.icon" class="w-10 h-10" />
             <span v-if="!showSidebar" class="font-bold">{{ item.label }}</span>
           </li>

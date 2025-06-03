@@ -2,6 +2,10 @@
 import { userManagementAdminApi } from "@/api/admin/user-management";
 import AddRoleForm from "./AddRoleForm.vue";
 let role: any[] = [];
+const page = ref(1);
+const pageCount = 5;
+
+const q = ref("");
 
 async function fetchAllRole() {
   await userManagementAdminApi()
@@ -29,10 +33,7 @@ const columns = [
   },
 ];
 
-const page = ref(1);
-const pageCount = 5;
 
-const q = ref("");
 
 type Role = {
   id: number;

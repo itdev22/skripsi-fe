@@ -2,6 +2,10 @@
 import { userManagementAdminApi } from "@/api/admin/user-management";
 import AddUserForm from "./AddUserForm.vue";
 let user: any[] = [];
+const page = ref(1);
+const pageCount = 5;
+
+const q = ref("");
 
 async function fetchAllUsers() {
   await userManagementAdminApi()
@@ -42,10 +46,7 @@ const columns = [
   },
 ];
 
-const page = ref(1);
-const pageCount = 5;
 
-const q = ref("");
 
 let userData = user;
 const filteredRows = computed(() => {
