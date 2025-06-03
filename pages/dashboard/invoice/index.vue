@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { invoiceAdminApi } from "@/api/admin/invoice";
 import FormAddComponent from "./FormAddInvoice.vue";
-import { formatIDR } from "@/helper/currency";
+import * as currency from "@/helper/currency";
 let customer = ref<any[]>([]);
 
 type Customer = {
@@ -16,6 +16,7 @@ type Customer = {
   ip_static: string;
   mac_address: string;
 };
+
 
 async function getData() {
   invoiceAdminApi()
@@ -189,7 +190,7 @@ function OpenModalAddCustomer(isEdit: boolean, data: any) {
       </UDropdown>
     </template>
     <template #amount-data="{ row }">
-      <p>{{ formatIDR(row.amount) }}</p>
+      <p>{{ currency.formatIDR(row.amount) }}</p>
     </template>
     <template #status-data="{ row }">
       <USelectMenu
