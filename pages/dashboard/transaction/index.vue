@@ -30,8 +30,6 @@ async function fetchAllTransaction(params: any) {
       console.error("Error fetching companies:", error);
     })
     .finally(() => {
-      console.log("succss");
-
       isLoading.value = false;
     });
 }

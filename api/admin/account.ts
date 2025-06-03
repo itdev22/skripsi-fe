@@ -1,5 +1,3 @@
-import type { CreateCompanyRequest } from "@/types/requests/company";
-
 export const accountAdminApi = () => {
   const api = useApiHost();
   return {

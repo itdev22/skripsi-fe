@@ -3,7 +3,26 @@ const props = defineProps<{
   data: any[];
   onRefresh: () => Promise<void>;
 }>();
-const rows = computed(() => props.data);
+const q = ref("");
+const page = ref(1);
+const pageCount = 5;
+
+const dataTable = ref<any[]>(
+  props.data
+);
+const dataTableList = computed(() => {
+  if (!q.value) {
+    return dataTable.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
+
+  const newData = dataTable.value.filter((transaction) => {
+    return Object.values(transaction).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+})
 type User = {
   id: number;
   username: string;
@@ -15,15 +34,6 @@ const columns = [
   { key: "name", label: "Account" },
   { key: "saldo", label: "Balance" },
 ];
-console.log(rows);
-
-const q = ref("");
-const page = 0;
-const pageCount = 0;
-
-function handleClick(row: { id: number }) {
-  alert("clicked" + row);
-}
 
 const toast = useToast();
 const modal = useModal();
@@ -44,18 +54,7 @@ const items = (row: User) => [
     },
   ],
 ];
-// function openModal() {
-//   count.value += 1;
-//   modal.open(FormRole, {
-//     count: count.value,
-//     onSuccess() {
-//       toast.add({
-//         title: "Success !",
-//         id: "modal-success",
-//       });
-//     },
-//   });
-// }
+
 </script>
 
 <template>
@@ -63,7 +62,7 @@ const items = (row: User) => [
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Search" />
   </div>
-  <UTable :rows="rows" :columns="columns">
+  <UTable :rows="dataTableList" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
         <UButton
@@ -78,10 +77,10 @@ const items = (row: User) => [
   <div
     class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
   >
-    <!-- <UPagination
+    <UPagination
             v-model="page"
             :page-count="pageCount"
-            :total="100"
-          /> -->
+            :total="dataTableList.length"
+          />
   </div>
 </template>
