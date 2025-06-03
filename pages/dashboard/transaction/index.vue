@@ -66,7 +66,7 @@ watch(
   activeTab,
   (tab) => {
     const query = queries[tab]; // aman karena pakai Record<string, {type: string}>
-    if (tab != 4) {
+    if (tab != 3) {
       isLoading.value = true; // Menandakan data sedang dimuat
       fetchAllTransaction(query);
     } else {
