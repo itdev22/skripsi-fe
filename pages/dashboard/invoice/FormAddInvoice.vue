@@ -3,6 +3,7 @@ import { object, string, type InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 import { customerAdminApi } from "@/api/admin/customer";
 import { invoiceAdminApi } from "@/api/admin/invoice";
+import { internetPackageAdminApi } from "@/api/admin/internet-package";
 
 const props = defineProps({
   isEdit: {
@@ -23,6 +24,7 @@ const props = defineProps({
     }),
   },
 });
+const loadingProduct = ref(false);
 
 const schema = object({
   customer_id: string().required("Customer is required"),
@@ -34,7 +36,35 @@ type Schema = InferType<typeof schema>;
 const state = reactive({
   customer_id: "",
   amount: "",
+  invoice_items: [
+    {
+      name: "",
+      quantity: 0,
+      price: 0,
+      total: 0,
+    },
+  ],
 });
+
+function addItem() {
+  state.invoice_items.push({
+    name: "",
+    quantity: 0,
+    price: 0,
+    total: 0,
+  });
+}
+function removeItem(index: number) {
+  state.invoice_items.splice(index, 1);
+}
+function updateTotal(index: number) {
+  const item = state.invoice_items[index];
+  state.invoice_items[index] = {
+    ...item,
+    total: item.quantity * item.price,
+  };
+  console.log(state.invoice_items[index].total);
+}
 
 watch(
   () => props.isEdit,
@@ -74,16 +104,30 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 const customer = ref([]);
+const productOptions = ref<any[]>([])
 
 async function getDataOptions() {
   customerAdminApi()
     .getAllCustomers()
     .then((response) => {
       customer.value = response.data.map((value: any, index: number) => ({
-        label:
-          value.email,
+        label: value.email,
         value: value.id,
       }));
+    });
+}
+async function searchProduct(q: string) {
+  console.log("AAAA");
+  
+  loadingProduct.value = true;
+
+  await internetPackageAdminApi()
+    .getAllInternetPacket()
+    .then((response) => {
+      productOptions.value= response.data.map((value: any, index: number) => value.name);
+    })
+    .finally(() => {
+      loadingProduct.value = false;
     });
 }
 await getDataOptions();
@@ -93,7 +137,7 @@ await getDataOptions();
   <UModal>
     <div class="w-full p-4">
       <div class="p-2 mb-4 text-2xl font-bold text-center">
-        <h1>{{ props.isEdit ? "Edit" : "Add New" }} Customer</h1>
+        <h1>{{ props.isEdit ? "Edit" : "Add New" }} Invoice</h1>
       </div>
       <UForm
         :schema="schema"
@@ -111,6 +155,59 @@ await getDataOptions();
         </UFormGroup>
         <UFormGroup label="Amount" name="amount">
           <UInput v-model="state.amount" type="number" />
+        </UFormGroup>
+        <div
+          v-for="(item, index) in state.invoice_items"
+          :key="index"
+          class="space-y-4"
+        >
+          <UFormGroup
+            :label="`Product ${index + 1} Name`"
+            :name="`item-name-${index}`"
+          >
+            <UInputMenu
+              v-model="item.name"
+              :popper="{ arrow: true }"
+              :loading="loadingProduct"
+              :searchable="true"
+              trailing
+              by="id"
+              @search="searchProduct"
+            />
+          </UFormGroup>
+
+          <div class="flex space-x-4">
+            <UFormGroup label="Quantity">
+              <UInput
+                v-model.number="item.quantity"
+                type="number"
+                @update:modelValue="() => updateTotal(index)"
+              />
+            </UFormGroup>
+
+            <UFormGroup label="Price">
+              <UInput
+                v-model.number="item.price"
+                type="number"
+                @update:modelValue="() => updateTotal(index)"
+              />
+            </UFormGroup>
+            <UFormGroup label="Total">
+              <UInput v-model.number="item.total" type="number" disabled />
+            </UFormGroup>
+          </div>
+
+          <UButton
+            color="red"
+            variant="soft"
+            @click="removeItem(index)"
+            v-if="state.invoice_items.length > 1"
+          >
+            Hapus Item
+          </UButton>
+        </div>
+        <UFormGroup>
+          <UButton @click="addItem" variant="outline">Tambah Item</UButton>
         </UFormGroup>
         <UButton type="submit"> Submit </UButton>
       </UForm>

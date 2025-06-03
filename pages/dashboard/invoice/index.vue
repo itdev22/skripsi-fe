@@ -87,7 +87,10 @@ const pageCount = 5;
 
 const rows = computed(() => {
   if (!q.value) {
-    return customer.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+    return customer.value.slice(
+      (page.value - 1) * pageCount,
+      page.value * pageCount
+    );
   }
 
   const newData = customer.value.filter((transaction) => {
@@ -131,6 +134,23 @@ const items = (row: Customer) => [
   ],
   [
     {
+      label: "Send Whatsapp",
+      icon: "i-heroicons-chat-bubble-left-ellipsis-20-solid",
+      click: () => OpenModalAddCustomer(true, row),
+    },
+    {
+      label: "Download PDF",
+      icon: "i-heroicons-arrow-down-on-square-20-solid",
+      click: () => OpenModalAddCustomer(true, row),
+    },
+    {
+      label: "Send PDF",
+      icon: "i-heroicons-paper-airplane-20-solid",
+      click: () => OpenModalAddCustomer(true, row),
+    },
+  ],
+  [
+    {
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
       click: () => deleteData(row.id),
@@ -162,15 +182,38 @@ function OpenModalAddCustomer(isEdit: boolean, data: any) {
   <UTable :rows="rows" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+        <UButton
+          color="gray"
+          variant="ghost"
+          icon="i-heroicons-ellipsis-horizontal-20-solid"
+        />
       </UDropdown>
     </template>
     <template #amount-data="{ row }">
       <p>{{ formatIDR(row.amount) }}</p>
     </template>
+    <template #status-data="{ row }">
+      <USelectMenu
+        v-model="row.status"
+        :options="[
+          { label: 'Pending', value: 'pending' },
+          { label: 'Paid', value: 'paid' },
+          { label: 'Unpaid', value: 'unpaid' },
+        ]"
+        value-attribute="value"
+        option-attribute="label"
+        
+      />
+    </template>
   </UTable>
 
-  <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-    <UPagination v-model="page" :page-count="pageCount" :total="customer.length" />
+  <div
+    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
+  >
+    <UPagination
+      v-model="page"
+      :page-count="pageCount"
+      :total="customer.length"
+    />
   </div>
 </template>
