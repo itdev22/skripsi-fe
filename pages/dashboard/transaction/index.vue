@@ -30,8 +30,6 @@ async function fetchAllTransaction(params: any) {
       console.error("Error fetching companies:", error);
     })
     .finally(() => {
-      console.log("succss");
-
       isLoading.value = false;
     });
 }
@@ -88,10 +86,10 @@ const tab_items = [
     label: "Expense",
     value: "expense",
   },
-  {
-    label: "Tranfer",
-    value: "tranfer",
-  },
+  // {
+  //   label: "Tranfer",
+  //   value: "tranfer",
+  // },
   {
     label: "View Transaction",
     value: "view-transaction",

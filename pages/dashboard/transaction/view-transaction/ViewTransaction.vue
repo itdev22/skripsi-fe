@@ -4,14 +4,29 @@ import { formatIDR } from '@/helper/currency';
 const props = defineProps<{
   data: any[];
 }>();
-const rows = computed(() => {
-  props.data.forEach((item, index) => {
-    item.account = item.account.name;
-    item.type = item.type_in_out;
-    item.balance = item.account?.saldo ??0;
+const q = ref("");
+const page = ref(1);
+const pageCount = 5;
+
+const dataTable = ref<any[]>(
+  props.data.map((data) => {
+    data.account = data.account.name;
+    return data;
+  })
+);
+const dataTableList = computed(() => {
+  if (!q.value) {
+    return dataTable.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
+
+  const newData = dataTable.value.filter((transaction) => {
+    return Object.values(transaction).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
   });
-  return [...props.data];
-});
+
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+})
 
 // watch(
 //   () => props.data,
@@ -39,9 +54,6 @@ const columns = [
   // { key: "balance", label: "Balance" },
   // { key: "actions", label: "Actions" },
 ];
-const q = ref("");
-const page = 0;
-const pageCount = 0;
 
 function handleClick(row: { id: number }) {
   alert("clicked" + row);
@@ -85,14 +97,10 @@ const items = (row: User) => [
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Search" />
   </div>
-  <UTable :rows="rows" :columns="columns">
+  <UTable :rows="dataTableList" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton
-          color="gray"
-          variant="ghost"
-          icon="i-heroicons-ellipsis-horizontal-20-solid"
-        />
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
       </UDropdown>
     </template>
     <template #date-data="{ row }">
@@ -101,21 +109,15 @@ const items = (row: User) => [
     <template #type-data="{ row }">
       <p class="capitalize">{{ row.type }}</p>
     </template>
-     <template #amount-data="{ row }">
-      <p >{{ formatIDR(row.amount) }}</p>
+    <template #amount-data="{ row }">
+      <p>{{ formatIDR(row.amount) }}</p>
     </template>
     <template #balance-data="{ row }">
-      <p >{{ formatIDR(row?.account?.saldo??0) }}</p>
+      <p>{{ formatIDR(row?.account?.saldo ?? 0) }}</p>
     </template>
   </UTable>
 
-  <div
-    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-  >
-    <!-- <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="100"
-          /> -->
+  <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+    <UPagination v-model="page" :page-count="pageCount" :total="dataTableList.length" />
   </div>
 </template>

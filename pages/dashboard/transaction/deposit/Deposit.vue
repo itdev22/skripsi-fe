@@ -9,19 +9,25 @@ const props = defineProps<{
   type?: any;
 }>();
 const q = ref("");
-const page = 0;
-const pageCount = 0;
-const rows = computed(() => props.data);
+const page = ref(1);
+const pageCount = 5;
 
-// watch(
-//   props.data,
-//   (newData) => {
-//     console.log("newData", newData);
+const deposites = ref<any[]>(
+  props.data
+); // Use ref for reactivity
+const depositesList = computed(() => {
+  if (!q.value) {
+    return deposites.value.slice((page.value - 1) * pageCount, page.value * pageCount);
+  }
 
-//     rows.value = newData;
-//   },
-//   { immediate: true }
-// );
+  const newData = deposites.value.filter((transaction) => {
+    return Object.values(transaction).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+
+  return newData.slice((page.value - 1) * pageCount, page.value * pageCount);
+})
 
 type Deposit = {
   id: string;
@@ -113,8 +119,6 @@ async function deleteDeposit(transactionId: string) {
   }
 }
 
-console.log("succss " + rows);
-
 </script>
 
 <template>
@@ -122,14 +126,10 @@ console.log("succss " + rows);
   <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
     <UInput v-model="q" placeholder="Search" />
   </div>
-  <UTable v-if="rows" :rows="rows" :columns="columns">
+  <UTable :rows="depositesList" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton
-          color="gray"
-          variant="ghost"
-          icon="i-heroicons-ellipsis-horizontal-20-solid"
-        />
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
       </UDropdown>
     </template>
     <template #amount-data="{ row }">
@@ -137,13 +137,7 @@ console.log("succss " + rows);
     </template>
   </UTable>
 
-  <div
-    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-  >
-    <!-- <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="100"
-          /> -->
+  <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+    <UPagination v-model="page" :page-count="pageCount" :total="depositesList.length" />
   </div>
 </template>
