@@ -6,9 +6,9 @@ export type CreateTransactionRequest = {
         description: string,
         file: string,
         amount: string,
-        category_id: string,
+        category: string,
         tags: string,
         payer_id: string,
-        method_id: string,
+        method: string,
         ref: string,
   }
