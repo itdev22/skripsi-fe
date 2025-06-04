@@ -47,7 +47,7 @@ export const transactionAdminApi = () => {
         category: "",
         tags: "",
         payer_id: "",
-        method_id: "",
+        method: "",
         ref: "",
       }
     ) => {

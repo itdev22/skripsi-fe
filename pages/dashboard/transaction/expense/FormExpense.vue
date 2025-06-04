@@ -23,7 +23,7 @@ const state = reactive({
   category_custom: "",
   tags: "",
   payer_id: "",
-  method_id: "",
+  method: "",
   ref: "",
 });
 if (props.id) {
@@ -125,6 +125,17 @@ const categoryOptions = [
     value: "other",
   },
 ]
+
+const methodOptions = [
+  {
+    label: "transfer",
+    value: "transfer",
+  },
+  {
+    label: "cash",
+    value: "cash",
+  },
+]
 </script>
 
 <template>
@@ -156,6 +167,10 @@ const categoryOptions = [
             <UFormGroup v-if="state.category == 'other'" label="Category" name="category">
               <UInput v-model="state.category_custom" />
             </UFormGroup>
+            <UFormGroup label="Method" name="method">
+              <USelectMenu v-model="state.method" :options="methodOptions" value-attribute="value"
+                option-attribute="label" />
+            </UFormGroup>
             <!-- <div class="flex justify-end">
               <UButton
                 variant="link"
@@ -179,7 +194,7 @@ const categoryOptions = [
                 option-attribute="label" />
             </UFormGroup>
             <UFormGroup label="Method" name="method">
-              <USelectMenu v-model="state.method_id" :options="accounts" value-attribute="value"
+              <USelectMenu v-model="state.method" :options="accounts" value-attribute="value"
                 option-attribute="label" />
             </UFormGroup>
             <UFormGroup label="Ref#" name="ref">
