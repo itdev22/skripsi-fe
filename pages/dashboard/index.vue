@@ -6,6 +6,8 @@ import { formatDateToYMD } from "@/helper/date";
 
 
 let invoices = ref<any[]>([]);
+const latestDeposites = ref<any[]>([]);
+const latestExpenses = ref<any[]>([]);
 let totalIncome = ref<any>(0);
 let totalExpenses = ref<any>(0);
 let totalNetWorth = ref<any>(0);
@@ -190,10 +192,6 @@ for (const card of CardList) {
   }
 }
 
-async function generateDataGraph() {
-
-}
-
 const columns = [
   {
     key: "number",
@@ -231,6 +229,31 @@ async function getData() {
       invoices.value = [...response.data];
     })
     .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
+
+  transactionAdminApi()
+    .getAllTransactions(null).then((response) => {
+      latestDeposites.value = response.data.filter((item: any) => item.type_in_out == "debit").map((transaction: any) => {
+        return {
+          number: response.data.indexOf(transaction) + 1,
+          type_cash: transaction.type_cash.split("_")[0] + " " + (transaction.type_cash.split("_")[1] ? transaction.type_cash.split("_")[1] : ""),
+          amount: transaction.amount,
+          description: transaction.description
+        }
+      }).slice((1 - 1) * 5, (1) * 5);
+      latestExpenses.value = response.data.filter((item: any) => item.type_in_out == "credit").map((transaction: any) => {
+        return {
+          number: response.data.indexOf(transaction) + 1,
+          type_cash: transaction.type_cash.split("_")[0] + " " + (transaction.type_cash.split("_")[1] ? transaction.type_cash.split("_")[1] : ""),
+          amount: transaction.amount,
+          description: transaction.description
+        }
+      }).slice((1 - 1) * 5, (1) * 5);
+    }).catch((err) => {
       useToast().add({
         title: err,
         color: "red",
@@ -291,6 +314,7 @@ getData();
 
 
 import { useLoading } from '@/composables/useLoading'
+import { transactionAdminApi } from "@/api/admin/transaction";
 
 const { show, hide } = useLoading()
 
@@ -359,6 +383,18 @@ onMounted(async () => {
     <VChart :option="optionCardArea" autoresize style="height: 400px;" />
     <VChart :option="optionCardReportCash" autoresize style="height: 400px;" />
   </div>
+
+  <div class="grid gap-6 md:grid-cols-2 sm:grid-cols-1 mb-10">
+    <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-lg">
+      <h1 class="text-xl font-semibold text-slate-800 mb-4">Latest Deposites</h1>
+      <UTable v-if="latestDeposites.length > 0" :rows="latestDeposites" :page-size="5"></UTable>
+    </div>
+    <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-lg">
+      <h1 class="text-xl font-semibold text-slate-800 mb-4">Latest Expenses</h1>
+      <UTable v-if="latestExpenses.length > 0" :rows="latestExpenses" :page-size="5"></UTable>
+    </div>
+  </div>
+
 
   <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-lg">
     <h1 class="text-xl font-semibold text-slate-800 mb-4">Recent Invoices</h1>
