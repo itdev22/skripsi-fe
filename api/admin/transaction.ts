@@ -44,7 +44,7 @@ export const transactionAdminApi = () => {
         description: "",
         file: "",
         amount: "",
-        category_id: "",
+        category: "",
         tags: "",
         payer_id: "",
         method_id: "",

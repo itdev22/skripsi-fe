@@ -19,7 +19,8 @@ const state = reactive({
   description: "",
   file: "",
   amount: "",
-  category_id: "",
+  category: "",
+  category_custom: "",
   tags: "",
   payer_id: "",
   method_id: "",
@@ -58,6 +59,9 @@ type Schema = InferType<typeof schema>;
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
   console.log(event.data);
+  if(state.category_custom != ""){
+    state.category = state.category_custom
+  }
   await transactionAdminApi()
     .createTransactions(state)
     .then((response) => {
@@ -94,6 +98,25 @@ async function getAccountData() {
     });
 }
 await getAccountData();
+
+const categoryOptions = [
+  {
+    label: "pengembalian kasbon pegawai",
+    value: "pengembalian kasbon pegawai",
+  },
+  {
+    label: "registration income",
+    value: "registration income",
+  },
+  {
+    label: "internet income",
+    value: "internet income",
+  },
+  {
+    label: "other",
+    value: "other",
+  },
+]
 </script>
 
 <template>
@@ -102,21 +125,12 @@ await getAccountData();
       <h1>Add Deposit</h1>
     </div>
     <div class="p-4">
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-4"
-        @submit="onSubmit"
-      >
+      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <div class="flex gap-4 flex-row-2">
           <div class="w-full">
             <UFormGroup label="Account" name="account">
-              <USelectMenu
-                v-model="state.account_id"
-                :options="accounts"
-                value-attribute="value"
-                option-attribute="label"
-              />
+              <USelectMenu v-model="state.account_id" :options="accounts" value-attribute="value"
+                option-attribute="label" />
             </UFormGroup>
             <UFormGroup label="Date" name="date">
               <UInput v-model="state.date" type="date" />
@@ -126,6 +140,13 @@ await getAccountData();
             </UFormGroup>
             <UFormGroup label="Amount" name="amount">
               <UInput v-model="state.amount" />
+            </UFormGroup>
+            <UFormGroup label="Category" name="category">
+              <USelectMenu v-model="state.category" :options="categoryOptions" value-attribute="value"
+                option-attribute="label" />
+            </UFormGroup>
+            <UFormGroup v-if="state.category == 'other'" label="Category" name="category">
+              <UInput v-model="state.category_custom" />
             </UFormGroup>
             <!-- <div class="flex justify-end">
               <UButton
@@ -139,31 +160,19 @@ await getAccountData();
           </div>
           <div class="w-full" v-if="isAdvanced">
             <UFormGroup label="Category" name="category">
-              <USelectMenu
-                v-model="state.category_id"
-                :options="accounts"
-                value-attribute="value"
-                option-attribute="label"
-              />
+              <USelectMenu v-model="state.category" :options="accounts" value-attribute="value"
+                option-attribute="label" />
             </UFormGroup>
             <UFormGroup label="Tags" name="tags">
               <UInput v-model="state.tags" />
             </UFormGroup>
             <UFormGroup label="Payer" name="payer">
-              <USelectMenu
-                v-model="state.payer_id"
-                :options="accounts"
-                value-attribute="value"
-                option-attribute="label"
-              />
+              <USelectMenu v-model="state.payer_id" :options="accounts" value-attribute="value"
+                option-attribute="label" />
             </UFormGroup>
             <UFormGroup label="Method" name="method">
-              <USelectMenu
-                v-model="state.method_id"
-                :options="accounts"
-                value-attribute="value"
-                option-attribute="label"
-              />
+              <USelectMenu v-model="state.method_id" :options="accounts" value-attribute="value"
+                option-attribute="label" />
             </UFormGroup>
             <UFormGroup label="Ref#" name="ref">
               <UInput v-model="state.ref" />
