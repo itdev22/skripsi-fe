@@ -2,6 +2,7 @@
 import { formatIDR } from "@/helper/currency";
 import { dashboardCustomerApi } from "../../api/customer/dashboard";
 import { formatDateToYMD } from "@/helper/date";
+import { use } from "echarts/core";
 
 interface Customer {
   id: string;
@@ -103,10 +104,15 @@ async function getData() {
 }
 await getData();
 
+const router = useRouter();
 const status =
   new Date(dashboardResponse.value.customer.next_payment_date) >= new Date()
     ? "active"
     : "non active";
+const logout = async () => {
+  await useAuthStore().logout();
+  router.push("/login");
+};
 </script>
 
 <template>
@@ -114,10 +120,18 @@ const status =
     <div
       class="flex items-center justify-between p-4 text-white bg-green-600 shadow-md"
     >
-      <div>
-        <p class="text-sm">Hello, Welcome</p>
-        <p class="text-2xl font-bold">{{ dashboardResponse.customer.name }}</p>
+      <div class="flex space-x-4">
+        <div>
+          <p class="text-sm">Hello, Welcome</p>
+          <p class="text-2xl font-bold">
+            {{ dashboardResponse.customer.name }}
+          </p>
+        </div>
+        <UButton @click="logout" color="white" variant="outline"
+          >Logout</UButton
+        >
       </div>
+
       <div class="text-2xl font-bold">Lilly Apps</div>
     </div>
 
@@ -154,7 +168,10 @@ const status =
           <p class="text-white capitalize">{{ status }}</p>
         </div>
         <UButton
-          :disabled="dashboardResponse.invoice.length === 0|| dashboardResponse.invoice[0].status === 'paid'"
+          :disabled="
+            dashboardResponse.invoice.length === 0 ||
+            dashboardResponse.invoice[0].status === 'paid'
+          "
           class="w-full max-w-md py-3 font-semibold text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
           size="xl"
           @click="handlePayment"
