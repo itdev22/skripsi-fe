@@ -61,7 +61,7 @@ async function sendWhatsapp(number: string, id: string) {
     .sendWhatsapp({
       number,
       message:
-        `berikut invoice yang harus anda bayarkan sekarang \n\nKami berikan Link untuk melihat invoice \n\nhttps://skripsi.rtrsite.com/${id} \n\nSilahkan menuju dashboard login customer kami https://skripsi.rtrsite.com/login \n\nTerimakasih`,
+        `berikut invoice yang harus anda bayarkan sekarang \n\nKami berikan Link untuk melihat invoice \n\nhttps://skripsi.rtrsite.com/invoice/${id} \n\nSilahkan menuju dashboard login customer kami https://skripsi.rtrsite.com/login \n\nTerimakasih`,
     })
     .then((response) => {
       useToast().add({
@@ -169,7 +169,7 @@ const items = (row: any) => [
     {
       label: "Download PDF",
       icon: "i-heroicons-arrow-down-on-square-20-solid",
-      click: () => navigateTo(`/dashboard/invoice/pdf/${row.id}`),
+      click: () => navigateTo(`/invoice/${row.id}`),
     },
   ],
   [
