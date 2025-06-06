@@ -158,7 +158,7 @@ const methodOptions = [
               <UInput v-model="state.description" />
             </UFormGroup>
             <UFormGroup label="Amount" name="amount">
-              <UInput v-model="state.amount" />
+              <UInput v-model="state.amount" type="number" />
             </UFormGroup>
             <UFormGroup label="Category" name="category">
               <USelectMenu v-model="state.category" :options="categoryOptions" value-attribute="value"

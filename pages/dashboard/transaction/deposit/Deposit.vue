@@ -40,10 +40,8 @@ const columns = [
   { key: "number", label: "Number" },
   { key: "description", label: "Description" },
   { key: "amount", label: "Amount" },
-  // {
-  //   key: "actions",
-  //   label: "Actions",
-  // },
+  { key: "category", label: "Category" },
+  { key: "method", label: "Method" },
 ];
 
 function handleClick(row: { id: number }) {
