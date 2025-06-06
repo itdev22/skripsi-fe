@@ -14,7 +14,6 @@ export const WhatsappApi = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${useCookie("token").value}`,
         },
         body: JSON.stringify(data),
       });

@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API_HOST: process.env.NUXT_PUBLIC_API_HOST, // Memastikan API_HOST tersedia
+      WA_HOST: process.env.NUXT_PUBLIC_WA_HOST, // Memastikan API_HOST tersedia
     },
   },
   hooks: {
