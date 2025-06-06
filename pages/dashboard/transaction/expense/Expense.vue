@@ -28,6 +28,8 @@ const columns = [
   { key: "number", label: "Number" },
   { key: "description", label: "Description" },
   { key: "amount", label: "Amount" },
+  { key: "category", label: "Category" },
+  { key: "method", label: "Method" },
   // {
   //   key: "actions",
   //   label: "Actions",
@@ -117,11 +119,7 @@ async function deleteExpense(transactionId: string) {
   <UTable :rows="rows" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
-        <UButton
-          color="gray"
-          variant="ghost"
-          icon="i-heroicons-ellipsis-horizontal-20-solid"
-        />
+        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
       </UDropdown>
     </template>
     <template #amount-data="{ row }">
@@ -129,9 +127,7 @@ async function deleteExpense(transactionId: string) {
     </template>
   </UTable>
 
-  <div
-    class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-  >
+  <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
     <!-- <UPagination
             v-model="page"
             :page-count="pageCount"
