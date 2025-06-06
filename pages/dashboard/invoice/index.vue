@@ -145,32 +145,21 @@ const rows = computed(() => {
 
 const q = ref("");
 
-let customerData = customer;
+const filteredRows = computed(() => {
+    if (!q.value) {
+        return customer.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    }
 
-// const filteredRows = computed(() => {
-//     if (!q.value) {
-//         customerData = customer
-//         return customer.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-//     }
-
-//     const newData = customer.value.filter((person) => {
-//         return Object.values(person).some((value) => {
-//             // person with paginate
-//             return String(value).toLowerCase().includes(q.value.toLowerCase())
-//         })
-//     })
-//     customerData.value = newData
-//     return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-// })
+    const newData = customer.value.filter((person) => {
+        return Object.values(person).some((value) => {
+            // person with paginate
+            return String(value).toLowerCase().includes(q.value.toLowerCase())
+        })
+    })
+    return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+})
 
 const items = (row: any) => [
-  // [
-  //   {
-  //     label: "Edit",
-  //     icon: "i-heroicons-pencil-square-20-solid",
-  //     click: () => OpenModalAddCustomer(true, row),
-  //   },
-  // ],
   [
     {
       label: "Send Whatsapp",
@@ -218,7 +207,7 @@ const sort = ref({
     <UInput v-model="q" placeholder="Filter customer..." />
   </div>
 
-  <UTable :rows="rows" :columns="columns">
+  <UTable :rows="filteredRows" :columns="columns">
     <template #actions-data="{ row }">
       <UDropdown :items="items(row)">
         <UButton
