@@ -76,12 +76,11 @@ const filterMenu = computed(() => {
     return items.filter(item => !hideMenu.includes(item.label));
   }
   if (authStore.user.role === 'TECHNICIAN') {
-    // const hideMenu = ['User Management','Report','Invoice','Transaction','Company']
-    const hideMenu = ['']
+    const hideMenu = ['User Management', 'Report', 'Invoice', 'Transaction', 'Company', 'Area']
     return items.filter(item => !hideMenu.includes(item.label));
   }
   if (authStore.user.role === 'FINANCE') {
-    const hideMenu = ['Company','Assets','Internet Package','Area']
+    const hideMenu = ['Company', 'Assets', 'Internet Package', 'Area']
     return items.filter(item => !hideMenu.includes(item.label));
   }
   return items;
