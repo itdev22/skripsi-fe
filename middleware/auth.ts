@@ -11,13 +11,16 @@ export default defineNuxtRouteMiddleware((to, from) => {
       checkAuth();
     }
   }
-  const check = checkPermission(to);
-  if (check == "disallow") {
-    return navigateTo("/dashboard");
-  }
-  if (!authStore.isLoggedIn && to.path !== "/login") {
-    authStore.logout();
-    return navigateTo("/login");
+
+  if (to.path !== "/dashboard") {
+    const check = checkPermission(to);
+    if (check == "disallow") {
+      return navigateTo("/dashboard");
+    }
+    if (!authStore.isLoggedIn && to.path !== "/login") {
+      authStore.logout();
+      return navigateTo("/login");
+    }
   }
 });
 
@@ -45,7 +48,7 @@ function checkPermission(to: RouteLocationNormalizedGeneric) {
     "/dashboard/report",
     "/dashboard/invoice",
     "/dashboard/transaction",
-    "/dashboard/companies"
+    "/dashboard/companies",
   ];
   const restrictedForFinances = [
     "/dashboard/user-management",
