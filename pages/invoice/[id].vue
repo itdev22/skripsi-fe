@@ -100,11 +100,11 @@ const generatePDF = async () => {
 
 <template>
   <div v-if="!isLoading	">
+    <div
+      class="p-8 text-gray-800 bg-white max-w-5xl mx-auto"
+      ref="pdfContentRef"
+    >
     <client-only>
-      <div
-        class="p-8 text-gray-800 bg-white max-w-5xl mx-auto"
-        ref="pdfContentRef"
-      >
         <div class="flex justify-between items-start mb-6">
           <div>
             <h2 class="text-2xl font-semibold">INVOICE</h2>
@@ -217,14 +217,14 @@ const generatePDF = async () => {
             </tr>
           </tbody>
         </table> -->
-      </div>
-    </client-only>
-    <button
+      </client-only>
+      <button
       @click="generatePDF"
       class="px-4 py-2 mt-4 text-white bg-green-500 rounded"
-    >
+      >
       Download PDF
     </button>
+  </div>
   </div>
 </template>
 

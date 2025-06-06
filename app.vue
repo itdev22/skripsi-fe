@@ -13,10 +13,10 @@ const { isLoading } = useLoading()
     <!-- <NuxtWelcome /> -->
     <!-- <NuxtUIProvider> -->
     <NuxtLayout>
-      <NuxtLayout name="navbar" v-if="route.path !== '/login' && route.path !== '/customer'">
+      <NuxtLayout name="navbar" v-if="route.path !== '/login' && route.path !== '/customer' && !route.path.startsWith('/invoice')">
         <NuxtPage />
       </NuxtLayout>
-      <NuxtPage v-if="route.path == '/login' || route.path == '/customer'" />
+      <NuxtPage v-if="route.path == '/login' || route.path == '/customer' || route.path.startsWith('/invoice')" />
     </NuxtLayout>
     <UModals />
     <UNotifications />
