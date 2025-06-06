@@ -1,4 +1,4 @@
-import type { CreateInvoiceRequest } from "@/types/requests/invoice";
+import type { CreateInvoiceRequest, UpdateStatusInvoiceRequest } from "@/types/requests/invoice";
 
 
 export const invoiceAdminApi = () => {
@@ -78,6 +78,25 @@ export const invoiceAdminApi = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${useCookie("token").value}`,
         },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      return response.json();
+    },
+
+    updateStatusInvoice: async (
+      invoiceId: string,
+      data: UpdateStatusInvoiceRequest
+    ) => {
+      const response = await fetch(`${api}/api/admin/invoice/${invoiceId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+        },
+        body: JSON.stringify(data),
       });
       if (!response.ok) {
         const errorData = await response.json();

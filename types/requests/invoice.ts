@@ -3,3 +3,7 @@ export type CreateInvoiceRequest = {
     amount: string,
     invoice_items: Array<{name: string, qty: number, price: number,total: number}>
   }
+
+  export type UpdateStatusInvoiceRequest = {
+    status: string
+  }

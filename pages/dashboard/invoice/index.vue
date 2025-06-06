@@ -2,8 +2,11 @@
 import { invoiceAdminApi } from "@/api/admin/invoice";
 import FormAddComponent from "./FormAddInvoice.vue";
 import * as currency from "@/helper/currency";
+import type { UpdateStatusInvoiceRequest } from "@/types/requests/invoice";
+import { WhatsappApi } from "@/api/admin/wa";
 let customer = ref<any[]>([]);
 
+const router = useRouter();
 type Customer = {
   id: string;
   name: string;
@@ -17,17 +20,54 @@ type Customer = {
   mac_address: string;
 };
 
-
 async function getData() {
   invoiceAdminApi()
     .getAllInvoices()
     .then((response) => {
       response.data.forEach((customer: any) => {
         customer.number = response.data.indexOf(customer) + 1;
-        customer.created_at = customer.created_at.split("T")[0]
+        customer.created_at = customer.created_at.split("T")[0];
       });
 
       customer.value = [...response.data];
+    })
+    .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
+}
+
+async function updateStatus(id: string, status: string) {
+  invoiceAdminApi()
+    .updateStatusInvoice(id, { status })
+    .then((response) => {
+      useToast().add({
+        title: response.message,
+        color: "green",
+      });
+    })
+    .catch((err) => {
+      useToast().add({
+        title: err,
+        color: "red",
+      });
+    });
+}
+
+async function sendWhatsapp(number: string, id: string) {
+  WhatsappApi()
+    .sendWhatsapp({
+      number,
+      message:
+        `berikut invoice yang harus anda bayarkan sekarang \n\nKami berikan Link untuk melihat invoice \n\nhttps://skripsi.rtrsite.com/${id} \n\nSilahkan menuju dashboard login customer kami https://skripsi.rtrsite.com/login \n\nTerimakasih`,
+    })
+    .then((response) => {
+      useToast().add({
+        title: response.message,
+        color: "green",
+      });
     })
     .catch((err) => {
       useToast().add({
@@ -123,30 +163,24 @@ let customerData = customer;
 //     return newData.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 // })
 
-
-const items = (row: Customer) => [
-  [
-    {
-      label: "Edit",
-      icon: "i-heroicons-pencil-square-20-solid",
-      click: () => OpenModalAddCustomer(true, row),
-    },
-  ],
+const items = (row: any) => [
+  // [
+  //   {
+  //     label: "Edit",
+  //     icon: "i-heroicons-pencil-square-20-solid",
+  //     click: () => OpenModalAddCustomer(true, row),
+  //   },
+  // ],
   [
     {
       label: "Send Whatsapp",
       icon: "i-heroicons-chat-bubble-left-ellipsis-20-solid",
-      click: () => OpenModalAddCustomer(true, row),
+      click: () => sendWhatsapp(row.customer.phone, row.id),
     },
     {
       label: "Download PDF",
       icon: "i-heroicons-arrow-down-on-square-20-solid",
-      click: () => OpenModalAddCustomer(true, row),
-    },
-    {
-      label: "Send PDF",
-      icon: "i-heroicons-paper-airplane-20-solid",
-      click: () => OpenModalAddCustomer(true, row),
+      click: () => navigateTo(`/dashboard/invoice/pdf/${row.id}`),
     },
   ],
   [
@@ -162,7 +196,7 @@ const toast = useToast();
 const modal = useModal();
 
 function OpenModalAddCustomer(isEdit: boolean, data: any) {
-  console.log("Open Modal")
+  console.log("Open Modal");
   modal.open(FormAddComponent, {
     isEdit,
     data,
@@ -172,6 +206,10 @@ function OpenModalAddCustomer(isEdit: boolean, data: any) {
     },
   });
 }
+const sort = ref({
+  column: "amount",
+  direction: "asc" as "asc",
+});
 </script>
 
 <template>
@@ -201,9 +239,9 @@ function OpenModalAddCustomer(isEdit: boolean, data: any) {
           { label: 'Paid', value: 'paid' },
           { label: 'Unpaid', value: 'unpaid' },
         ]"
+        @change="updateStatus(row.id, row.status)"
         value-attribute="value"
         option-attribute="label"
-        
       />
     </template>
   </UTable>
