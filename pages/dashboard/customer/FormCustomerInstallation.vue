@@ -28,7 +28,6 @@ const props = defineProps({
 const schema = object({
   technician_id: string().required("Customer is required"),
   date: string().required("Date is required"),
-  image: string().required("Image is required"),
 });
 
 const state = reactive({
