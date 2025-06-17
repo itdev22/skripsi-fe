@@ -76,6 +76,17 @@ watch(
   },
   { immediate: true }
 );
+
+watch(
+  () => props.isEdit,
+  (newValue) => {
+    if (newValue) {
+      (state.customer_id = props.data.customer_id),
+        (state.amount = props.data.amount);
+    }
+  },
+  { immediate: true }
+);
 const emit = defineEmits(["success"]);
 
 function onSuccess() {
@@ -106,6 +117,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 const customer = ref([]);
 const searchOptions = ref();
 const productOptions = ref<any[]>([])
+const productOptionsD = ref<any[]>([])
 
 async function getDataOptions() {
   customerAdminApi()
@@ -119,7 +131,7 @@ async function getDataOptions() {
 }
 
 function search(q: any) {
-  const data =  productOptions.value.filter((option: any) =>
+  const data = productOptions.value.filter((option: any) =>
     option.toLowerCase().includes(q.toLowerCase())
   );
   if (data.length > 0) {
@@ -133,11 +145,28 @@ await internetPackageAdminApi()
   .getAllInternetPacket()
   .then((response) => {
     productOptions.value = response.data.map((value: any, index: number) => value.name);
+    productOptionsD.value = response.data.map((value: any, index: number) => ({
+      id: value.id,
+      label: value.name,
+      value: value.name,
+      price: value.price,
+    }));
   })
   .finally(() => {
     loadingProduct.value = false;
   });
 await getDataOptions();
+
+function checkProductIsExist(name: string, index: number) {
+  const product = productOptionsD.value.find((option: any) => option.label === name);
+  if (product) {
+    const item = state.invoice_items[index];
+    state.invoice_items[index] = {
+      ...item,
+      price: product.price,
+    };
+  }
+}
 </script>
 
 <template>
@@ -157,14 +186,13 @@ await getDataOptions();
         <div v-for="(item, index) in state.invoice_items" :key="index" class="space-y-4">
           <UFormGroup :label="`Product ${index + 1} Name`" :name="`item-name-${index}`">
             <UInputMenu v-model="item.name" :loading="loadingProduct" by="id" :options="productOptions"
-              :search="search" />
+              @change="(name) => checkProductIsExist(name, index)" :search="search" />
           </UFormGroup>
 
           <div class="flex space-x-4">
             <UFormGroup label="Quantity">
               <UInput v-model.number="item.qty" type="number" @update:modelValue="() => updateTotal(index)" />
             </UFormGroup>
-
             <UFormGroup label="Price">
               <UInput v-model.number="item.price" type="number" @update:modelValue="() => updateTotal(index)" />
             </UFormGroup>
