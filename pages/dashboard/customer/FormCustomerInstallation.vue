@@ -35,7 +35,7 @@ const state = reactive({
   technician_id: "",
   date: "",
   description: "",
-  images: [] as File[],
+  image_ids: [] as string[],
   previews: [] as string[],
   selectedImage: "",
   showModal: false,
@@ -89,11 +89,7 @@ const handleFileUpload = async (event: FileList) => {
 
   if (input) {
     const files = input;
-    console.log(event);
 
-    state.images.push(...Array.from(files));
-    // state.images = Array.from(files); // Store selected files
-    // state.previews = []; // Clear previous previews
 
     Array.from(files).forEach(async (file, index) => {
       if (file.type.startsWith("image/")) {
@@ -104,7 +100,7 @@ const handleFileUpload = async (event: FileList) => {
             file: file,
           })
           .then((response) => {
-            state.images[index] = response.data.id;
+            state.image_ids[index] = response.data.id;
           });
         const reader = new FileReader();
 

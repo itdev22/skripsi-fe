@@ -21,7 +21,7 @@ const pageCount = 5;
 const modal = useModal()
 function handleClick(row:any) {
   modal.open(ImageViewComponent, {
-    image: row.images.map((item:any) => "https://skripsi-api.rtrsite.com/"+item.full_path),
+    image: row.images.map((item:any) => useApiHost()+"/"+item.full_path),
     onClose: () => {
       modal.close();
     },

@@ -23,7 +23,7 @@ export type CreateCustomerInstallationRequest = {
   technician_id: String,
   date: String,
   description:  String,
-  images: File[] ,
+  image_ids: string[] ,
   previews: String[] ,
   selectedImage: String,
   showModal: boolean,
