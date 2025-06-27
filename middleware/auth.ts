@@ -4,7 +4,7 @@ import type { RouteLocationNormalizedGeneric } from "vue-router";
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore();
-  if (to.path.startsWith('/dashboard') && to.path.startsWith('/customer')) {
+  if (to.path.startsWith('/dashboard') || to.path.startsWith('/customer')) {
       checkAuth();
   }
 
