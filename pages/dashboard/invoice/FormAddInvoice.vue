@@ -35,7 +35,7 @@ type Schema = InferType<typeof schema>;
 
 const state = reactive({
   customer_id: "",
-  amount: "",
+  amount: 0,
   invoice_items: [
     {
       name: "",
@@ -63,6 +63,8 @@ function updateTotal(index: number) {
     ...item,
     total: item.qty * item.price,
   };
+
+  state.amount = state.invoice_items.reduce((acc, item) => acc + item.total, 0);
   console.log(state.invoice_items[index].total);
 }
 
