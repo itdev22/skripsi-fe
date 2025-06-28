@@ -31,6 +31,17 @@ export const authApi = () => {
             });
 
             return response.json();
+        },
+        verifyAuthCustomer: async () => {
+            const response = await fetch(`${api}/api/auth/verify-customer`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${useCookie("token").value}`,
+                },
+            });
+
+            return response.json();
         }
     }
 }

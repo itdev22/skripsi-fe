@@ -4,8 +4,12 @@ import type { RouteLocationNormalizedGeneric } from "vue-router";
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore();
-  if (to.path.startsWith('/dashboard') || to.path.startsWith('/customer')) {
+  if (to.path.startsWith('/dashboard') ) {
       checkAuth();
+  }
+
+  if (to.path.startsWith('/customer')) {
+      checkAuthCustomer();
   }
 
   if (to.path !== "/dashboard") {
@@ -24,6 +28,21 @@ async function checkAuth() {
   const authStore = useAuthStore();
   authApi()
     .verifyAuth()
+    .then((response) => {
+      if (response.success == false) {
+        authStore.logout();
+      }
+      authStore.user = response.data;
+    })
+    .catch((error) => {
+      console.error("authStore cek auth error", error);
+    });
+}
+
+async function checkAuthCustomer() {
+  const authStore = useAuthStore();
+  authApi()
+    .verifyAuthCustomer()
     .then((response) => {
       if (response.success == false) {
         authStore.logout();
