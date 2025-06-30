@@ -154,6 +154,6 @@ async function deleteUser(companyId: string) {
   </UTable>
 
   <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-    <UPagination v-model="page" :page-count="pageCount" :total="100" />
+    <UPagination v-model="page" :page-count="pageCount" :total="userData.length" />
   </div>
 </template>
