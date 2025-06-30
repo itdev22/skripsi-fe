@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       checkAuthCustomer();
   }
 
-  if (to.path !== "/dashboard") {
+  if (to.path.startsWith('/dashboard')) {
     const check = checkPermission(to);
     if (check == "disallow") {
       return navigateTo("/dashboard");

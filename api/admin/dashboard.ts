@@ -74,5 +74,47 @@ export const dashboardAdminApi = () => {
       }
       return response.json();
     },
+     cardPacketPopularDashboard: async () => {
+      const response = await fetch(`${api}/api/admin/dashboard/card-packet-popular`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      return response.json();
+    },
+    cardAreaPopularDashboard: async () => {
+      const response = await fetch(`${api}/api/admin/dashboard/card-area-popular`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      return response.json();
+    },
+    cardReportCashDashboard: async () => {
+      const response = await fetch(`${api}/api/admin/dashboard/card-report-cash`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${useCookie("token").value}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      return response.json();
+    },
   };
 };

@@ -100,8 +100,8 @@ for (const card of CardList) {
 
   if (card.name === "Packet Popular") {
     try {
-      const response = await dashboardAdminApi().cardCustomerDashboard();
-      const graph = response.data.graph_customer;
+      const response = await dashboardAdminApi().cardPacketPopularDashboard();
+      const graph = response.data.graph_packet_popular;
 
       (option.title as any).text = card.name
 
@@ -113,9 +113,7 @@ for (const card of CardList) {
 
       (option.xAxis as any).data =
         graph.map((item: any) => {
-          const date = new Date(item.date);
-          return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }
-          );
+          return item.name;
         })
 
       optionCardPacketPopular.value = option
@@ -131,8 +129,8 @@ for (const card of CardList) {
 
   if (card.name === "Area") {
     try {
-      const response = await dashboardAdminApi().cardCustomerDashboard();
-      const graph = response.data.graph_customer;
+      const response = await dashboardAdminApi().cardAreaPopularDashboard();
+      const graph = response.data.graph_area_popular;
 
       (option.title as any).text = card.name
 
@@ -144,9 +142,7 @@ for (const card of CardList) {
 
       (option.xAxis as any).data =
         graph.map((item: any) => {
-          const date = new Date(item.date);
-          return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }
-          );
+          return item.name_city+ " - " + item.name_subdistrict + " - " + item.name_village;
         })
 
       optionCardArea.value = option
@@ -162,8 +158,8 @@ for (const card of CardList) {
 
   if (card.name === "Report Cash") {
     try {
-      const response = await dashboardAdminApi().cardCustomerDashboard();
-      const graph = response.data.graph_customer;
+      const response = await dashboardAdminApi().cardReportCashDashboard();
+      const graph = response.data.graph_report_cash;
 
       (option.title as any).text = card.name
 
@@ -237,17 +233,17 @@ async function getData() {
 
   transactionAdminApi()
     .getAllTransactions(null).then((response) => {
-      latestDeposites.value = response.data.filter((item: any) => item.type_in_out == "debit").map((transaction: any) => {
+      latestDeposites.value = response.data.filter((item: any) => item.type_in_out == "debit").map((transaction: any,index: number) => {
         return {
-          number: response.data.indexOf(transaction) + 1,
+          number: index + 1,
           type_cash: transaction.type_cash.split("_")[0] + " " + (transaction.type_cash.split("_")[1] ? transaction.type_cash.split("_")[1] : ""),
           amount: transaction.amount,
           description: transaction.description
         }
       }).slice((1 - 1) * 5, (1) * 5);
-      latestExpenses.value = response.data.filter((item: any) => item.type_in_out == "credit").map((transaction: any) => {
+      latestExpenses.value = response.data.filter((item: any) => item.type_in_out == "credit").map((transaction: any,index: number) => {
         return {
-          number: response.data.indexOf(transaction) + 1,
+          number: index + 1,
           type_cash: transaction.type_cash.split("_")[0] + " " + (transaction.type_cash.split("_")[1] ? transaction.type_cash.split("_")[1] : ""),
           amount: transaction.amount,
           description: transaction.description
@@ -315,6 +311,7 @@ getData();
 
 import { useLoading } from '@/composables/useLoading'
 import { transactionAdminApi } from "@/api/admin/transaction";
+import { number } from "yup";
 
 const { show, hide } = useLoading()
 
