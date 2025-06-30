@@ -30,8 +30,8 @@ export const tableColumns = [
     label: "Date",
   },
   {
-    key: "area",
-    label: "Area",
+    key: "site",
+    label: "Site",
   },
   {
     key: "description",
