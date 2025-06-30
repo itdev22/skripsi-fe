@@ -55,10 +55,10 @@ const columns = [
     {
         key: "url",
         label: "Website",
-    },    {
+    }, {
         key: "npwp",
         label: "NPWP",
-    },    {
+    }, {
         key: "address",
         label: "Address",
     },
@@ -166,6 +166,9 @@ const modal = useModal();
     </div>
 
     <UTable :rows="filteredRows" :columns="columns">
+        <template #logo_url-data="{ row }">
+            <UAvatar :src="row.logo_url" size="xl" />
+        </template>
         <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
                 <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
